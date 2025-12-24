@@ -1,0 +1,21 @@
+## 0) 基础工程与质量门禁
+
+## 1) 数据库访问层（infra/db）（prefer Core）
+
+## 2) 任务状态与幂等基础设施（infra/task_state + infra/idempotency）
+
+## 3) 交易日管理模块（core/calendar + infra/calendar_store）
+
+## 4) 异步执行底座（infra/queue + worker runtime）
+
+## 5) 抓取模块（core/fetch + infra/external_clients）
+
+## 6) 清洗模块（core/clean）
+
+## 7) 分块与内存控制（core/chunking）
+
+## 8) Workflow 编排（services/workflow）
+
+## 9) API 层（api/routers）
+
+## 10) 测试完善与可运维性
