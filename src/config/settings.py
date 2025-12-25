@@ -20,7 +20,13 @@ class DatabaseConfig(BaseModel):
     url: str = Field(default="postgresql+psycopg2://myuser:xjqxz214@192.168.56.101:5432/mydb")
 
 
+class TushareConfig(BaseModel):
+    token: str = Field(default="")
+    exchange: str = Field(default="SSE")
+
+
 class AppConfig(BaseModel):
     environment: str = Field(default="local")
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
+    tushare: TushareConfig = Field(default_factory=TushareConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)

@@ -61,6 +61,16 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
     if database_config:
         merged["database"] = database_config
 
+    tushare_config = dict(merged.get("tushare", {}))
+    tushare_token = os.environ.get("APP_TUSHARE_TOKEN")
+    if tushare_token:
+        tushare_config["token"] = tushare_token
+    tushare_exchange = os.environ.get("APP_TUSHARE_EXCHANGE")
+    if tushare_exchange:
+        tushare_config["exchange"] = tushare_exchange
+    if tushare_config:
+        merged["tushare"] = tushare_config
+
     logging_config = dict(merged.get("logging", {}))
     log_level = os.environ.get("APP_LOG_LEVEL")
     if log_level:

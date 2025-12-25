@@ -4,7 +4,7 @@
 
 ## 2) 任务状态与幂等基础设施（infra/task_state + infra/idempotency）（已完成）
 
-## 3) 交易日管理模块（core/calendar + infra/calendar_store）
+## 3) 交易日管理模块（core/calendar + infra/calendar_store）（已完成）
 
 ## 4) 异步执行底座（infra/queue + worker runtime）
 
