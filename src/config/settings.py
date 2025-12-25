@@ -16,6 +16,11 @@ class LoggingConfig(BaseModel):
     date_format: str = Field(default="%Y-%m-%d %H:%M:%S")
 
 
+class DatabaseConfig(BaseModel):
+    url: str = Field(default="postgresql+psycopg2://myuser:xjqxz214@192.168.56.101:5432/mydb")
+
+
 class AppConfig(BaseModel):
     environment: str = Field(default="local")
+    database: DatabaseConfig = Field(default_factory=DatabaseConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)

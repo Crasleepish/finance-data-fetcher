@@ -53,6 +53,14 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
     if environment:
         merged["environment"] = environment
 
+    database_config = dict(merged.get("database", {}))
+    db_url = os.environ.get("APP_DB_URL")
+    if db_url:
+        database_config["url"] = db_url
+
+    if database_config:
+        merged["database"] = database_config
+
     logging_config = dict(merged.get("logging", {}))
     log_level = os.environ.get("APP_LOG_LEVEL")
     if log_level:
