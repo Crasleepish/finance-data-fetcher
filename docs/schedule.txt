@@ -1,8 +1,8 @@
 ## 0) 基础工程与质量门禁（已完成）
 
-## 1) 数据库访问层（infra/db）（prefer Core）
+## 1) 数据库访问层（infra/db）（prefer Core）（已完成）
 
-## 2) 任务状态与幂等基础设施（infra/task_state + infra/idempotency）
+## 2) 任务状态与幂等基础设施（infra/task_state + infra/idempotency）（已完成）
 
 ## 3) 交易日管理模块（core/calendar + infra/calendar_store）
 
