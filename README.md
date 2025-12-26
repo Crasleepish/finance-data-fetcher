@@ -10,7 +10,7 @@ cd finance-data-fetcher
 ```
 
 ```sh
-uv sync --extra dev
+uv sync --dev
 ```
 
 ```sh

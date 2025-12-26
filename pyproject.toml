@@ -34,6 +34,8 @@ select = ["E", "F", "I"]
 line-ending = "lf"
 
 [tool.mypy]
+mypy_path = ["src"]
+files = ["src"]
 python_version = "3.12"
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
