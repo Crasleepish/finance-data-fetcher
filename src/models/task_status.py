@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class TaskState(StrEnum):
+    """Lifecycle states for background tasks."""
     PENDING = "PENDING"
     RUNNING = "RUNNING"
     SUCCEEDED = "SUCCEEDED"
@@ -16,6 +17,7 @@ class TaskState(StrEnum):
 
 
 class TaskStatusRecord(BaseModel):
+    """Immutable task status record returned from persistence layer."""
     model_config = ConfigDict(frozen=True)
 
     task_id: int = Field(..., ge=1)

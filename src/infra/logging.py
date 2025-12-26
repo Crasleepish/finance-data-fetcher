@@ -11,6 +11,7 @@ from config.settings import LoggingConfig
 
 
 def setup_logging(config: LoggingConfig) -> None:
+    """Configure root and uvicorn loggers with file rotation + console output."""
     handlers = _build_handlers(config)
     formatter = logging.Formatter(config.log_format, datefmt=config.date_format)
 
@@ -31,6 +32,7 @@ def setup_logging(config: LoggingConfig) -> None:
 
 
 def _build_handlers(config: LoggingConfig) -> list[logging.Handler]:
+    """Build logging handlers based on config."""
     handlers: list[logging.Handler] = []
 
     log_path = Path(config.log_file)
@@ -47,6 +49,7 @@ def _build_handlers(config: LoggingConfig) -> list[logging.Handler]:
 
 
 def _build_file_handler(config: LoggingConfig) -> TimedRotatingFileHandler:
+    """Create a daily rotating file handler with gzip compression."""
     handler = TimedRotatingFileHandler(
         filename=config.log_file,
         when=config.rotation_when,
@@ -62,10 +65,12 @@ def _build_file_handler(config: LoggingConfig) -> TimedRotatingFileHandler:
 
 
 def _gzip_namer(default_name: str) -> str:
+    """Append gzip suffix to rotated log filenames."""
     return f"{default_name}.gz"
 
 
 def _gzip_rotator(source: str, dest: str) -> None:
+    """Compress rotated log files and remove the source."""
     with open(source, "rb") as source_handle:
         with gzip.open(dest, "wb") as dest_handle:
             shutil.copyfileobj(source_handle, dest_handle)

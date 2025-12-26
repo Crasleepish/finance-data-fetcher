@@ -8,10 +8,12 @@ import tushare as ts
 
 @dataclass(frozen=True)
 class TushareCalendarSyncer:
+    """Fetch trade calendar data from Tushare."""
     token: str
     exchange: str = "SSE"
 
     def fetch_trade_days(self, start: date, end: date, exchange: str) -> list[date]:
+        """Return open trading days for the date range."""
         if not self.token:
             raise ValueError("Tushare token is required")
 

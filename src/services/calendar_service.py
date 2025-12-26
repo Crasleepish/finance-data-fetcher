@@ -12,13 +12,16 @@ from infra.db.engine import create_engine_from_config
 
 @dataclass(frozen=True)
 class CalendarService:
+    """Service wrapper for calendar operations used by the API layer."""
     calendar: TradingCalendarService
 
     def sync(self, start: date, end: date, exchange: str | None = None) -> int:
+        """Sync trade days via the underlying calendar service."""
         return int(self.calendar.sync_range(start, end, exchange))
 
 
 def build_calendar_service(config: AppConfig) -> CalendarService:
+    """Wire calendar store + syncer from config."""
     engine = create_engine_from_config(config.database)
     store = CalendarStore(engine=engine)
     syncer = TushareCalendarSyncer(

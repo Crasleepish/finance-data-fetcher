@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def create_app() -> FastAPI:
+    """Create FastAPI app with configured dependencies and routes."""
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         config = load_config()

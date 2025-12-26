@@ -11,12 +11,14 @@ router = APIRouter(prefix="/calendar", tags=["calendar"])
 
 
 class CalendarSyncRequest(BaseModel):
+    """Request body for calendar sync endpoint."""
     start_date: date
     end_date: date
     exchange: str = Field(default="SSE")
 
 
 class CalendarSyncResponse(BaseModel):
+    """Response payload for calendar sync endpoint."""
     inserted: int
     start_date: date
     end_date: date
@@ -24,6 +26,7 @@ class CalendarSyncResponse(BaseModel):
 
 
 def get_calendar_service(request: Request) -> CalendarService:
+    """Provide CalendarService from app state."""
     return request.app.state.calendar_service
 
 
@@ -32,6 +35,7 @@ def sync_calendar(
     payload: CalendarSyncRequest,
     service: CalendarService = Depends(get_calendar_service),
 ) -> CalendarSyncResponse:
+    """Manually sync trade calendar for a date range."""
     inserted = service.sync(payload.start_date, payload.end_date, payload.exchange)
     return CalendarSyncResponse(
         inserted=inserted,

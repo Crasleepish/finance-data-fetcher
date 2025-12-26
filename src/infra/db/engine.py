@@ -9,11 +9,13 @@ from config.settings import DatabaseConfig
 
 
 def create_engine_from_config(config: DatabaseConfig) -> Engine:
+    """Create a SQLAlchemy Engine from DatabaseConfig."""
     return create_engine(config.url, pool_pre_ping=True)
 
 
 @contextmanager
 def transaction(engine: Engine) -> Iterator[Connection]:
+    """Context-managed transaction with explicit commit/rollback."""
     connection = engine.connect()
     trans = connection.begin()
     try:

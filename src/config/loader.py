@@ -13,6 +13,7 @@ DEFAULT_CONFIG_PATH = PROJECT_ROOT / "config" / "app.yaml"
 
 
 def load_config(config_path: Path | None = None) -> AppConfig:
+    """Load AppConfig from YAML file with environment variable overrides."""
     resolved_path = _resolve_config_path(config_path)
     raw_config = _read_yaml(resolved_path)
     merged_config = _apply_env_overrides(raw_config)
@@ -20,6 +21,7 @@ def load_config(config_path: Path | None = None) -> AppConfig:
 
 
 def _resolve_config_path(config_path: Path | None) -> Path:
+    """Resolve config path from explicit arg, env var, or default."""
     if config_path is not None:
         return config_path
 
@@ -31,6 +33,7 @@ def _resolve_config_path(config_path: Path | None) -> Path:
 
 
 def _read_yaml(path: Path) -> dict[str, Any]:
+    """Read a YAML mapping file and return a dict."""
     if not path.exists():
         raise FileNotFoundError(f"Config file not found: {path}")
 
@@ -47,6 +50,7 @@ def _read_yaml(path: Path) -> dict[str, Any]:
 
 
 def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
+    """Merge known environment overrides onto the raw config mapping."""
     merged = dict(config)
 
     environment = os.environ.get("APP_ENVIRONMENT")

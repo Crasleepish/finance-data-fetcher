@@ -153,6 +153,7 @@ Agents must assume CI enforces this.
 * Simple > clever
 * Small, composable functions
 * Comments explain **why**, not **what**
+* Public classes/functions should include concise docstrings (purpose, role, params)
 
 If logic cannot be clearly explained, it is considered incorrect.
 

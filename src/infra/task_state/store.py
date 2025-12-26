@@ -18,11 +18,13 @@ _ACTIVE_STATES = (TaskState.PENDING, TaskState.RUNNING)
 
 @dataclass(frozen=True)
 class TaskStatusStore:
+    """Persistence helper for task status records."""
     engine: Engine
     table: Table = task_table
     state_machine: TaskStateMachine = TaskStateMachine()
 
     def create_task(self, spec: str, idempotency_key: str, attempt: int) -> TaskStatusRecord:
+        """Create a new task in PENDING state."""
         now = _utc_now()
         stmt = (
             insert(self.table)
@@ -41,6 +43,7 @@ class TaskStatusStore:
         return _row_to_task_status(row)
 
     def update_progress(self, task_id: int, progress: Decimal) -> TaskStatusRecord:
+        """Update task progress (0-100)."""
         normalized = _normalize_progress(progress)
         stmt = (
             update(self.table)
@@ -55,6 +58,7 @@ class TaskStatusStore:
     def update_state(
         self, task_id: int, new_state: TaskState, error: str | None = None
     ) -> TaskStatusRecord:
+        """Transition task state with FSM validation and timestamp updates."""
         with transaction(self.engine) as connection:
             current_row = (
                 connection.execute(
@@ -80,12 +84,14 @@ class TaskStatusStore:
         return _row_to_task_status(row)
 
     def list_running(self) -> list[TaskStatusRecord]:
+        """List tasks in active states (PENDING/RUNNING)."""
         stmt = select(self.table).where(self.table.c.state.in_([s.value for s in _ACTIVE_STATES]))
         with transaction(self.engine) as connection:
             rows = connection.execute(stmt).mappings().all()
         return [_row_to_task_status(row) for row in rows]
 
     def get_by_id(self, task_id: int) -> TaskStatusRecord:
+        """Fetch a task status record by id."""
         stmt = select(self.table).where(self.table.c.task_id == task_id)
         with transaction(self.engine) as connection:
             row = connection.execute(stmt).mappings().one()
@@ -95,6 +101,7 @@ class TaskStatusStore:
 def _state_updates(
     new_state: TaskState, error: str | None, current_row: RowMapping
 ) -> dict[str, Any]:
+    """Compute column updates for a state transition."""
     updates: dict[str, Any] = {"state": new_state.value}
     now = _utc_now()
 
@@ -113,6 +120,7 @@ def _state_updates(
 
 
 def _normalize_progress(progress: Decimal | float | int) -> Decimal:
+    """Normalize and validate progress within 0-100."""
     if not isinstance(progress, Decimal):
         progress = Decimal(str(progress))
     if progress < 0 or progress > 100:
@@ -121,6 +129,7 @@ def _normalize_progress(progress: Decimal | float | int) -> Decimal:
 
 
 def _row_to_task_status(row: RowMapping) -> TaskStatusRecord:
+    """Map a DB row to TaskStatusRecord."""
     return TaskStatusRecord(
         task_id=row["task_id"],
         idempotency_key=row["idempotency_key"],
@@ -136,4 +145,5 @@ def _row_to_task_status(row: RowMapping) -> TaskStatusRecord:
 
 
 def _utc_now() -> datetime:
+    """UTC timestamp helper."""
     return datetime.now(timezone.utc)
