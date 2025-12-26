@@ -149,8 +149,6 @@ Agents must assume CI enforces this.
 
 ## 7. Code Style Expectations
 
-* Explicit > implicit
-* Simple > clever
 * Small, composable functions
 * Comments explain **why**, not **what**
 * Public classes/functions should include concise docstrings (purpose, role, params)
