@@ -6,7 +6,7 @@
 
 ## 3) 交易日管理模块（core/calendar + infra/calendar_store）（已完成）
 
-## 4) 异步执行底座（infra/queue + worker runtime）
+## 4) 异步执行底座（infra/queue + worker runtime）（已完成）
 
 ## 5) 抓取模块（core/fetch + infra/external_clients）
 

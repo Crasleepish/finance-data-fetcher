@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import date
+from typing import cast
 
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, Field
@@ -12,6 +13,7 @@ router = APIRouter(prefix="/calendar", tags=["calendar"])
 
 class CalendarSyncRequest(BaseModel):
     """Request body for calendar sync endpoint."""
+
     start_date: date
     end_date: date
     exchange: str = Field(default="SSE")
@@ -19,6 +21,7 @@ class CalendarSyncRequest(BaseModel):
 
 class CalendarSyncResponse(BaseModel):
     """Response payload for calendar sync endpoint."""
+
     inserted: int
     start_date: date
     end_date: date
@@ -27,7 +30,7 @@ class CalendarSyncResponse(BaseModel):
 
 def get_calendar_service(request: Request) -> CalendarService:
     """Provide CalendarService from app state."""
-    return request.app.state.calendar_service
+    return cast(CalendarService, request.app.state.calendar_service)
 
 
 @router.post("/sync", response_model=CalendarSyncResponse)

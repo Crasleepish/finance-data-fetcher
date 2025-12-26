@@ -11,6 +11,7 @@ from sqlalchemy.engine import RowMapping
 from infra.db.engine import transaction
 from infra.db.tables import task_table
 from infra.task_state.state_machine import TaskStateMachine
+from models.task_spec import TaskSpec
 from models.task_status import TaskState, TaskStatusRecord
 
 _ACTIVE_STATES = (TaskState.PENDING, TaskState.RUNNING)
@@ -19,18 +20,19 @@ _ACTIVE_STATES = (TaskState.PENDING, TaskState.RUNNING)
 @dataclass(frozen=True)
 class TaskStatusStore:
     """Persistence helper for task status records."""
+
     engine: Engine
     table: Table = task_table
     state_machine: TaskStateMachine = TaskStateMachine()
 
-    def create_task(self, spec: str, idempotency_key: str, attempt: int) -> TaskStatusRecord:
+    def create_task(self, spec: TaskSpec, idempotency_key: str, attempt: int) -> TaskStatusRecord:
         """Create a new task in PENDING state."""
         now = _utc_now()
         stmt = (
             insert(self.table)
             .values(
                 idempotency_key=idempotency_key,
-                spec=spec,
+                spec=spec.value,
                 state=TaskState.PENDING.value,
                 attempt=attempt,
                 progress=Decimal("0"),
@@ -83,6 +85,18 @@ class TaskStatusStore:
             )
         return _row_to_task_status(row)
 
+    def update_heartbeat(self, task_id: int) -> TaskStatusRecord:
+        """Update task heartbeat timestamp."""
+        stmt = (
+            update(self.table)
+            .where(self.table.c.task_id == task_id)
+            .values(last_heartbeat_at=_utc_now())
+            .returning(self.table)
+        )
+        with transaction(self.engine) as connection:
+            row = connection.execute(stmt).mappings().one()
+        return _row_to_task_status(row)
+
     def list_running(self) -> list[TaskStatusRecord]:
         """List tasks in active states (PENDING/RUNNING)."""
         stmt = select(self.table).where(self.table.c.state.in_([s.value for s in _ACTIVE_STATES]))
@@ -107,6 +121,7 @@ def _state_updates(
 
     if new_state == TaskState.RUNNING and current_row["started_at"] is None:
         updates["started_at"] = now
+        updates["last_heartbeat_at"] = now
 
     if new_state in {TaskState.SUCCEEDED, TaskState.FAILED, TaskState.CANCELLED}:
         updates["finished_at"] = now
@@ -133,7 +148,7 @@ def _row_to_task_status(row: RowMapping) -> TaskStatusRecord:
     return TaskStatusRecord(
         task_id=row["task_id"],
         idempotency_key=row["idempotency_key"],
-        spec=row["spec"],
+        spec=TaskSpec(row["spec"]),
         state=TaskState(row["state"]),
         attempt=row["attempt"],
         progress=Decimal(row["progress"]),
@@ -141,6 +156,7 @@ def _row_to_task_status(row: RowMapping) -> TaskStatusRecord:
         created_at=row["created_at"],
         started_at=row["started_at"],
         finished_at=row["finished_at"],
+        last_heartbeat_at=row["last_heartbeat_at"],
     )
 
 

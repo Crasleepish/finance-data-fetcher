@@ -14,12 +14,14 @@ from sqlalchemy.sql import Select
 from infra.db.engine import transaction
 from infra.db.tables import task_table
 from infra.task_state.store import _row_to_task_status
+from models.task_spec import TaskSpec
 from models.task_status import TaskState, TaskStatusRecord
 
 
 class IdempotencyInput(BaseModel):
     """Inputs used to build a deterministic idempotency key."""
-    spec: str
+
+    spec: TaskSpec
     source: str
     start_date: date | None = None
     end_date: date | None = None
@@ -29,6 +31,7 @@ class IdempotencyInput(BaseModel):
 @dataclass(frozen=True)
 class IdempotencyGuard:
     """Guard to prevent concurrent duplicate task runs for the same logic."""
+
     engine: Engine
     table: Table = task_table
 
@@ -46,7 +49,7 @@ class IdempotencyGuard:
                 insert(self.table)
                 .values(
                     idempotency_key=idempotency_key,
-                    spec=payload.spec,
+                    spec=payload.spec.value,
                     state=TaskState.PENDING.value,
                     attempt=attempt,
                     progress=0,

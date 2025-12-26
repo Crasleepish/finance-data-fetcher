@@ -13,6 +13,7 @@ from infra.db.engine import create_engine_from_config
 @dataclass(frozen=True)
 class CalendarService:
     """Service wrapper for calendar operations used by the API layer."""
+
     calendar: TradingCalendarService
 
     def sync(self, start: date, end: date, exchange: str | None = None) -> int:

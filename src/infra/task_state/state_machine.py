@@ -16,6 +16,7 @@ _ALLOWED_TRANSITIONS: dict[TaskState, set[TaskState]] = {
 @dataclass(frozen=True)
 class TaskStateMachine:
     """Finite-state machine enforcing task status transitions."""
+
     def can_transition(self, current: TaskState, target: TaskState) -> bool:
         """Return True if the transition is allowed."""
         return target in _ALLOWED_TRANSITIONS.get(current, set())

@@ -13,6 +13,7 @@ from infra.db.engine import transaction
 
 class UpsertStrategy(Protocol):
     """Strategy interface for upsert statements."""
+
     def build_upsert(
         self,
         table: Table,
@@ -24,6 +25,7 @@ class UpsertStrategy(Protocol):
 @dataclass(frozen=True)
 class PostgresUpsertStrategy:
     """PostgreSQL upsert strategy using ON CONFLICT DO UPDATE."""
+
     def build_upsert(
         self,
         table: Table,
@@ -45,6 +47,7 @@ class PostgresUpsertStrategy:
 @dataclass(frozen=True)
 class Repository:
     """Repository helper for batch insert/upsert with explicit transactions."""
+
     engine: Engine
     table: Table
 

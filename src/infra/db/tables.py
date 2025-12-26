@@ -50,6 +50,7 @@ task_table = Table(
     Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
     Column("started_at", DateTime(timezone=True)),
     Column("finished_at", DateTime(timezone=True)),
+    Column("last_heartbeat_at", DateTime(timezone=True)),
 )
 
 Index("task_table_idempotency_key_idx", task_table.c.idempotency_key)

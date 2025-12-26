@@ -7,6 +7,7 @@ from typing import Protocol, Sequence
 
 class CalendarStore(Protocol):
     """Persistence interface for trade calendar data."""
+
     def get_bounds(self) -> tuple[date, date] | None: ...
 
     def get_trade_days(self, start: date, end: date) -> list[date]: ...
@@ -22,12 +23,14 @@ class CalendarStore(Protocol):
 
 class CalendarSyncer(Protocol):
     """External data source interface for fetching trade days."""
+
     def fetch_trade_days(self, start: date, end: date, exchange: str) -> list[date]: ...
 
 
 @dataclass(frozen=True)
 class TradingCalendarService:
     """Business logic for trade day queries and range normalization."""
+
     store: CalendarStore
     syncer: CalendarSyncer
     exchange: str = "SSE"

@@ -7,12 +7,13 @@ from sqlalchemy.engine import Engine
 
 from infra.idempotency.guard import IdempotencyGuard, IdempotencyInput
 from infra.task_state.store import TaskStatusStore
+from models.task_spec import TaskSpec
 from models.task_status import TaskState
 
 
 def test_task_status_lifecycle(postgres_engine: Engine) -> None:
     store = TaskStatusStore(engine=postgres_engine)
-    task = store.create_task("fetch_stock_info", "key-1", attempt=1)
+    task = store.create_task(TaskSpec.NOOP_SLEEP, "key-1", attempt=1)
 
     assert task.state == TaskState.PENDING
     assert task.progress == Decimal("0.00")
@@ -35,7 +36,7 @@ def test_task_status_lifecycle(postgres_engine: Engine) -> None:
 
 def test_invalid_transition(postgres_engine: Engine) -> None:
     store = TaskStatusStore(engine=postgres_engine)
-    task = store.create_task("fetch_stock_info", "key-2", attempt=1)
+    task = store.create_task(TaskSpec.NOOP_SLEEP, "key-2", attempt=1)
 
     with pytest.raises(ValueError, match="Invalid transition"):
         store.update_state(task.task_id, TaskState.SUCCEEDED)
@@ -46,7 +47,7 @@ def test_idempotency_guard_reuse_and_retry(postgres_engine: Engine) -> None:
     store = TaskStatusStore(engine=postgres_engine)
 
     payload = IdempotencyInput(
-        spec="fetch_stock_info",
+        spec=TaskSpec.NOOP_SLEEP,
         source="sina",
         start_date=None,
         end_date=None,

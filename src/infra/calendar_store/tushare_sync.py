@@ -9,6 +9,7 @@ import tushare as ts
 @dataclass(frozen=True)
 class TushareCalendarSyncer:
     """Fetch trade calendar data from Tushare."""
+
     token: str
     exchange: str = "SSE"
 

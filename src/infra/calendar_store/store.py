@@ -14,6 +14,7 @@ from infra.db.tables import trade_calendar
 @dataclass(frozen=True)
 class CalendarStore:
     """SQL-backed store for trade calendar dates."""
+
     engine: Engine
     table: Table = trade_calendar
 

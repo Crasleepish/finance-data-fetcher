@@ -1,0 +1,9 @@
+from __future__ import annotations
+
+from enum import StrEnum
+
+
+class TaskSpec(StrEnum):
+    """Enumerated task specifications used by the task runtime."""
+
+    NOOP_SLEEP = "noop_sleep"
