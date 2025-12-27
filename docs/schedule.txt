@@ -14,7 +14,7 @@
 
 ## 7) Fetcher（chunk 级 retry ONLY）（已完成）
 
-## 8) Cleaner（与 Pipeline 绑定）
+## 8) Cleaner（与 Pipeline 绑定）（已完成）
 
 ## 9) WorkflowEngine（pipeline-aware + chunk loop + progress）
 
