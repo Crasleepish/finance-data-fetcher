@@ -76,6 +76,12 @@ src/
 ├── models/          # Pydantic schemas (and ORM models if needed)
 ├── config/          # Centralized configuration
 tests/
+
+Notes:
+- core/pipeline: pipeline interfaces, types, validation, registry
+- infra/queue: task queue interfaces/implementations
+- infra/worker_runtime: background worker runtime
+- services/worker_handler: task execution handler for pipelines
 ```
 
 ---

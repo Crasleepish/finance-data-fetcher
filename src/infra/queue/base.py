@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Protocol
 
-from models.task_spec import TaskSpec
+from models.task_payload import PipelineTask
 
 
 @dataclass(frozen=True)
@@ -11,7 +11,7 @@ class TaskItem:
     """Queue payload for task execution."""
 
     task_id: int
-    spec: TaskSpec
+    task: PipelineTask
 
 
 class TaskQueue(Protocol):

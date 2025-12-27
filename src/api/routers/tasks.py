@@ -6,7 +6,9 @@ from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
 
 from infra.task_state.store import TaskStatusStore
+from models.task_payload import PipelineTask
 from models.task_status import TaskState, TaskStatusRecord
+from services.task_service import TaskService
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
@@ -27,9 +29,22 @@ class TaskStatusResponse(BaseModel):
     last_heartbeat_at: str | None
 
 
+class TaskStartResponse(BaseModel):
+    """Response payload for task start requests."""
+
+    task_id: int
+    state: TaskState
+    idempotency_key: str
+
+
 def get_task_store(request: Request) -> TaskStatusStore:
     """Provide TaskStatusStore from app state."""
     return cast(TaskStatusStore, request.app.state.task_store)
+
+
+def get_task_service(request: Request) -> TaskService:
+    """Provide TaskService from app state."""
+    return cast(TaskService, request.app.state.task_service)
 
 
 @router.get("/{task_id}", response_model=TaskStatusResponse)
@@ -40,6 +55,20 @@ def get_task_status(
     """Get task status by id."""
     record = store.get_by_id(task_id)
     return _to_response(record)
+
+
+@router.post("/start", response_model=TaskStartResponse)
+def start_task(
+    payload: PipelineTask,
+    service: TaskService = Depends(get_task_service),
+) -> TaskStartResponse:
+    """Start a task asynchronously and return its id."""
+    record = service.start_task(payload)
+    return TaskStartResponse(
+        task_id=record.task_id,
+        state=record.state,
+        idempotency_key=record.idempotency_key,
+    )
 
 
 def _to_response(record: TaskStatusRecord) -> TaskStatusResponse:

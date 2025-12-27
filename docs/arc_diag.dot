@@ -1,171 +1,98 @@
-digraph DataPipelineService {
+digraph DataPipelineServiceV2 {
   rankdir=LR;
   compound=true;
   labelloc="t";
-  label="FastAPI Microservice: Fetch → Clean → Persist (Async Tasks, Chunking, Retry/HA, Trading Calendar, Idempotency, Status)";
+  label="Async Ingestion Service: Pipeline-based Fetch→Clean→Persist";
 
-  node [shape=box, style="rounded,filled", fillcolor="#f7f7f7", fontname="Helvetica"];
-  edge [fontname="Helvetica"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f7f7"];
+  edge [];
 
-  // ====== API Layer ======
+  // ================= API =================
   subgraph cluster_api {
-    label="API Layer (FastAPI)";
-    style="rounded";
-    color="#c0c0c0";
-
-    api_start   [label="POST /tasks/start\n(async: return immediately)\n→ enqueue TaskSpec"];
-    api_list    [label="GET /tasks/running\n(list running tasks)"];
-    api_status  [label="GET /tasks/{task_id}\n(task status / progress)"];
+    label="API (FastAPI)";
+    api_start  [label="POST /tasks/start\n(async, return run_id)"];
+    api_list   [label="GET /tasks/running"];
+    api_status [label="GET /tasks/{run_id}"];
   }
 
-  // ====== Task & Orchestration ======
-  subgraph cluster_orch {
-    label="Task Orchestration";
-    style="rounded";
-    color="#c0c0c0";
-
-    task_router   [label="Task Router\n(Task registry & routing)"];
-    task_spec     [label="TaskSpec\n(source, date range, params, chunk size)"];
-    workflow      [label="Workflow Engine\n(fetch→clean→persist)"];
-    chunker       [label="Chunk Planner\n(date/offset partition)"];
-    idempotency   [label="Idempotency Guard\n(dedup key, upsert/merge policy)"];
-    state_machine [label="Task State Machine\n(PENDING/RUNNING/...)\nprogress, timestamps"];
+  // ================= Task & Workflow =================
+  subgraph cluster_workflow {
+    label="Workflow Orchestration";
+    workflow     [label="WorkflowEngine\n(run orchestration)"];
+    selector     [label="PipelineSelector\n(by source/task type)"];
+    failover     [label="PipelineFailoverPolicy\n(optional)"];
+    state_machine[label="Task State Machine"];
+    progress     [label="Progress Tracker"];
+    idempotency  [label="Idempotency Guard\n(active-run dedupe)"];
   }
 
-  // ====== Async Processing ======
+  // ================= Async Runtime =================
   subgraph cluster_async {
-    label="Async Execution";
-    style="rounded";
-    color="#c0c0c0";
-
-    queue        [shape=box3d, label="Task Queue\n(async between tasks)"];
-    workers      [label="Worker Pool\n(concurrent task runners)"];
-    sched        [label="Scheduler / Trigger\n(optional: cron/manual)"];
+    label="Async Runtime";
+    queue   [label="Task Queue"];
+    workers [label="Worker Pool"];
   }
 
-  // ====== Trading Calendar ======
+  // ================= Trading Calendar =================
   subgraph cluster_calendar {
     label="Trading Day Management";
-    style="rounded";
-    color="#c0c0c0";
-
-    calendar_svc [label="TradingCalendarService\nis_trade_day / prev / next\nnormalize date range"];
-    calendar_db  [label="TradingCalendar Store\n(DB/cache)"];
+    calendar [label="TradingCalendarService\nnormalize date range"];
   }
 
-  // ====== Fetch Layer ======
-  subgraph cluster_fetch {
-    label="Fetch Layer";
-    style="rounded";
-    color="#c0c0c0";
-
-    fetcher_iface [label="Fetcher Interface\nfetch(chunk) -> raw records"];
-    fetch_client  [label="External Client(s)\nHTTP/SDK/File"];
-    retry_policy  [label="Retry Policy\n(backoff, jitter)\nretryable errors"];
-    ha_strategy   [label="Multi-Active Strategy\n(multi-endpoint)\nhealth/selection"];
-    rate_limit    [label="Rate Limit / Throttle\n(optional)"];
+  // ================= Ingestion Pipeline =================
+  subgraph cluster_pipeline {
+    label="IngestionPipeline (per data source / task type)";
+    pipeline      [label="IngestionPipeline"];
+    chunk_policy  [label="ChunkPolicy\n(plan chunks)"];
+    fetcher       [label="Fetcher\n(chunk-level retry only)"];
+    cleaner       [label="Cleaner\n(raw → normalized)"];
   }
 
-  // ====== Clean Layer ======
-  subgraph cluster_clean {
-    label="Clean Layer";
-    style="rounded";
-    color="#c0c0c0";
-
-    cleaner_iface [label="Cleaner Interface\nclean(raw) -> normalized"];
-    validators    [label="Validation / Schema\n(Pydantic/Typed)\nreject/repair rules"];
-    transforms    [label="Transforms\nnormalize, map, dedup,\nunit conversion"];
-  }
-
-  // ====== Persist Layer ======
+  // ================= Persist =================
   subgraph cluster_persist {
-    label="Persist Layer (DB)";
-    style="rounded";
-    color="#c0c0c0";
-
-    repo_iface   [label="Repository Interface\npersist(batch)\ntransaction boundary"];
-    db_core      [label="DB Access (prefer SA Core)\nexplicit transactions"];
-    db_tables    [label="Target Tables"];
+    label="Persist Layer";
+    repo [label="Repository\n(explicit tx, idempotent write)"];
+    db   [label="Database"];
   }
 
-  // ====== Observability & Status ======
+  // ================= Status & Observability =================
   subgraph cluster_obs {
-    label="Observability & Status";
-    style="rounded";
-    color="#c0c0c0";
-
-    status_store [label="Task Status Store\n(DB/Redis)\nstate + progress + error"];
-    logs         [label="Logging\n(rotating, 30d, compressed)"];
-    metrics      [label="Metrics/Tracing\n(optional)"];
+    label="Task Status & Observability";
+    status_store [label="TaskRun Store\n(state, progress, stats)"];
+    logs         [label="Logging"];
   }
 
-  // ====== Relations: API → Orchestration → Async ======
-  api_start  -> task_spec     [label="build spec"];
-  task_spec  -> task_router   [label="register/route"];
-  task_router -> queue        [label="enqueue TaskSpec"];
-  api_start  -> queue         [style=dashed, label="submit"];
-  api_list   -> status_store  [label="query running"];
-  api_status -> status_store  [label="query by id"];
+  // -------- API → Async --------
+  api_start -> idempotency;
+  idempotency -> queue;
+  api_list -> status_store;
+  api_status -> status_store;
 
-  sched      -> queue         [label="enqueue scheduled tasks"];
+  // -------- Async execution --------
+  queue -> workers;
+  workers -> workflow;
 
-  queue      -> workers       [label="dequeue"];
-  workers    -> workflow      [label="run(task)"];
+  // -------- Workflow internals --------
+  workflow -> selector;
+  selector -> pipeline;
+  workflow -> failover [style=dashed];
 
-  // ====== Workflow internals ======
-  workflow   -> state_machine [label="state transitions"];
-  state_machine -> status_store [label="persist status/progress"];
+  workflow -> calendar;
+  workflow -> state_machine;
+  workflow -> progress;
+  workflow -> status_store;
 
-  workflow   -> calendar_svc  [label="normalize dates"];
-  calendar_svc -> calendar_db [label="load calendar"];
-  calendar_svc -> workflow    [label="trade-day ranges"];
+  // -------- Pipeline internals --------
+  pipeline -> chunk_policy;
+  pipeline -> fetcher;
+  pipeline -> cleaner;
 
-  workflow   -> idempotency   [label="check/lock key"];
-  idempotency -> status_store [label="idempotency records\n(optional)"];
+  workflow -> pipeline [label="for each chunk"];
 
-  workflow   -> chunker       [label="plan chunks"];
-  chunker    -> workflow      [label="chunk iterator\n(streaming)"];
+  // -------- Persist --------
+  workflow -> repo;
+  repo -> db;
 
-  // ====== Fetch path (with retry + multi-active) ======
-  workflow   -> fetcher_iface [label="fetch(chunk)"];
-  fetcher_iface -> retry_policy [label="wrap"];
-  retry_policy  -> ha_strategy  [label="select endpoint"];
-  ha_strategy   -> fetch_client [label="call"];
-  fetch_client  -> rate_limit   [style=dashed, label="throttle"];
-  fetch_client  -> fetcher_iface [style=dashed, label="raw data"];
-
-  // ====== Clean path ======
-  workflow   -> cleaner_iface [label="clean(raw batch)"];
-  cleaner_iface -> validators [label="validate/parse"];
-  cleaner_iface -> transforms [label="transform"];
-  transforms -> cleaner_iface [style=dashed, label="normalized batch"];
-
-  // ====== Persist path (explicit tx) ======
-  workflow   -> repo_iface    [label="persist(batch)"];
-  repo_iface -> db_core       [label="transaction"];
-  db_core    -> db_tables     [label="insert/update"];
-  repo_iface -> idempotency   [style=dashed, label="upsert/dedup policy"];
-
-  // ====== Observability links ======
-  workflow -> logs    [style=dashed, label="structured logs"];
-  workflow -> metrics [style=dashed, label="timings/counters"];
-  workers  -> logs    [style=dashed];
-  queue    -> metrics [style=dashed, label="queue depth"];
-
-  // ====== Notes as edge labels (key requirements) ======
-  api_start -> api_start [shape=none, style=invis];
-
-  // Legend-like nodes
-  legend [shape=note, fillcolor="#fffdf0", label=<
-    <b>Key Architecture Points</b><br/>
-    • Each task = Fetch→Clean→Persist workflow<br/>
-    • Tasks run asynchronously via Queue + Workers<br/>
-    • Task-internal chunking avoids memory blow-ups<br/>
-    • Fetch supports retry + multi-active endpoints<br/>
-    • Task is idempotent (dedup key / safe writes)<br/>
-    • API start returns immediately after enqueue<br/>
-    • Status store enables listing running tasks & per-task state
-  >];
-
-  legend -> status_store [style=dotted, arrowhead=none];
+  // -------- Observability --------
+  workflow -> logs [style=dashed];
 }

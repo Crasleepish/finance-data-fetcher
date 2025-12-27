@@ -8,14 +8,18 @@
 
 ## 4) 异步执行底座（infra/queue + worker runtime）（已完成）
 
-## 5) 抓取模块（core/fetch + infra/external_clients）
+## 5) Pipeline 核心抽象（先定接口，再写实现）（已完成）
 
-## 6) 清洗模块（core/clean）
+## 6) ChunkPolicy：Arguments → chunks_of_arguments（可复用策略模板）
 
-## 7) 分块与内存控制（core/chunking）
+## 7) Fetcher（chunk 级 retry ONLY）
 
-## 8) Workflow 编排（services/workflow）
+## 8) Cleaner（与 Pipeline 绑定）
 
-## 9) API 层（api/routers）
+## 9) WorkflowEngine（pipeline-aware + chunk loop + progress）
 
-## 10) 测试完善与可运维性
+## 10) PipelineFailoverPolicy（可选但位置固定）
+
+## 11) API 层（控制面）
+
+## 12) 测试与稳定性补齐

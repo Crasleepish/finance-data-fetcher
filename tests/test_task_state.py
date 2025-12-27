@@ -5,8 +5,9 @@ from decimal import Decimal
 import pytest
 from sqlalchemy.engine import Engine
 
-from infra.idempotency.guard import IdempotencyGuard, IdempotencyInput
+from infra.idempotency.guard import IdempotencyGuard
 from infra.task_state.store import TaskStatusStore
+from models.task_payload import PipelineTask
 from models.task_spec import TaskSpec
 from models.task_status import TaskState
 
@@ -46,25 +47,30 @@ def test_idempotency_guard_reuse_and_retry(postgres_engine: Engine) -> None:
     guard = IdempotencyGuard(engine=postgres_engine)
     store = TaskStatusStore(engine=postgres_engine)
 
-    payload = IdempotencyInput(
+    payload = PipelineTask(
         spec=TaskSpec.NOOP_SLEEP,
+        pipeline_id="demo",
         source="sina",
-        start_date=None,
-        end_date=None,
-        params={"market": "cn"},
+        task_type="noop",
+        arguments={"params": {"market": "cn"}},
+        options={},
     )
 
-    first = guard.start_or_get_task(payload)
-    again = guard.start_or_get_task(payload)
-    assert first.task_id == again.task_id
-    assert first.attempt == 1
+    decision = guard.check_or_prepare(payload)
+    assert decision.existing is None
+    task = store.create_task(
+        spec=payload.spec,
+        idempotency_key=decision.idempotency_key,
+        attempt=decision.attempt or 1,
+    )
 
-    store.update_state(first.task_id, TaskState.RUNNING)
-    store.update_state(first.task_id, TaskState.SUCCEEDED)
+    again = guard.check_or_prepare(payload)
+    assert again.existing is not None
+    assert again.existing.task_id == task.task_id
 
-    rerun = guard.start_or_get_task(payload)
-    assert rerun.task_id != first.task_id
-    assert rerun.attempt == 2
+    store.update_state(task.task_id, TaskState.RUNNING)
+    store.update_state(task.task_id, TaskState.SUCCEEDED)
 
-    row = store.get_by_id(rerun.task_id)
-    assert row.state == TaskState.PENDING
+    rerun_decision = guard.check_or_prepare(payload)
+    assert rerun_decision.existing is None
+    assert rerun_decision.attempt == 2

@@ -7,14 +7,14 @@ from typing import Protocol
 
 from infra.queue.base import TaskItem, TaskQueue
 from infra.task_state.store import TaskStatusStore
-from models.task_spec import TaskSpec
+from models.task_payload import PipelineTask
 from models.task_status import TaskState
 
 
 class TaskHandler(Protocol):
     """Handler interface for executing a task spec."""
 
-    def handle(self, task_id: int, spec: TaskSpec) -> None: ...
+    def handle(self, task_id: int, task: PipelineTask) -> None: ...
 
 
 @dataclass
@@ -53,7 +53,7 @@ class WorkerRuntime:
         try:
             self.store.update_state(item.task_id, TaskState.RUNNING)
             self.store.update_heartbeat(item.task_id)
-            self.handler.handle(item.task_id, item.spec)
+            self.handler.handle(item.task_id, item.task)
             self.store.update_state(item.task_id, TaskState.SUCCEEDED)
         except Exception as exc:
             self.store.update_state(item.task_id, TaskState.FAILED, error=str(exc))
