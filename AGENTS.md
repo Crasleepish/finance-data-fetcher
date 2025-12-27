@@ -80,6 +80,9 @@ tests/
 Notes:
 - core/pipeline: pipeline interfaces, types, validation, registry
 - core/chunking: chunk policies for splitting arguments into chunks
+- core/fetch: fetcher interfaces, retry policy, fetch errors
+- infra/http_client: HTTP client adapters (no direct requests in business logic)
+- infra/fetcher: fetcher implementations
 - infra/queue: task queue interfaces/implementations
 - infra/worker_runtime: background worker runtime
 - services/worker_handler: task execution handler for pipelines
