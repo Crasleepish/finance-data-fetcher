@@ -10,7 +10,7 @@
 
 ## 5) Pipeline 核心抽象（先定接口，再写实现）（已完成）
 
-## 6) ChunkPolicy：Arguments → chunks_of_arguments（可复用策略模板）
+## 6) ChunkPolicy：Arguments → chunks_of_arguments（可复用策略模板）（已完成）
 
 ## 7) Fetcher（chunk 级 retry ONLY）
 

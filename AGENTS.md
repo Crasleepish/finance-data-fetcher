@@ -79,6 +79,7 @@ tests/
 
 Notes:
 - core/pipeline: pipeline interfaces, types, validation, registry
+- core/chunking: chunk policies for splitting arguments into chunks
 - infra/queue: task queue interfaces/implementations
 - infra/worker_runtime: background worker runtime
 - services/worker_handler: task execution handler for pipelines
