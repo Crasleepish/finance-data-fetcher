@@ -55,14 +55,27 @@ class TaskStatusStore:
     def update_progress(self, task_id: int, progress: Decimal) -> TaskStatusRecord:
         """Update task progress (0-100)."""
         normalized = _normalize_progress(progress)
-        stmt = (
-            update(self.table)
-            .where(self.table.c.task_id == task_id)
-            .values(progress=normalized)
-            .returning(self.table)
-        )
         with transaction(self.engine) as connection:
-            row = connection.execute(stmt).mappings().one()
+            current_row = (
+                connection.execute(
+                    select(self.table).where(self.table.c.task_id == task_id).with_for_update()
+                )
+                .mappings()
+                .one()
+            )
+            current_progress = Decimal(current_row["progress"])
+            if normalized < current_progress:
+                return _row_to_task_status(current_row)
+            row = (
+                connection.execute(
+                    update(self.table)
+                    .where(self.table.c.task_id == task_id)
+                    .values(progress=normalized)
+                    .returning(self.table)
+                )
+                .mappings()
+                .one()
+            )
         return _row_to_task_status(row)
 
     def update_state(
