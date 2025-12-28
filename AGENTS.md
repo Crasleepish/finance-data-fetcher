@@ -123,6 +123,7 @@ Lower layers must not import higher layers.
 
 * Use `logging`, never `print`
 No ad-hoc loggers.
+* Logs must be traceable, debuggable, not excessive, and must not leak sensitive data.
 
 ---
 
