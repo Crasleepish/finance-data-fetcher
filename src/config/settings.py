@@ -38,3 +38,4 @@ class AppConfig(BaseModel):
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
     tushare: TushareConfig = Field(default_factory=TushareConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
+    pipeline_mapping_path: str = Field(default="config/task_pipeline_mapping.py")

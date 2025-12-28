@@ -11,6 +11,7 @@ from sqlalchemy.engine import RowMapping
 from infra.db.engine import transaction
 from infra.db.tables import task_table
 from infra.task_state.state_machine import TaskStateMachine
+from models.task_payload import PipelineTask
 from models.task_spec import TaskSpec
 from models.task_status import TaskState, TaskStatusRecord
 
@@ -25,7 +26,13 @@ class TaskStatusStore:
     table: Table = task_table
     state_machine: TaskStateMachine = TaskStateMachine()
 
-    def create_task(self, spec: TaskSpec, idempotency_key: str, attempt: int) -> TaskStatusRecord:
+    def create_task(
+        self,
+        spec: TaskSpec,
+        idempotency_key: str,
+        attempt: int,
+        task_payload: dict[str, Any],
+    ) -> TaskStatusRecord:
         """Create a new task in PENDING state."""
         now = _utc_now()
         stmt = (
@@ -37,6 +44,7 @@ class TaskStatusStore:
                 attempt=attempt,
                 progress=Decimal("0"),
                 created_at=now,
+                task_payload=task_payload,
             )
             .returning(self.table)
         )
@@ -110,6 +118,13 @@ class TaskStatusStore:
         with transaction(self.engine) as connection:
             row = connection.execute(stmt).mappings().one()
         return _row_to_task_status(row)
+
+    def get_task_payload(self, task_id: int) -> PipelineTask:
+        """Fetch task payload for a given id."""
+        stmt = select(self.table.c.task_payload).where(self.table.c.task_id == task_id)
+        with transaction(self.engine) as connection:
+            payload = connection.execute(stmt).scalar_one()
+        return PipelineTask.model_validate(payload)
 
 
 def _state_updates(

@@ -25,6 +25,7 @@ class WorkerRuntime:
     store: TaskStatusStore
     handler: TaskHandler
     poll_interval: float = 0.5
+    manage_state: bool = False
     _stop_event: threading.Event = field(default_factory=threading.Event, init=False)
     _thread: threading.Thread | None = field(default=None, init=False)
 
@@ -51,10 +52,13 @@ class WorkerRuntime:
 
     def _execute_item(self, item: TaskItem) -> None:
         try:
-            self.store.update_state(item.task_id, TaskState.RUNNING)
+            if self.manage_state:
+                self.store.update_state(item.task_id, TaskState.RUNNING)
             self.store.update_heartbeat(item.task_id)
             self.handler.handle(item.task_id, item.task)
-            self.store.update_state(item.task_id, TaskState.SUCCEEDED)
+            if self.manage_state:
+                self.store.update_state(item.task_id, TaskState.SUCCEEDED)
         except Exception as exc:
-            self.store.update_state(item.task_id, TaskState.FAILED, error=str(exc))
+            if self.manage_state:
+                self.store.update_state(item.task_id, TaskState.FAILED, error=str(exc))
             time.sleep(0)

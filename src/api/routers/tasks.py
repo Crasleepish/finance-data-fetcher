@@ -37,6 +37,16 @@ class TaskStartResponse(BaseModel):
     idempotency_key: str
 
 
+class TaskRunningResponse(BaseModel):
+    """Response payload for running tasks."""
+
+    task_id: int
+    state: TaskState
+    progress: str
+    started_at: str | None
+    error: str | None
+
+
 def get_task_store(request: Request) -> TaskStatusStore:
     """Provide TaskStatusStore from app state."""
     return cast(TaskStatusStore, request.app.state.task_store)
@@ -45,16 +55,6 @@ def get_task_store(request: Request) -> TaskStatusStore:
 def get_task_service(request: Request) -> TaskService:
     """Provide TaskService from app state."""
     return cast(TaskService, request.app.state.task_service)
-
-
-@router.get("/{task_id}", response_model=TaskStatusResponse)
-def get_task_status(
-    task_id: int,
-    store: TaskStatusStore = Depends(get_task_store),
-) -> TaskStatusResponse:
-    """Get task status by id."""
-    record = store.get_by_id(task_id)
-    return _to_response(record)
 
 
 @router.post("/start", response_model=TaskStartResponse)
@@ -69,6 +69,32 @@ def start_task(
         state=record.state,
         idempotency_key=record.idempotency_key,
     )
+
+
+@router.get("/running", response_model=list[TaskRunningResponse])
+def list_running(store: TaskStatusStore = Depends(get_task_store)) -> list[TaskRunningResponse]:
+    """List active task runs."""
+    records = store.list_running()
+    return [
+        TaskRunningResponse(
+            task_id=record.task_id,
+            state=record.state,
+            progress=str(record.progress),
+            started_at=record.started_at.isoformat() if record.started_at else None,
+            error=record.error,
+        )
+        for record in records
+    ]
+
+
+@router.get("/{task_id}", response_model=TaskStatusResponse)
+def get_task_status(
+    task_id: int,
+    store: TaskStatusStore = Depends(get_task_store),
+) -> TaskStatusResponse:
+    """Get task status by id."""
+    record = store.get_by_id(task_id)
+    return _to_response(record)
 
 
 def _to_response(record: TaskStatusRecord) -> TaskStatusResponse:

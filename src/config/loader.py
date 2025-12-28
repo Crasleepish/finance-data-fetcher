@@ -76,6 +76,9 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
         merged["tushare"] = tushare_config
 
     logging_config = dict(merged.get("logging", {}))
+    pipeline_mapping_path = os.environ.get("APP_PIPELINE_MAPPING_PATH")
+    if pipeline_mapping_path:
+        merged["pipeline_mapping_path"] = pipeline_mapping_path
     log_level = os.environ.get("APP_LOG_LEVEL")
     if log_level:
         logging_config["level"] = log_level

@@ -31,6 +31,7 @@ class TaskService:
                 spec=task.spec,
                 idempotency_key=decision.idempotency_key,
                 attempt=attempt,
+                task_payload=task.model_dump(mode="json"),
             )
         except IntegrityError:
             decision = self.guard.check_or_prepare(task)

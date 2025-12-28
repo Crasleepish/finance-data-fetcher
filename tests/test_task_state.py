@@ -14,7 +14,20 @@ from models.task_status import TaskState
 
 def test_task_status_lifecycle(postgres_engine: Engine) -> None:
     store = TaskStatusStore(engine=postgres_engine)
-    task = store.create_task(TaskSpec.NOOP_SLEEP, "key-1", attempt=1)
+    payload = PipelineTask(
+        spec=TaskSpec.NOOP_SLEEP,
+        pipeline_id="demo",
+        source="unit-test",
+        task_type="noop",
+        arguments={},
+        options={},
+    )
+    task = store.create_task(
+        payload.spec,
+        "key-1",
+        attempt=1,
+        task_payload=payload.model_dump(mode="json"),
+    )
 
     assert task.state == TaskState.PENDING
     assert task.progress == Decimal("0.00")
@@ -37,7 +50,20 @@ def test_task_status_lifecycle(postgres_engine: Engine) -> None:
 
 def test_invalid_transition(postgres_engine: Engine) -> None:
     store = TaskStatusStore(engine=postgres_engine)
-    task = store.create_task(TaskSpec.NOOP_SLEEP, "key-2", attempt=1)
+    payload = PipelineTask(
+        spec=TaskSpec.NOOP_SLEEP,
+        pipeline_id="demo",
+        source="unit-test",
+        task_type="noop",
+        arguments={},
+        options={},
+    )
+    task = store.create_task(
+        payload.spec,
+        "key-2",
+        attempt=1,
+        task_payload=payload.model_dump(mode="json"),
+    )
 
     with pytest.raises(ValueError, match="Invalid transition"):
         store.update_state(task.task_id, TaskState.SUCCEEDED)
@@ -62,6 +88,7 @@ def test_idempotency_guard_reuse_and_retry(postgres_engine: Engine) -> None:
         spec=payload.spec,
         idempotency_key=decision.idempotency_key,
         attempt=decision.attempt or 1,
+        task_payload=payload.model_dump(mode="json"),
     )
 
     again = guard.check_or_prepare(payload)

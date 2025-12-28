@@ -1,0 +1,7 @@
+from __future__ import annotations
+
+from models.task_spec import TaskSpec
+
+TASK_PIPELINE_MAPPING = {
+    TaskSpec.PIPELINE: ["dummy"],
+}

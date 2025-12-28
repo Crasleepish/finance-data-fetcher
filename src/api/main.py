@@ -11,14 +11,17 @@ from api.routers.tasks import router as tasks_router
 from config.loader import load_config
 from core.pipeline.registry import PipelineRegistry
 from infra.db.engine import create_engine_from_config
+from infra.db.repository import Repository
+from infra.db.tables import test_messages
 from infra.idempotency.guard import IdempotencyGuard
 from infra.logging import setup_logging
 from infra.queue.in_memory import InMemoryTaskQueue
 from infra.task_state.store import TaskStatusStore
 from infra.worker_runtime.runtime import WorkerRuntime
 from services.calendar_service import build_calendar_service
+from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
 from services.task_service import TaskService
-from services.worker_handler import PipelineTaskHandler
+from services.workflow_engine import WorkflowEngine
 
 logger = logging.getLogger(__name__)
 
@@ -37,14 +40,24 @@ def create_app() -> FastAPI:
         task_queue = InMemoryTaskQueue()
         guard = IdempotencyGuard(engine=engine)
         registry = PipelineRegistry()
+        selector = PipelineSelector(mapping=load_pipeline_mapping(config.pipeline_mapping_path))
+        repo = Repository(engine=engine, table=test_messages)
+        workflow = WorkflowEngine(
+            store=task_store,
+            registry=registry,
+            selector=selector,
+            repo=repo,
+        )
         app.state.task_store = task_store
         app.state.task_service = TaskService(store=task_store, queue=task_queue, guard=guard)
         app.state.worker_runtime = WorkerRuntime(
             queue=task_queue,
             store=task_store,
-            handler=PipelineTaskHandler(registry=registry),
+            handler=workflow,
         )
         app.state.pipeline_registry = registry
+        app.state.pipeline_selector = selector
+        app.state.workflow_engine = workflow
         app.state.worker_runtime.start()
         yield
         app.state.worker_runtime.stop()

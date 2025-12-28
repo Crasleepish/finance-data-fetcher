@@ -82,11 +82,14 @@ Notes:
 - core/chunking: chunk policies for splitting arguments into chunks
 - core/fetch: fetcher interfaces, retry policy, fetch errors
 - core/clean: cleaner interfaces and validation helpers
+- core/workflow: workflow orchestration and failover policies
 - infra/http_client: HTTP client adapters (no direct requests in business logic)
 - infra/fetcher: fetcher implementations
 - infra/queue: task queue interfaces/implementations
 - infra/worker_runtime: background worker runtime
 - services/worker_handler: task execution handler for pipelines
+- services/workflow_engine: pipeline-aware workflow orchestrator
+- config/task_pipeline_mapping.py: static spec→pipeline mapping
 ```
 
 ---

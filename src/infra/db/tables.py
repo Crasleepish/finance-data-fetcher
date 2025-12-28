@@ -20,6 +20,7 @@ from sqlalchemy import (
     func,
     text,
 )
+from sqlalchemy.dialects.postgresql import JSONB
 
 metadata = MetaData()
 
@@ -51,6 +52,7 @@ task_table = Table(
     Column("started_at", DateTime(timezone=True)),
     Column("finished_at", DateTime(timezone=True)),
     Column("last_heartbeat_at", DateTime(timezone=True)),
+    Column("task_payload", JSONB, nullable=False),
 )
 
 Index("task_table_idempotency_key_idx", task_table.c.idempotency_key)

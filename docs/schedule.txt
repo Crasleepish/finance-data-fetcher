@@ -16,10 +16,10 @@
 
 ## 8) Cleaner（与 Pipeline 绑定）（已完成）
 
-## 9) WorkflowEngine（pipeline-aware + chunk loop + progress）
+## 9) WorkflowEngine（pipeline-aware + chunk loop + progress）（已完成）
 
-## 10) PipelineFailoverPolicy（可选但位置固定）
+## 10) PipelineFailoverPolicy（可选但位置固定）（已完成）
 
-## 11) API 层（控制面）
+## 11) API 层（控制面）（已完成）
 
 ## 12) 测试与稳定性补齐

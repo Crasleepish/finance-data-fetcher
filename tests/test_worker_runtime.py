@@ -26,7 +26,7 @@ def test_worker_executes_sleep_task(postgres_engine: Engine) -> None:
     store = TaskStatusStore(engine=postgres_engine)
     queue = InMemoryTaskQueue()
     service = TaskService(store=store, queue=queue, guard=IdempotencyGuard(engine=postgres_engine))
-    runtime = WorkerRuntime(queue=queue, store=store, handler=SleepHandler())
+    runtime = WorkerRuntime(queue=queue, store=store, handler=SleepHandler(), manage_state=True)
     runtime.start()
 
     task = service.start_task(
