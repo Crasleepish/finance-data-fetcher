@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -16,6 +17,7 @@ from models.task_spec import TaskSpec
 from models.task_status import TaskState, TaskStatusRecord
 
 _ACTIVE_STATES = (TaskState.PENDING, TaskState.RUNNING)
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -48,62 +50,93 @@ class TaskStatusStore:
             )
             .returning(self.table)
         )
-        with transaction(self.engine) as connection:
-            row = connection.execute(stmt).mappings().one()
+        try:
+            with transaction(self.engine) as connection:
+                row = connection.execute(stmt).mappings().one()
+        except Exception:
+            logger.exception("task status write failed", extra={"operation": "create_task"})
+            raise
         return _row_to_task_status(row)
 
     def update_progress(self, task_id: int, progress: Decimal) -> TaskStatusRecord:
         """Update task progress (0-100)."""
         normalized = _normalize_progress(progress)
-        with transaction(self.engine) as connection:
-            current_row = (
-                connection.execute(
-                    select(self.table).where(self.table.c.task_id == task_id).with_for_update()
+        try:
+            with transaction(self.engine) as connection:
+                current_row = (
+                    connection.execute(
+                        select(self.table).where(self.table.c.task_id == task_id).with_for_update()
+                    )
+                    .mappings()
+                    .one()
                 )
-                .mappings()
-                .one()
-            )
-            current_progress = Decimal(current_row["progress"])
-            if normalized < current_progress:
-                return _row_to_task_status(current_row)
-            row = (
-                connection.execute(
-                    update(self.table)
-                    .where(self.table.c.task_id == task_id)
-                    .values(progress=normalized)
-                    .returning(self.table)
+                current_progress = Decimal(current_row["progress"])
+                if normalized < current_progress:
+                    return _row_to_task_status(current_row)
+                row = (
+                    connection.execute(
+                        update(self.table)
+                        .where(self.table.c.task_id == task_id)
+                        .values(progress=normalized)
+                        .returning(self.table)
+                    )
+                    .mappings()
+                    .one()
                 )
-                .mappings()
-                .one()
+        except Exception:
+            logger.exception(
+                "task status write failed",
+                extra={"operation": "update_progress", "task_id": task_id},
             )
+            raise
         return _row_to_task_status(row)
 
     def update_state(
         self, task_id: int, new_state: TaskState, error: str | None = None
     ) -> TaskStatusRecord:
         """Transition task state with FSM validation and timestamp updates."""
-        with transaction(self.engine) as connection:
-            current_row = (
-                connection.execute(
-                    select(self.table).where(self.table.c.task_id == task_id).with_for_update()
+        try:
+            with transaction(self.engine) as connection:
+                current_row = (
+                    connection.execute(
+                        select(self.table).where(self.table.c.task_id == task_id).with_for_update()
+                    )
+                    .mappings()
+                    .one()
                 )
-                .mappings()
-                .one()
-            )
-            current_state = TaskState(current_row["state"])
-            self.state_machine.ensure_transition(current_state, new_state)
+                current_state = TaskState(current_row["state"])
+                try:
+                    self.state_machine.ensure_transition(current_state, new_state)
+                except ValueError:
+                    logger.warning(
+                        "invalid state transition",
+                        extra={
+                            "task_id": task_id,
+                            "from_state": current_state.value,
+                            "to_state": new_state.value,
+                        },
+                    )
+                    raise
 
-            updates = _state_updates(new_state, error, current_row)
-            row = (
-                connection.execute(
-                    update(self.table)
-                    .where(self.table.c.task_id == task_id)
-                    .values(**updates)
-                    .returning(self.table)
+                updates = _state_updates(new_state, error, current_row)
+                row = (
+                    connection.execute(
+                        update(self.table)
+                        .where(self.table.c.task_id == task_id)
+                        .values(**updates)
+                        .returning(self.table)
+                    )
+                    .mappings()
+                    .one()
                 )
-                .mappings()
-                .one()
+        except ValueError:
+            raise
+        except Exception:
+            logger.exception(
+                "task status write failed",
+                extra={"operation": "update_state", "task_id": task_id},
             )
+            raise
         return _row_to_task_status(row)
 
     def update_heartbeat(self, task_id: int) -> TaskStatusRecord:
@@ -114,8 +147,15 @@ class TaskStatusStore:
             .values(last_heartbeat_at=_utc_now())
             .returning(self.table)
         )
-        with transaction(self.engine) as connection:
-            row = connection.execute(stmt).mappings().one()
+        try:
+            with transaction(self.engine) as connection:
+                row = connection.execute(stmt).mappings().one()
+        except Exception:
+            logger.exception(
+                "task status write failed",
+                extra={"operation": "update_heartbeat", "task_id": task_id},
+            )
+            raise
         return _row_to_task_status(row)
 
     def list_running(self) -> list[TaskStatusRecord]:

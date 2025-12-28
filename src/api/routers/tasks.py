@@ -1,16 +1,19 @@
 from __future__ import annotations
 
+import logging
 from typing import cast
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
+from core.pipeline.validation import ensure_hashable
 from infra.task_state.store import TaskStatusStore
 from models.task_payload import PipelineTask
 from models.task_status import TaskState, TaskStatusRecord
 from services.task_service import TaskService
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
+logger = logging.getLogger(__name__)
 
 
 class TaskStatusResponse(BaseModel):
@@ -60,10 +63,30 @@ def get_task_service(request: Request) -> TaskService:
 @router.post("/start", response_model=TaskStartResponse)
 def start_task(
     payload: PipelineTask,
+    request: Request,
     service: TaskService = Depends(get_task_service),
 ) -> TaskStartResponse:
     """Start a task asynchronously and return its id."""
-    record = service.start_task(payload)
+    arguments_digest = ensure_hashable(payload.arguments)
+    options_digest = ensure_hashable(payload.options)
+    caller = request.headers.get("x-caller")
+    logger.info(
+        "task start request",
+        extra={
+            "pipeline_id": payload.pipeline_id,
+            "arguments_digest": arguments_digest,
+            "options_digest": options_digest,
+            "caller": caller,
+        },
+    )
+    try:
+        record = service.start_task(payload)
+    except Exception:
+        logger.exception(
+            "task start failed",
+            extra={"pipeline_id": payload.pipeline_id},
+        )
+        raise HTTPException(status_code=500, detail="task start failed")
     return TaskStartResponse(
         task_id=record.task_id,
         state=record.state,

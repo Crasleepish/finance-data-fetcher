@@ -1,14 +1,19 @@
 from __future__ import annotations
 
+import logging
+import time
 from dataclasses import dataclass
 from typing import Any, Mapping, Protocol, Sequence
 
 from sqlalchemy import Engine, Table, insert
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.engine import CursorResult
+from sqlalchemy.exc import DBAPIError
 from sqlalchemy.sql import Executable
 
 from infra.db.engine import transaction
+
+logger = logging.getLogger(__name__)
 
 
 class UpsertStrategy(Protocol):
@@ -56,8 +61,20 @@ class Repository:
         if not records:
             return 0
 
+        logger.info("persist start", extra={"batch_size": len(records)})
+        started_at = time.monotonic()
         stmt = insert(self.table).values(list(records))
-        return self._execute_write(stmt)
+        affected = self._execute_write(stmt, started_at)
+        logger.info(
+            "persist commit",
+            extra={
+                "inserted": affected,
+                "updated": 0,
+                "skipped": 0,
+                "duration_ms": int((time.monotonic() - started_at) * 1000),
+            },
+        )
+        return affected
 
     def upsert_batch(
         self,
@@ -69,15 +86,39 @@ class Repository:
         if not records:
             return 0
 
+        logger.info("persist start", extra={"batch_size": len(records)})
+        started_at = time.monotonic()
         resolved_strategy = strategy or PostgresUpsertStrategy()
         stmt = resolved_strategy.build_upsert(self.table, records, unique_keys)
-        return self._execute_write(stmt)
+        affected = self._execute_write(stmt, started_at)
+        logger.info(
+            "persist commit",
+            extra={
+                "inserted": 0,
+                "updated": affected,
+                "skipped": 0,
+                "duration_ms": int((time.monotonic() - started_at) * 1000),
+            },
+        )
+        return affected
 
-    def _execute_write(self, stmt: Executable) -> int:
+    def _execute_write(self, stmt: Executable, started_at: float) -> int:
         """Execute a write statement within a transaction."""
-        with transaction(self.engine) as connection:
-            result = connection.execute(stmt)
-            return _rowcount(result)
+        try:
+            with transaction(self.engine) as connection:
+                result = connection.execute(stmt)
+                return _rowcount(result)
+        except DBAPIError as exc:
+            sql_state = getattr(getattr(exc, "orig", None), "pgcode", None)
+            logger.error(
+                "database write failed",
+                extra={
+                    "sql_state": sql_state,
+                    "deadlock": sql_state == "40P01",
+                    "duration_ms": int((time.monotonic() - started_at) * 1000),
+                },
+            )
+            raise
 
 
 def _rowcount(result: CursorResult[Any]) -> int:

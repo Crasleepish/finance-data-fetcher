@@ -4,7 +4,9 @@ import logging
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 from api.routers.calendar import router as calendar_router
 from api.routers.tasks import router as tasks_router
@@ -63,6 +65,26 @@ def create_app() -> FastAPI:
         app.state.worker_runtime.stop()
 
     app = FastAPI(lifespan=lifespan)
+
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(
+        request: Request, exc: RequestValidationError
+    ) -> JSONResponse:
+        error_fields = []
+        for err in exc.errors():
+            loc = err.get("loc", [])
+            if len(loc) >= 2:
+                error_fields.append(str(loc[1]))
+        logger.warning(
+            "request validation failed",
+            extra={
+                "path": request.url.path,
+                "error_count": len(exc.errors()),
+                "error_fields": sorted(set(error_fields)),
+            },
+        )
+        return JSONResponse(status_code=400, content={"detail": "request validation failed"})
+
     app.include_router(calendar_router)
     app.include_router(tasks_router)
     return app

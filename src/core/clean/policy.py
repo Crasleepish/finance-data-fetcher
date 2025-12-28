@@ -27,6 +27,7 @@ class DropDecision:
     """Decision result for a validation error."""
 
     drop: bool
+    quarantined: bool = False
 
 
 def handle_error(
@@ -39,12 +40,11 @@ def handle_error(
     if mode == ErrorMode.FAIL_CHUNK:
         raise error
     if mode == ErrorMode.DROP_RECORD:
-        logger.warning("dropping invalid record", extra={"error": str(error)})
         return DropDecision(drop=True)
     if mode == ErrorMode.QUARANTINE:
         if quarantine is not None:
             quarantine.record(error, raw)
         else:
             logger.warning("quarantine sink missing", extra={"error": str(error)})
-        return DropDecision(drop=True)
+        return DropDecision(drop=True, quarantined=True)
     raise ValueError(f"unknown error mode: {mode}")

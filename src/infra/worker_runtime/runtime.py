@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import threading
 import time
 from dataclasses import dataclass, field
@@ -9,6 +10,8 @@ from infra.queue.base import TaskItem, TaskQueue
 from infra.task_state.store import TaskStatusStore
 from models.task_payload import PipelineTask
 from models.task_status import TaskState
+
+logger = logging.getLogger(__name__)
 
 
 class TaskHandler(Protocol):
@@ -51,7 +54,27 @@ class WorkerRuntime:
             self._execute_item(item)
 
     def _execute_item(self, item: TaskItem) -> None:
+        worker_id = threading.current_thread().name
+        queue_lag_ms = int((time.monotonic() - item.enqueued_at) * 1000)
+        logger.info(
+            "dequeued task",
+            extra={"worker_id": worker_id, "queue_lag_ms": queue_lag_ms, "task_id": item.task_id},
+        )
         try:
+            try:
+                record = self.store.get_by_id(item.task_id)
+                if record.state in {TaskState.SUCCEEDED, TaskState.FAILED, TaskState.CANCELLED}:
+                    logger.warning(
+                        "task already terminal on dequeue",
+                        extra={"task_id": item.task_id, "state": record.state.value},
+                    )
+                    return
+            except Exception:
+                logger.warning(
+                    "failed to load task status on dequeue",
+                    extra={"task_id": item.task_id},
+                )
+
             if self.manage_state:
                 self.store.update_state(item.task_id, TaskState.RUNNING)
             self.store.update_heartbeat(item.task_id)
@@ -59,6 +82,7 @@ class WorkerRuntime:
             if self.manage_state:
                 self.store.update_state(item.task_id, TaskState.SUCCEEDED)
         except Exception as exc:
+            logger.exception("worker execution failed", extra={"task_id": item.task_id})
             if self.manage_state:
                 self.store.update_state(item.task_id, TaskState.FAILED, error=str(exc))
             time.sleep(0)

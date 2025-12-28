@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import random
 import time
 from dataclasses import dataclass
@@ -8,6 +9,7 @@ from typing import Callable, TypeVar
 from core.fetch.errors import FetchError, RetryableError
 
 T = TypeVar("T")
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -30,6 +32,7 @@ class RetryPolicy:
 
         attempt = 0
         last_error: FetchError | None = None
+        started_at = time.monotonic()
         while attempt < self.max_attempts:
             attempt += 1
             try:
@@ -40,7 +43,26 @@ class RetryPolicy:
                     break
                 delay = min(self.max_delay, self.base_delay * (2 ** (attempt - 1)))
                 jitter = delay * self.jitter_ratio * self.random_fn()
+                logger.warning(
+                    "retryable fetch error",
+                    extra={
+                        "attempt": attempt,
+                        "max_attempts": self.max_attempts,
+                        "backoff_ms": int(delay * 1000),
+                        "jitter_ms": int(jitter * 1000),
+                        "error_type": type(exc).__name__,
+                    },
+                )
                 self.sleep_fn(delay + jitter)
         if last_error is None:
             raise FetchError("retry policy failed without error")
+        setattr(last_error, "attempts_used", attempt)
+        logger.error(
+            "retry attempts exhausted",
+            extra={
+                "attempts_used": attempt,
+                "last_error": str(last_error),
+                "duration_ms": int((time.monotonic() - started_at) * 1000),
+            },
+        )
         raise last_error

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, field
 from typing import Protocol
 
 from models.task_payload import PipelineTask
@@ -12,6 +13,7 @@ class TaskItem:
 
     task_id: int
     task: PipelineTask
+    enqueued_at: float = field(default_factory=time.monotonic)
 
 
 class TaskQueue(Protocol):

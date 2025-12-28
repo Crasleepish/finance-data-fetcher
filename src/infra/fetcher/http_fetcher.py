@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from typing import Any, Mapping
 
@@ -8,6 +9,8 @@ from core.fetch.fetcher import Fetcher
 from core.fetch.retry import RetryPolicy
 from core.pipeline.types import ChunkArgs, RawBatch
 from infra.http_client.base import HttpClient
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -26,6 +29,13 @@ class HttpFetcher(Fetcher):
         def operation() -> RawBatch:
             params = _extract_params(chunk_args)
             json_body = _extract_body(chunk_args)
+            logger.debug(
+                "http fetch request",
+                extra={
+                    "endpoint": self.url,
+                    "timeout_s": self.timeout,
+                },
+            )
             response = self.client.request(
                 method=self.method,
                 url=self.url,
