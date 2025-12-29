@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import gzip
+import json
 import logging
 import shutil
 import sys
@@ -9,11 +10,58 @@ from pathlib import Path
 
 from config.settings import LoggingConfig
 
+_LOG_RECORD_ATTRS = {
+    "args",
+    "asctime",
+    "created",
+    "exc_info",
+    "exc_text",
+    "filename",
+    "funcName",
+    "levelname",
+    "levelno",
+    "lineno",
+    "message",
+    "module",
+    "msecs",
+    "msg",
+    "name",
+    "pathname",
+    "process",
+    "processName",
+    "relativeCreated",
+    "stack_info",
+    "thread",
+    "threadName",
+}
+
+
+class ExtraFormatter(logging.Formatter):
+    """Formatter that appends structured extra fields."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        base = super().format(record)
+        extras = {
+            key: value
+            for key, value in record.__dict__.items()
+            if key not in _LOG_RECORD_ATTRS and not key.startswith("_")
+        }
+        if not extras:
+            return base
+        extra_json = json.dumps(
+            extras,
+            ensure_ascii=True,
+            separators=(",", ":"),
+            sort_keys=True,
+            default=str,
+        )
+        return f"{base} | extra={extra_json}"
+
 
 def setup_logging(config: LoggingConfig) -> None:
     """Configure root and uvicorn loggers with file rotation + console output."""
     handlers = _build_handlers(config)
-    formatter = logging.Formatter(config.log_format, datefmt=config.date_format)
+    formatter = ExtraFormatter(config.log_format, datefmt=config.date_format)
 
     for handler in handlers:
         handler.setFormatter(formatter)
