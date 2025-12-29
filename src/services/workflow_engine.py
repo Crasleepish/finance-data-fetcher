@@ -63,11 +63,12 @@ class WorkflowEngine:
 
         self.store.update_state(task_id, TaskState.RUNNING)
         self.store.update_progress(task_id, Decimal("0"))
+        selected_pipeline_id = candidates[0]
         logger.info(
             "run started",
             extra={
                 "task_id": task_id,
-                "pipeline_id": task_payload.pipeline_id,
+                "pipeline_id": selected_pipeline_id,
                 "arguments_digest": arguments_digest,
             },
         )
@@ -76,7 +77,7 @@ class WorkflowEngine:
             extra={"task_id": task_id, "candidates": candidates},
         )
 
-        current_pipeline_id = candidates[0]
+        current_pipeline_id = selected_pipeline_id
         consecutive_failures = 0
         while current_pipeline_id is not None:
             try:

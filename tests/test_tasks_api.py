@@ -98,3 +98,20 @@ def test_start_stock_info_example_payload(postgres_engine: Engine) -> None:
     assert status_response.status_code == 200
     status_data = status_response.json()
     assert status_data["spec"] == "get_stock_info"
+
+
+def test_start_stock_hist_unadj_payload(postgres_engine: Engine) -> None:
+    app = _build_test_app(postgres_engine)
+    client = TestClient(app)
+
+    payload = {
+        "spec": TaskSpec.GET_STOCK_HIST_UNADJ,
+        "pipeline_id": "stock_hist_unadj",
+        "source": "manual",
+        "task_type": "stock_hist_unadj",
+        "arguments": {"params": {"start_date": "2024-01-02", "end_date": "2024-01-02"}},
+        "options": {},
+    }
+
+    response = client.post("/tasks/start", json=payload)
+    assert response.status_code == 200

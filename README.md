@@ -24,13 +24,31 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
   -H "Content-Type: application/json" \
   -d '{
     "spec": "get_stock_info",
-    "pipeline_id": "stock_info",
     "source": "manual",
     "task_type": "stock_info",
     "arguments": {
       "params": {
         "exchange": "",
         "list_statuses": ["L", "D", "P"]
+      }
+    },
+    "options": {}
+  }'
+```
+
+## Example: start get_stock_hist_unadj
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_stock_hist_unadj",
+    "source": "manual",
+    "task_type": "stock_hist_unadj",
+    "arguments": {
+      "params": {
+        "start_date": "2024-01-02",
+        "end_date": "2024-01-05"
       }
     },
     "options": {}

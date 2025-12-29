@@ -27,6 +27,8 @@ class PipelineTaskHandler:
         if task.spec != TaskSpec.PIPELINE:
             raise ValueError(f"Unknown task spec: {task.spec}")
 
+        if task.pipeline_id is None:
+            raise ValueError("pipeline_id is required for PIPELINE tasks")
         pipeline = self.registry.get(task.pipeline_id)
         chunks = pipeline.plan_chunks(task.arguments)
         for chunk in chunks:

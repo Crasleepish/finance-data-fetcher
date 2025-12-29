@@ -73,7 +73,7 @@ def start_task(
     logger.info(
         "task start request",
         extra={
-            "pipeline_id": payload.pipeline_id,
+            "pipeline_id": payload.pipeline_id or "selector",
             "arguments_digest": arguments_digest,
             "options_digest": options_digest,
             "caller": caller,

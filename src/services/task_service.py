@@ -28,6 +28,7 @@ class TaskService:
         """Create a task record and enqueue it for execution."""
         arguments_digest = ensure_hashable(task.arguments)
         options_digest = ensure_hashable(task.options)
+        pipeline_label = task.pipeline_id or "selector"
         decision = self.guard.check_or_prepare(task)
         if decision.existing is not None:
             logger.info(
@@ -35,7 +36,7 @@ class TaskService:
                 extra={
                     "action": "dedupe_active",
                     "task_id": decision.existing.task_id,
-                    "pipeline_id": task.pipeline_id,
+                    "pipeline_id": pipeline_label,
                     "arguments_digest": arguments_digest,
                     "options_digest": options_digest,
                 },
@@ -59,7 +60,7 @@ class TaskService:
                 extra={
                     "action": "dedupe_active",
                     "task_id": decision.existing.task_id,
-                    "pipeline_id": task.pipeline_id,
+                    "pipeline_id": pipeline_label,
                     "arguments_digest": arguments_digest,
                     "options_digest": options_digest,
                 },
@@ -71,7 +72,7 @@ class TaskService:
             extra={
                 "action": "create_run",
                 "task_id": record.task_id,
-                "pipeline_id": task.pipeline_id,
+                "pipeline_id": pipeline_label,
                 "arguments_digest": arguments_digest,
                 "options_digest": options_digest,
             },

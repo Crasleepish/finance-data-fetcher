@@ -20,7 +20,7 @@ class IdempotencyInput(BaseModel):
 class PipelineTask(IdempotencyInput):
     """Task payload for pipeline execution."""
 
-    pipeline_id: str
+    pipeline_id: str | None = None
     source: str
     task_type: str
     arguments: Arguments = Field(default_factory=lambda: cast(Arguments, {}))

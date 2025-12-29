@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+import threading
+import time
+from dataclasses import dataclass, field
 from typing import Protocol, cast
 
 import tushare as ts
@@ -19,12 +21,29 @@ class TushareClient(Protocol):
     ) -> list[dict[str, object]]:
         """Return stock_basic rows as a list of dicts."""
 
+    def daily(self, trade_date: str, fields: str) -> list[dict[str, object]]:
+        """Return daily rows as a list of dicts."""
+
+    def daily_basic(self, trade_date: str, fields: str) -> list[dict[str, object]]:
+        """Return daily_basic rows as a list of dicts."""
+
+    def stock_st(self, trade_date: str, fields: str) -> list[dict[str, object]]:
+        """Return stock_st rows as a list of dicts."""
+
+    def suspend_d(self, trade_date: str, suspend_type: str, fields: str) -> list[dict[str, object]]:
+        """Return suspend_d rows as a list of dicts."""
+
 
 @dataclass(frozen=True)
 class TushareProClient(TushareClient):
     """Tushare PRO client wrapper."""
 
     token: str
+    min_interval_s: float = 1.0
+    _rate_limiter: _RateLimiter = field(init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "_rate_limiter", _RateLimiter(self.min_interval_s))
 
     def stock_basic(
         self,
@@ -37,6 +56,7 @@ class TushareProClient(TushareClient):
         """Query stock_basic via Tushare PRO API."""
         if not self.token:
             raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
         pro = ts.pro_api(self.token)
         data = pro.stock_basic(
             exchange=exchange,
@@ -48,3 +68,62 @@ class TushareProClient(TushareClient):
         if data is None or data.empty:
             return []
         return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def daily(self, trade_date: str, fields: str) -> list[dict[str, object]]:
+        """Query daily data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.daily(trade_date=trade_date, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def daily_basic(self, trade_date: str, fields: str) -> list[dict[str, object]]:
+        """Query daily_basic data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.daily_basic(trade_date=trade_date, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def stock_st(self, trade_date: str, fields: str) -> list[dict[str, object]]:
+        """Query stock_st data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.stock_st(trade_date=trade_date, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def suspend_d(self, trade_date: str, suspend_type: str, fields: str) -> list[dict[str, object]]:
+        """Query suspend_d data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.suspend_d(trade_date=trade_date, suspend_type=suspend_type, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+
+@dataclass
+class _RateLimiter:
+    min_interval_s: float
+    _last_call: float = field(default=0.0, init=False)
+    _lock: threading.Lock = field(default_factory=threading.Lock, init=False)
+
+    def wait(self) -> None:
+        with self._lock:
+            now = time.monotonic()
+            elapsed = now - self._last_call
+            if elapsed < self.min_interval_s:
+                time.sleep(self.min_interval_s - elapsed)
+            self._last_call = time.monotonic()
