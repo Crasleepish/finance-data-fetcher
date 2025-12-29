@@ -86,11 +86,14 @@ Notes:
 - infra/http_client: HTTP client adapters (no direct requests in business logic)
 - infra/fetcher: fetcher implementations
 - infra/fetcher/csv_fetcher: CSV-backed fetcher for tests/examples
+- infra/fetcher/tushare_stock_basic_fetcher: Tushare stock_basic fetcher
+- infra/tushare/client: Tushare client wrapper for SDK access
 - core/clean/csv_cleaner: CSV cleaner for test_messages
 - infra/queue: task queue interfaces/implementations
 - infra/worker_runtime: background worker runtime
 - services/worker_handler: task execution handler for pipelines
 - services/workflow_engine: pipeline-aware workflow orchestrator
+- services/pipelines: pipeline implementations (stock_info, etc.)
 - config/task_pipeline_mapping.py: static spec→pipeline mapping
 ```
 

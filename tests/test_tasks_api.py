@@ -69,3 +69,32 @@ def test_list_running(postgres_engine: Engine) -> None:
     assert running_response.status_code == 200
     running = running_response.json()
     assert any(item["task_id"] == task_id for item in running)
+
+
+def test_start_stock_info_example_payload(postgres_engine: Engine) -> None:
+    app = _build_test_app(postgres_engine)
+    client = TestClient(app)
+
+    payload = {
+        "spec": TaskSpec.GET_STOCK_INFO,
+        "pipeline_id": "stock_info",
+        "source": "manual",
+        "task_type": "stock_info",
+        "arguments": {
+            "params": {
+                "exchange": "",
+                "list_statuses": ["L", "D", "P"],
+            }
+        },
+        "options": {},
+    }
+
+    response = client.post("/tasks/start", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    task_id = data["task_id"]
+
+    status_response = client.get(f"/tasks/{task_id}")
+    assert status_response.status_code == 200
+    status_data = status_response.json()
+    assert status_data["spec"] == "get_stock_info"

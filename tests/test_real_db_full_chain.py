@@ -5,8 +5,8 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from pathlib import Path
 
-from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.engine import Engine
 
@@ -109,9 +109,10 @@ def _wait_for_completion(client: TestClient, task_id: int, timeout_s: float) -> 
         if state == TaskState.RUNNING.value:
             running_response = client.get("/tasks/running")
             assert running_response.status_code == 200
-            observed_running = any(
-                item["task_id"] == task_id for item in running_response.json()
-            ) or observed_running
+            observed_running = (
+                any(item["task_id"] == task_id for item in running_response.json())
+                or observed_running
+            )
         if state == TaskState.SUCCEEDED.value:
             assert observed_running
             return progress_samples

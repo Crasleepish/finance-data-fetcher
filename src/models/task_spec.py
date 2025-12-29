@@ -8,3 +8,4 @@ class TaskSpec(StrEnum):
 
     NOOP_SLEEP = "noop_sleep"
     PIPELINE = "pipeline"
+    GET_STOCK_INFO = "get_stock_info"

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from decimal import Decimal
 from time import sleep
 
@@ -39,6 +39,8 @@ class WorkflowEngine:
     registry: PipelineRegistry
     selector: PipelineSelector
     repo: Repository
+    repo_by_pipeline: dict[str, Repository] = field(default_factory=dict)
+    upsert_keys_by_pipeline: dict[str, list[str]] = field(default_factory=dict)
     failover: PipelineFailoverPolicy = FetchCleanFailoverPolicy()
 
     def handle(self, task_id: int, task: PipelineTask) -> None:
@@ -79,7 +81,12 @@ class WorkflowEngine:
         while current_pipeline_id is not None:
             try:
                 pipeline = self.registry.get(current_pipeline_id)
-                total_chunks, total_persisted = self._run_pipeline(task_id, task_payload, pipeline)
+                total_chunks, total_persisted = self._run_pipeline(
+                    task_id,
+                    task_payload,
+                    pipeline,
+                    current_pipeline_id,
+                )
                 self.store.update_state(task_id, TaskState.SUCCEEDED)
                 total_duration_ms = int((time.monotonic() - run_started_at) * 1000)
                 logger.info(
@@ -147,8 +154,13 @@ class WorkflowEngine:
                 self.store.update_progress(task_id, Decimal("0"))
 
     def _run_pipeline(
-        self, task_id: int, task: PipelineTask, pipeline: IngestionPipeline
+        self,
+        task_id: int,
+        task: PipelineTask,
+        pipeline: IngestionPipeline,
+        pipeline_id: str,
     ) -> tuple[int, int]:
+        repo = self.repo_by_pipeline.get(pipeline_id, self.repo)
         chunks = pipeline.plan_chunks(task.arguments)
         total = len(chunks)
         strategy_label = getattr(pipeline, "chunk_strategy", type(pipeline).__name__)
@@ -182,7 +194,11 @@ class WorkflowEngine:
             try:
                 raw_batch = self._fetch(pipeline, current_chunk)
                 normalized = self._clean(pipeline, raw_batch, current_chunk)
-                persisted, normalized_count = self._persist(normalized)
+                persisted, normalized_count = self._persist(
+                    normalized,
+                    repo,
+                    self.upsert_keys_by_pipeline.get(pipeline_id),
+                )
             except Exception as exc:
                 failed_stage = (
                     exc.stage.value if isinstance(exc, StageError) else Stage.PERSIST.value
@@ -235,11 +251,19 @@ class WorkflowEngine:
         except Exception as exc:
             raise StageError(Stage.CLEAN, exc, chunk_args) from exc
 
-    def _persist(self, normalized: NormalizedBatch) -> tuple[int, int]:
+    def _persist(
+        self,
+        normalized: NormalizedBatch,
+        repo: Repository,
+        upsert_keys: list[str] | None,
+    ) -> tuple[int, int]:
         records = list(normalized)
         if not records:
             return 0, 0
-        persisted = self.repo.insert_batch(records)
+        if upsert_keys:
+            persisted = repo.upsert_batch(records, upsert_keys)
+        else:
+            persisted = repo.insert_batch(records)
         return persisted, len(records)
 
 

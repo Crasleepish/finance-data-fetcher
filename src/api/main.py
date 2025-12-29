@@ -11,17 +11,20 @@ from fastapi.responses import JSONResponse
 from api.routers.calendar import router as calendar_router
 from api.routers.tasks import router as tasks_router
 from config.loader import load_config
+from core.fetch.retry import RetryPolicy
 from core.pipeline.registry import PipelineRegistry
 from infra.db.engine import create_engine_from_config
 from infra.db.repository import Repository
-from infra.db.tables import test_messages
+from infra.db.tables import stock_info, test_messages
 from infra.idempotency.guard import IdempotencyGuard
 from infra.logging import setup_logging
 from infra.queue.in_memory import InMemoryTaskQueue
 from infra.task_state.store import TaskStatusStore
+from infra.tushare.client import TushareProClient
 from infra.worker_runtime.runtime import WorkerRuntime
 from services.calendar_service import build_calendar_service
 from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
+from services.pipelines.stock_info_pipeline import StockInfoPipeline
 from services.task_service import TaskService
 from services.workflow_engine import WorkflowEngine
 
@@ -42,13 +45,23 @@ def create_app() -> FastAPI:
         task_queue = InMemoryTaskQueue()
         guard = IdempotencyGuard(engine=engine)
         registry = PipelineRegistry()
+        registry.register(
+            "stock_info",
+            StockInfoPipeline(
+                client=TushareProClient(config.tushare.token),
+                retry_policy=RetryPolicy(),
+            ),
+        )
         selector = PipelineSelector(mapping=load_pipeline_mapping(config.pipeline_mapping_path))
         repo = Repository(engine=engine, table=test_messages)
+        repo_by_pipeline = {"stock_info": Repository(engine=engine, table=stock_info)}
         workflow = WorkflowEngine(
             store=task_store,
             registry=registry,
             selector=selector,
             repo=repo,
+            repo_by_pipeline=repo_by_pipeline,
+            upsert_keys_by_pipeline={"stock_info": ["stock_code"]},
         )
         app.state.task_store = task_store
         app.state.task_service = TaskService(store=task_store, queue=task_queue, guard=guard)
