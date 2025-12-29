@@ -27,9 +27,6 @@ class TushareClient(Protocol):
     def daily_basic(self, trade_date: str, fields: str) -> list[dict[str, object]]:
         """Return daily_basic rows as a list of dicts."""
 
-    def stock_st(self, trade_date: str, fields: str) -> list[dict[str, object]]:
-        """Return stock_st rows as a list of dicts."""
-
     def suspend_d(self, trade_date: str, suspend_type: str, fields: str) -> list[dict[str, object]]:
         """Return suspend_d rows as a list of dicts."""
 
@@ -87,17 +84,6 @@ class TushareProClient(TushareClient):
         self._rate_limiter.wait()
         pro = ts.pro_api(self.token)
         data = pro.daily_basic(trade_date=trade_date, fields=fields)
-        if data is None or data.empty:
-            return []
-        return cast(list[dict[str, object]], data.to_dict("records"))
-
-    def stock_st(self, trade_date: str, fields: str) -> list[dict[str, object]]:
-        """Query stock_st data via Tushare PRO API."""
-        if not self.token:
-            raise ValueError("Tushare token is required")
-        self._rate_limiter.wait()
-        pro = ts.pro_api(self.token)
-        data = pro.stock_st(trade_date=trade_date, fields=fields)
         if data is None or data.empty:
             return []
         return cast(list[dict[str, object]], data.to_dict("records"))

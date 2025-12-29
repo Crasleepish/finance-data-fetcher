@@ -44,7 +44,6 @@ def test_stock_hist_unadj_cleaner_merges_and_converts() -> None:
                     "circ_mv": 80.0,
                 }
             ],
-            "stock_st": [{"ts_code": "000001.SZ"}],
             "suspend": [{"ts_code": "000001.SZ"}],
         }
     ]
@@ -78,7 +77,6 @@ def test_stock_hist_unadj_cleaner_merges_and_converts() -> None:
             "free_share": 70000,
             "mkt_cap": 1000000,
             "circ_mv": 800000,
-            "is_st": "Y",
             "is_suspend": "Y",
         }
     ]

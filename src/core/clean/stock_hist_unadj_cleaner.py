@@ -17,7 +17,6 @@ class StockHistUnadjCleaner:
         trade_date = _parse_trade_date(payload.get("trade_date"))
         daily_rows = _list_of_dicts(payload.get("daily"))
         daily_basic_rows = _list_of_dicts(payload.get("daily_basic"))
-        stock_st_rows = _list_of_dicts(payload.get("stock_st"))
         suspend_rows = _list_of_dicts(payload.get("suspend"))
 
         daily_by_code = {
@@ -28,11 +27,6 @@ class StockHistUnadjCleaner:
         basic_by_code = {
             str(row.get("ts_code")): row
             for row in daily_basic_rows
-            if isinstance(row.get("ts_code"), str) and row.get("ts_code")
-        }
-        st_set = {
-            str(row.get("ts_code"))
-            for row in stock_st_rows
             if isinstance(row.get("ts_code"), str) and row.get("ts_code")
         }
         suspend_set = {
@@ -73,7 +67,6 @@ class StockHistUnadjCleaner:
                 "free_share": _as_int(_scale(basic.get("free_share"), 10000)),
                 "mkt_cap": _as_int(_scale(basic.get("total_mv"), 10000)),
                 "circ_mv": _as_int(_scale(basic.get("circ_mv"), 10000)),
-                "is_st": "Y" if code in st_set else "N",
                 "is_suspend": "Y" if code in suspend_set else "N",
             }
             records.append(record)

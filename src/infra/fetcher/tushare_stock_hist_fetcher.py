@@ -20,7 +20,7 @@ _DAILY_BASIC_FIELDS = (
 
 @dataclass(frozen=True)
 class TushareStockHistUnadjFetcher(Fetcher):
-    """Fetch daily, daily_basic, stock_st, and suspend data for a trade date."""
+    """Fetch daily, daily_basic, and suspend data for a trade date."""
 
     client: TushareClient
     retry_policy: RetryPolicy
@@ -37,9 +37,6 @@ class TushareStockHistUnadjFetcher(Fetcher):
         daily_basic_rows = self.retry_policy.execute(
             lambda: _safe_call(self.client.daily_basic, trade_date_compact, _DAILY_BASIC_FIELDS)
         )
-        stock_st_rows = self.retry_policy.execute(
-            lambda: _safe_call(self.client.stock_st, trade_date_compact, "ts_code")
-        )
         suspend_rows = self.retry_policy.execute(
             lambda: _safe_call(self.client.suspend_d, trade_date_compact, "S", "ts_code")
         )
@@ -50,7 +47,6 @@ class TushareStockHistUnadjFetcher(Fetcher):
                 "trade_date": trade_date_compact,
                 "daily_count": len(daily_rows),
                 "daily_basic_count": len(daily_basic_rows),
-                "stock_st_count": len(stock_st_rows),
                 "suspend_count": len(suspend_rows),
             },
         )
@@ -60,7 +56,6 @@ class TushareStockHistUnadjFetcher(Fetcher):
                 "trade_date": trade_date_compact,
                 "daily": daily_rows,
                 "daily_basic": daily_basic_rows,
-                "stock_st": stock_st_rows,
                 "suspend": suspend_rows,
             }
         ]
