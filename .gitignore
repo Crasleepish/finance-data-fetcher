@@ -34,3 +34,6 @@ htmlcov/
 
 # log
 logs/
+
+# config files
+config/app.yaml

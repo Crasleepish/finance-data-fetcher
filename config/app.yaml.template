@@ -1,0 +1,15 @@
+environment: local
+database:
+  url: postgresql+psycopg2://
+tushare:
+  token: ""
+logging:
+  level: INFO
+  log_dir: logs
+  log_file: logs/app.log
+  rotation_when: midnight
+  rotation_interval: 1
+  backup_count: 30
+  encoding: utf-8
+  console: true
+pipeline_mapping_path: config/task_pipeline_mapping.py
