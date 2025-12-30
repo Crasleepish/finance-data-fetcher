@@ -136,10 +136,14 @@ def _apply_operating_profit_ttm(
                 op_t = op_lookup.get((stock_code, report_date))
                 last_annual = op_lookup.get((stock_code, _last_annual_date(report_date)))
                 last_same = op_lookup.get((stock_code, _last_same_period(report_date)))
-                if _is_valid_number(op_t) and _is_valid_number(last_annual) and _is_valid_number(
-                    last_same
+                if (
+                    _is_valid_number(op_t)
+                    and _is_valid_number(last_annual)
+                    and _is_valid_number(last_same)
                 ):
-                    record["operating_profit_ttm"] = op_t + last_annual - last_same
+                    record["operating_profit_ttm"] = (
+                        float(op_t or 0.0) + float(last_annual or 0.0) - float(last_same or 0.0)
+                    )
                 else:
                     record["operating_profit_ttm"] = None
 
