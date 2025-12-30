@@ -89,6 +89,7 @@ Notes:
 - infra/fetcher/tushare_stock_basic_fetcher: Tushare stock_basic fetcher
 - infra/fetcher/tushare_stock_hist_fetcher: Tushare daily/daily_basic/stock_st/suspend fetcher
 - infra/fetcher/tushare_fundamental_fetcher: Tushare vip fundamental fetcher
+- infra/fetcher/tushare_fundamental_single_fetcher: Tushare non-vip fundamental fetcher
 - infra/tushare/client: Tushare client wrapper for SDK access
 - core/clean/csv_cleaner: CSV cleaner for test_messages
 - core/clean/stock_hist_unadj_cleaner: Cleaner for stock_hist_unadj

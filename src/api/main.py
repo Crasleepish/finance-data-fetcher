@@ -25,6 +25,7 @@ from infra.worker_runtime.runtime import WorkerRuntime
 from services.calendar_service import build_calendar_service
 from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
 from services.pipelines.fundamental_data_pipeline import FundamentalDataPipeline
+from services.pipelines.fundamental_data_single_pipeline import FundamentalDataSinglePipeline
 from services.pipelines.stock_hist_unadj_pipeline import StockHistUnadjPipeline
 from services.pipelines.stock_info_pipeline import StockInfoPipeline
 from services.task_service import TaskService
@@ -74,12 +75,23 @@ def create_app() -> FastAPI:
                 table=fundamental_data,
             ),
         )
+        registry.register(
+            "fundamental_data_single",
+            FundamentalDataSinglePipeline(
+                client=tushare_client,
+                retry_policy=retry_policy,
+                engine=engine,
+                stock_table=stock_info,
+                fundamental_table=fundamental_data,
+            ),
+        )
         selector = PipelineSelector(mapping=load_pipeline_mapping(config.pipeline_mapping_path))
         repo = Repository(engine=engine, table=test_messages)
         repo_by_pipeline = {
             "stock_info": Repository(engine=engine, table=stock_info),
             "stock_hist_unadj": Repository(engine=engine, table=stock_hist_unadj),
             "fundamental_data": Repository(engine=engine, table=fundamental_data),
+            "fundamental_data_single": Repository(engine=engine, table=fundamental_data),
         }
         workflow = WorkflowEngine(
             store=task_store,
@@ -91,6 +103,7 @@ def create_app() -> FastAPI:
                 "stock_info": ["stock_code"],
                 "stock_hist_unadj": ["stock_code", "date"],
                 "fundamental_data": ["stock_code", "report_date"],
+                "fundamental_data_single": ["stock_code", "report_date"],
             },
         )
         app.state.task_store = task_store
