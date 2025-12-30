@@ -54,3 +54,23 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
     "options": {}
   }'
 ```
+
+## Example: start get_fundamental_data
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_fundamental_data",
+    "source": "manual",
+    "task_type": "fundamental_data",
+    "arguments": {
+      "params": {
+        "start_period": "2023-12-31",
+        "end_period": "2024-09-30",
+        "overwrite": false
+      }
+    },
+    "options": {}
+  }'
+```
