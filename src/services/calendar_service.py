@@ -26,7 +26,7 @@ def build_calendar_service(config: AppConfig) -> CalendarService:
     engine = create_engine_from_config(config.database)
     store = CalendarStore(engine=engine)
     syncer = TushareCalendarSyncer(
-        token=config.tushare.token,
+        token=config.tushare.token_private,
         exchange=config.tushare.exchange,
     )
     calendar = TradingCalendarService(store=store, syncer=syncer, exchange=config.tushare.exchange)

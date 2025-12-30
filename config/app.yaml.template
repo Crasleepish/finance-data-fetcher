@@ -2,7 +2,8 @@ environment: local
 database:
   url: postgresql+psycopg2://
 tushare:
-  token: ""
+  token_private: ""
+  token_public: ""
 logging:
   level: INFO
   log_dir: logs

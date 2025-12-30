@@ -66,9 +66,12 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
         merged["database"] = database_config
 
     tushare_config = dict(merged.get("tushare", {}))
-    tushare_token = os.environ.get("APP_TUSHARE_TOKEN")
-    if tushare_token:
-        tushare_config["token"] = tushare_token
+    tushare_token_private = os.environ.get("APP_TUSHARE_TOKEN_PRIVATE")
+    if tushare_token_private:
+        tushare_config["token_private"] = tushare_token_private
+    tushare_token_public = os.environ.get("APP_TUSHARE_TOKEN_PUBLIC")
+    if tushare_token_public:
+        tushare_config["token_public"] = tushare_token_public
     tushare_exchange = os.environ.get("APP_TUSHARE_EXCHANGE")
     if tushare_exchange:
         tushare_config["exchange"] = tushare_exchange

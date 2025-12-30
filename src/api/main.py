@@ -47,7 +47,7 @@ def create_app() -> FastAPI:
         guard = IdempotencyGuard(engine=engine)
         registry = PipelineRegistry()
         retry_policy = RetryPolicy()
-        tushare_client = TushareProClient(config.tushare.token)
+        tushare_client = TushareProClient(config.tushare.token_private)
         registry.register(
             "stock_info",
             StockInfoPipeline(

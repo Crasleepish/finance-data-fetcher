@@ -27,7 +27,8 @@ class DatabaseConfig(BaseModel):
 class TushareConfig(BaseModel):
     """Tushare integration configuration (token + exchange defaults)."""
 
-    token: str = Field(default="")
+    token_private: str = Field(default="")
+    token_public: str = Field(default="")
     exchange: str = Field(default="SSE")
 
 
