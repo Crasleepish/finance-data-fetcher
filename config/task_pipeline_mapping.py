@@ -7,4 +7,5 @@ TASK_PIPELINE_MAPPING = {
     TaskSpec.GET_STOCK_INFO: ["stock_info"],
     TaskSpec.GET_STOCK_HIST_UNADJ: ["stock_hist_unadj"],
     TaskSpec.GET_FUNDAMENTAL_DATA: ["fundamental_data", "fundamental_data_single"],
+    TaskSpec.GET_ADJ_FACTOR: ["adj_factor"],
 }

@@ -74,3 +74,22 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
     "options": {}
   }'
 ```
+
+## Example: start get_adj_factor
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_adj_factor",
+    "source": "manual",
+    "task_type": "adj_factor",
+    "arguments": {
+      "params": {
+        "start_date": "2024-01-02",
+        "end_date": "2024-01-05"
+      }
+    },
+    "options": {}
+  }'
+```

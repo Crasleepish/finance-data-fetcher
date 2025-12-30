@@ -15,7 +15,13 @@ from core.fetch.retry import RetryPolicy
 from core.pipeline.registry import PipelineRegistry
 from infra.db.engine import create_engine_from_config
 from infra.db.repository import Repository
-from infra.db.tables import fundamental_data, stock_hist_unadj, stock_info, test_messages
+from infra.db.tables import (
+    adj_factor,
+    fundamental_data,
+    stock_hist_unadj,
+    stock_info,
+    test_messages,
+)
 from infra.idempotency.guard import IdempotencyGuard
 from infra.logging import setup_logging
 from infra.queue.in_memory import InMemoryTaskQueue
@@ -24,6 +30,7 @@ from infra.tushare.client import TushareProClient
 from infra.worker_runtime.runtime import WorkerRuntime
 from services.calendar_service import build_calendar_service
 from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
+from services.pipelines.adj_factor_pipeline import AdjFactorPipeline
 from services.pipelines.fundamental_data_pipeline import FundamentalDataPipeline
 from services.pipelines.fundamental_data_single_pipeline import FundamentalDataSinglePipeline
 from services.pipelines.stock_hist_unadj_pipeline import StockHistUnadjPipeline
@@ -67,6 +74,14 @@ def create_app() -> FastAPI:
             ),
         )
         registry.register(
+            "adj_factor",
+            AdjFactorPipeline(
+                calendar=app.state.calendar_service.calendar,
+                client=tushare_client,
+                retry_policy=retry_policy,
+            ),
+        )
+        registry.register(
             "fundamental_data",
             FundamentalDataPipeline(
                 client=tushare_public_client,
@@ -90,6 +105,7 @@ def create_app() -> FastAPI:
         repo_by_pipeline = {
             "stock_info": Repository(engine=engine, table=stock_info),
             "stock_hist_unadj": Repository(engine=engine, table=stock_hist_unadj),
+            "adj_factor": Repository(engine=engine, table=adj_factor),
             "fundamental_data": Repository(engine=engine, table=fundamental_data),
             "fundamental_data_single": Repository(engine=engine, table=fundamental_data),
         }
@@ -102,6 +118,7 @@ def create_app() -> FastAPI:
             upsert_keys_by_pipeline={
                 "stock_info": ["stock_code"],
                 "stock_hist_unadj": ["stock_code", "date"],
+                "adj_factor": ["stock_code", "date"],
                 "fundamental_data": ["stock_code", "report_date"],
                 "fundamental_data_single": ["stock_code", "report_date"],
             },
