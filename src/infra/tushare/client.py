@@ -30,6 +30,15 @@ class TushareClient(Protocol):
     def suspend_d(self, trade_date: str, suspend_type: str, fields: str) -> list[dict[str, object]]:
         """Return suspend_d rows as a list of dicts."""
 
+    def income_vip(self, period: str, fields: str) -> list[dict[str, object]]:
+        """Return income_vip rows as a list of dicts."""
+
+    def balancesheet_vip(self, period: str, fields: str) -> list[dict[str, object]]:
+        """Return balancesheet_vip rows as a list of dicts."""
+
+    def cashflow_vip(self, period: str, fields: str) -> list[dict[str, object]]:
+        """Return cashflow_vip rows as a list of dicts."""
+
 
 @dataclass(frozen=True)
 class TushareProClient(TushareClient):
@@ -95,6 +104,39 @@ class TushareProClient(TushareClient):
         self._rate_limiter.wait()
         pro = ts.pro_api(self.token)
         data = pro.suspend_d(trade_date=trade_date, suspend_type=suspend_type, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def income_vip(self, period: str, fields: str) -> list[dict[str, object]]:
+        """Query income_vip data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.income_vip(period=period, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def balancesheet_vip(self, period: str, fields: str) -> list[dict[str, object]]:
+        """Query balancesheet_vip data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.balancesheet_vip(period=period, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def cashflow_vip(self, period: str, fields: str) -> list[dict[str, object]]:
+        """Query cashflow_vip data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.cashflow_vip(period=period, fields=fields)
         if data is None or data.empty:
             return []
         return cast(list[dict[str, object]], data.to_dict("records"))

@@ -15,7 +15,7 @@ from core.fetch.retry import RetryPolicy
 from core.pipeline.registry import PipelineRegistry
 from infra.db.engine import create_engine_from_config
 from infra.db.repository import Repository
-from infra.db.tables import stock_hist_unadj, stock_info, test_messages
+from infra.db.tables import fundamental_data, stock_hist_unadj, stock_info, test_messages
 from infra.idempotency.guard import IdempotencyGuard
 from infra.logging import setup_logging
 from infra.queue.in_memory import InMemoryTaskQueue
@@ -24,6 +24,7 @@ from infra.tushare.client import TushareProClient
 from infra.worker_runtime.runtime import WorkerRuntime
 from services.calendar_service import build_calendar_service
 from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
+from services.pipelines.fundamental_data_pipeline import FundamentalDataPipeline
 from services.pipelines.stock_hist_unadj_pipeline import StockHistUnadjPipeline
 from services.pipelines.stock_info_pipeline import StockInfoPipeline
 from services.task_service import TaskService
@@ -48,6 +49,7 @@ def create_app() -> FastAPI:
         registry = PipelineRegistry()
         retry_policy = RetryPolicy()
         tushare_client = TushareProClient(config.tushare.token_private)
+        tushare_public_client = TushareProClient(config.tushare.token_public)
         registry.register(
             "stock_info",
             StockInfoPipeline(
@@ -63,11 +65,21 @@ def create_app() -> FastAPI:
                 retry_policy=retry_policy,
             ),
         )
+        registry.register(
+            "fundamental_data",
+            FundamentalDataPipeline(
+                client=tushare_public_client,
+                retry_policy=retry_policy,
+                engine=engine,
+                table=fundamental_data,
+            ),
+        )
         selector = PipelineSelector(mapping=load_pipeline_mapping(config.pipeline_mapping_path))
         repo = Repository(engine=engine, table=test_messages)
         repo_by_pipeline = {
             "stock_info": Repository(engine=engine, table=stock_info),
             "stock_hist_unadj": Repository(engine=engine, table=stock_hist_unadj),
+            "fundamental_data": Repository(engine=engine, table=fundamental_data),
         }
         workflow = WorkflowEngine(
             store=task_store,
@@ -78,6 +90,7 @@ def create_app() -> FastAPI:
             upsert_keys_by_pipeline={
                 "stock_info": ["stock_code"],
                 "stock_hist_unadj": ["stock_code", "date"],
+                "fundamental_data": ["stock_code", "report_date"],
             },
         )
         app.state.task_store = task_store
