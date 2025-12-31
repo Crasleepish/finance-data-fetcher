@@ -17,6 +17,7 @@ from infra.db.engine import create_engine_from_config
 from infra.db.repository import Repository
 from infra.db.tables import (
     adj_factor,
+    fund_info,
     fundamental_data,
     index_hist,
     index_info,
@@ -33,6 +34,7 @@ from infra.worker_runtime.runtime import WorkerRuntime
 from services.calendar_service import build_calendar_service
 from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
 from services.pipelines.adj_factor_pipeline import AdjFactorPipeline
+from services.pipelines.fund_info_pipeline import FundInfoPipeline
 from services.pipelines.fundamental_data_pipeline import FundamentalDataPipeline
 from services.pipelines.fundamental_data_single_pipeline import FundamentalDataSinglePipeline
 from services.pipelines.index_hist_bond_pipeline import IndexHistBondPipeline
@@ -83,6 +85,13 @@ def create_app() -> FastAPI:
             "adj_factor",
             AdjFactorPipeline(
                 calendar=app.state.calendar_service.calendar,
+                client=tushare_client,
+                retry_policy=retry_policy,
+            ),
+        )
+        registry.register(
+            "fund_info",
+            FundInfoPipeline(
                 client=tushare_client,
                 retry_policy=retry_policy,
             ),
@@ -155,6 +164,7 @@ def create_app() -> FastAPI:
             "index_hist_stock": Repository(engine=engine, table=index_hist),
             "index_hist_bond": Repository(engine=engine, table=index_hist),
             "index_hist_gold": Repository(engine=engine, table=index_hist),
+            "fund_info": Repository(engine=engine, table=fund_info),
             "fundamental_data": Repository(engine=engine, table=fundamental_data),
             "fundamental_data_single": Repository(engine=engine, table=fundamental_data),
         }
@@ -172,6 +182,7 @@ def create_app() -> FastAPI:
                 "index_hist_stock": ["index_code", "date"],
                 "index_hist_bond": ["index_code", "date"],
                 "index_hist_gold": ["index_code", "date"],
+                "fund_info": ["fund_code"],
                 "fundamental_data": ["stock_code", "report_date"],
                 "fundamental_data_single": ["stock_code", "report_date"],
             },

@@ -75,6 +75,25 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
   }'
 ```
 
+## Example: start get_fund_info
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_fund_info",
+    "source": "manual",
+    "task_type": "fund_info",
+    "arguments": {
+      "params": {
+        "market": "O",
+        "status": "L"
+      }
+    },
+    "options": {}
+  }'
+```
+
 ## Example: start get_adj_factor
 
 ```sh

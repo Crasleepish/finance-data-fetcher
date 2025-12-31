@@ -16,3 +16,4 @@ class TaskSpec(StrEnum):
     GET_INDEX_HIST_STOCK = "get_index_hist_stock"
     GET_INDEX_HIST_BOND = "get_index_hist_bond"
     GET_INDEX_HIST_GOLD = "get_index_hist_gold"
+    GET_FUND_INFO = "get_fund_info"

@@ -94,6 +94,7 @@ Notes:
 - infra/fetcher/tushare_index_daily_fetcher: Tushare index_daily fetcher
 - infra/fetcher/tushare_sge_daily_fetcher: Tushare sge_daily fetcher
 - infra/fetcher/akshare_index_hist_fetcher: Akshare csindex fetcher
+- infra/fetcher/tushare_fund_basic_fetcher: Tushare fund_basic fetcher
 - infra/fetcher/tushare_fundamental_fetcher: Tushare vip fundamental fetcher
 - infra/fetcher/tushare_fundamental_single_fetcher: Tushare non-vip fundamental fetcher
 - infra/tushare/client: Tushare client wrapper for SDK access
@@ -104,6 +105,7 @@ Notes:
 - core/clean/index_hist_stock_cleaner: Cleaner for stock index history
 - core/clean/index_hist_bond_cleaner: Cleaner for bond index history
 - core/clean/index_hist_gold_cleaner: Cleaner for gold index history
+- core/clean/fund_info_cleaner: Cleaner for fund_info
 - core/indexing/index_codes: index code parsing and API mapping helpers
 - core/clean/fundamental_data_cleaner: Cleaner for fundamental_data
 - infra/queue: task queue interfaces/implementations
