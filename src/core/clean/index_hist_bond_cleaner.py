@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from datetime import datetime
 from typing import Any
 
@@ -52,19 +53,19 @@ def _parse_date(value: Any) -> Any:
 
 
 def _scale(value: Any, factor: int) -> Any:
-    if value is None:
+    if value is None or _is_nan(value):
         return None
     return float(value) * factor
 
 
 def _as_float(value: Any) -> Any:
-    if value is None:
+    if value is None or _is_nan(value):
         return None
     return float(value)
 
 
 def _as_int(value: Any) -> Any:
-    if value is None:
+    if value is None or _is_nan(value):
         return None
     return int(float(value))
 
@@ -77,3 +78,10 @@ def _as_str(value: Any) -> str | None:
 
 def _fill_close(value: Any, close: Any) -> Any:
     return close if value is None else value
+
+
+def _is_nan(value: Any) -> bool:
+    try:
+        return math.isnan(value)
+    except TypeError:
+        return False
