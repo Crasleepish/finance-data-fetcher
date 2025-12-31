@@ -46,7 +46,14 @@ class FundInfoCleaner:
 
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
         """Normalize raw fund_basic rows into fund_info records."""
-        return self._cleaner.clean(raw_batch)
+        normalized = list(self._cleaner.clean(raw_batch))
+        by_code: dict[str, dict[str, Any]] = {}
+        for row in normalized:
+            record = dict(row)
+            code = record.get("fund_code")
+            if isinstance(code, str) and code:
+                by_code[code] = record
+        return [by_code[code] for code in sorted(by_code.keys())]
 
 
 def _parse_date(value: Any) -> Any:

@@ -52,6 +52,11 @@ def test_fund_info_cleaner_maps_and_drops_missing_found_date() -> None:
             "market": "O",
         },
         {
+            "ts_code": "000001.OF",
+            "name": "Fund A+",
+            "found_date": "20240103",
+        },
+        {
             "ts_code": "000002.OF",
             "name": "Fund B",
             "found_date": None,
@@ -61,12 +66,7 @@ def test_fund_info_cleaner_maps_and_drops_missing_found_date() -> None:
     assert cleaned == [
         {
             "fund_code": "000001.OF",
-            "fund_name": "Fund A",
-            "fund_type": "TypeA",
-            "invest_type": "InvestA",
-            "found_date": date(2024, 1, 2),
-            "fee_rate": 0.1,
-            "commission_rate": 0.01,
-            "market": "O",
+            "fund_name": "Fund A+",
+            "found_date": date(2024, 1, 3),
         }
     ]
