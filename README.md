@@ -93,3 +93,22 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
     "options": {}
   }'
 ```
+
+## Example: start get_index_info
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_index_info",
+    "source": "manual",
+    "task_type": "index_info",
+    "arguments": {
+      "params": {
+        "markets": ["CSI", "SSE", "SZSE"],
+        "csv_path": "extra/additional_index_info.csv"
+      }
+    },
+    "options": {}
+  }'
+```

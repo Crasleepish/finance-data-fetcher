@@ -76,6 +76,7 @@ src/
 ├── models/          # Pydantic schemas (and ORM models if needed)
 ├── config/          # Centralized configuration
 tests/
+extra/             # Supplemental CSV inputs (manual overrides)
 
 Notes:
 - core/pipeline: pipeline interfaces, types, validation, registry
@@ -89,12 +90,14 @@ Notes:
 - infra/fetcher/tushare_stock_basic_fetcher: Tushare stock_basic fetcher
 - infra/fetcher/tushare_stock_hist_fetcher: Tushare daily/daily_basic/stock_st/suspend fetcher
 - infra/fetcher/tushare_adj_factor_fetcher: Tushare adj_factor fetcher
+- infra/fetcher/tushare_index_basic_fetcher: Tushare index_basic fetcher
 - infra/fetcher/tushare_fundamental_fetcher: Tushare vip fundamental fetcher
 - infra/fetcher/tushare_fundamental_single_fetcher: Tushare non-vip fundamental fetcher
 - infra/tushare/client: Tushare client wrapper for SDK access
 - core/clean/csv_cleaner: CSV cleaner for test_messages
 - core/clean/stock_hist_unadj_cleaner: Cleaner for stock_hist_unadj
 - core/clean/adj_factor_cleaner: Cleaner for adj_factor
+- core/clean/index_info_cleaner: Cleaner for index_info
 - core/clean/fundamental_data_cleaner: Cleaner for fundamental_data
 - infra/queue: task queue interfaces/implementations
 - infra/worker_runtime: background worker runtime

@@ -18,6 +18,7 @@ from infra.db.repository import Repository
 from infra.db.tables import (
     adj_factor,
     fundamental_data,
+    index_info,
     stock_hist_unadj,
     stock_info,
     test_messages,
@@ -33,6 +34,7 @@ from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
 from services.pipelines.adj_factor_pipeline import AdjFactorPipeline
 from services.pipelines.fundamental_data_pipeline import FundamentalDataPipeline
 from services.pipelines.fundamental_data_single_pipeline import FundamentalDataSinglePipeline
+from services.pipelines.index_info_pipeline import IndexInfoPipeline
 from services.pipelines.stock_hist_unadj_pipeline import StockHistUnadjPipeline
 from services.pipelines.stock_info_pipeline import StockInfoPipeline
 from services.task_service import TaskService
@@ -82,6 +84,13 @@ def create_app() -> FastAPI:
             ),
         )
         registry.register(
+            "index_info",
+            IndexInfoPipeline(
+                client=tushare_client,
+                retry_policy=retry_policy,
+            ),
+        )
+        registry.register(
             "fundamental_data",
             FundamentalDataPipeline(
                 client=tushare_public_client,
@@ -106,6 +115,7 @@ def create_app() -> FastAPI:
             "stock_info": Repository(engine=engine, table=stock_info),
             "stock_hist_unadj": Repository(engine=engine, table=stock_hist_unadj),
             "adj_factor": Repository(engine=engine, table=adj_factor),
+            "index_info": Repository(engine=engine, table=index_info),
             "fundamental_data": Repository(engine=engine, table=fundamental_data),
             "fundamental_data_single": Repository(engine=engine, table=fundamental_data),
         }
@@ -119,6 +129,7 @@ def create_app() -> FastAPI:
                 "stock_info": ["stock_code"],
                 "stock_hist_unadj": ["stock_code", "date"],
                 "adj_factor": ["stock_code", "date"],
+                "index_info": ["index_code"],
                 "fundamental_data": ["stock_code", "report_date"],
                 "fundamental_data_single": ["stock_code", "report_date"],
             },

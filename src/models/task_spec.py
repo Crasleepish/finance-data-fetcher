@@ -12,3 +12,4 @@ class TaskSpec(StrEnum):
     GET_STOCK_HIST_UNADJ = "get_stock_hist_unadj"
     GET_FUNDAMENTAL_DATA = "get_fundamental_data"
     GET_ADJ_FACTOR = "get_adj_factor"
+    GET_INDEX_INFO = "get_index_info"
