@@ -18,6 +18,7 @@ from infra.db.repository import Repository
 from infra.db.tables import (
     adj_factor,
     fundamental_data,
+    index_hist,
     index_info,
     stock_hist_unadj,
     stock_info,
@@ -34,6 +35,9 @@ from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
 from services.pipelines.adj_factor_pipeline import AdjFactorPipeline
 from services.pipelines.fundamental_data_pipeline import FundamentalDataPipeline
 from services.pipelines.fundamental_data_single_pipeline import FundamentalDataSinglePipeline
+from services.pipelines.index_hist_bond_pipeline import IndexHistBondPipeline
+from services.pipelines.index_hist_gold_pipeline import IndexHistGoldPipeline
+from services.pipelines.index_hist_stock_pipeline import IndexHistStockPipeline
 from services.pipelines.index_info_pipeline import IndexInfoPipeline
 from services.pipelines.stock_hist_unadj_pipeline import StockHistUnadjPipeline
 from services.pipelines.stock_info_pipeline import StockInfoPipeline
@@ -91,6 +95,38 @@ def create_app() -> FastAPI:
             ),
         )
         registry.register(
+            "index_hist_stock",
+            IndexHistStockPipeline(
+                calendar=app.state.calendar_service.calendar,
+                client=tushare_client,
+                retry_policy=retry_policy,
+                engine=engine,
+                index_info_table=index_info,
+                codes_raw=config.data.index.stock,
+            ),
+        )
+        registry.register(
+            "index_hist_bond",
+            IndexHistBondPipeline(
+                calendar=app.state.calendar_service.calendar,
+                retry_policy=retry_policy,
+                engine=engine,
+                index_info_table=index_info,
+                codes_raw=config.data.index.bond,
+            ),
+        )
+        registry.register(
+            "index_hist_gold",
+            IndexHistGoldPipeline(
+                calendar=app.state.calendar_service.calendar,
+                client=tushare_client,
+                retry_policy=retry_policy,
+                engine=engine,
+                index_info_table=index_info,
+                codes_raw=config.data.index.gold,
+            ),
+        )
+        registry.register(
             "fundamental_data",
             FundamentalDataPipeline(
                 client=tushare_public_client,
@@ -116,6 +152,9 @@ def create_app() -> FastAPI:
             "stock_hist_unadj": Repository(engine=engine, table=stock_hist_unadj),
             "adj_factor": Repository(engine=engine, table=adj_factor),
             "index_info": Repository(engine=engine, table=index_info),
+            "index_hist_stock": Repository(engine=engine, table=index_hist),
+            "index_hist_bond": Repository(engine=engine, table=index_hist),
+            "index_hist_gold": Repository(engine=engine, table=index_hist),
             "fundamental_data": Repository(engine=engine, table=fundamental_data),
             "fundamental_data_single": Repository(engine=engine, table=fundamental_data),
         }
@@ -130,6 +169,9 @@ def create_app() -> FastAPI:
                 "stock_hist_unadj": ["stock_code", "date"],
                 "adj_factor": ["stock_code", "date"],
                 "index_info": ["index_code"],
+                "index_hist_stock": ["index_code", "date"],
+                "index_hist_bond": ["index_code", "date"],
+                "index_hist_gold": ["index_code", "date"],
                 "fundamental_data": ["stock_code", "report_date"],
                 "fundamental_data_single": ["stock_code", "report_date"],
             },

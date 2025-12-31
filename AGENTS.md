@@ -91,6 +91,9 @@ Notes:
 - infra/fetcher/tushare_stock_hist_fetcher: Tushare daily/daily_basic/stock_st/suspend fetcher
 - infra/fetcher/tushare_adj_factor_fetcher: Tushare adj_factor fetcher
 - infra/fetcher/tushare_index_basic_fetcher: Tushare index_basic fetcher
+- infra/fetcher/tushare_index_daily_fetcher: Tushare index_daily fetcher
+- infra/fetcher/tushare_sge_daily_fetcher: Tushare sge_daily fetcher
+- infra/fetcher/akshare_index_hist_fetcher: Akshare csindex fetcher
 - infra/fetcher/tushare_fundamental_fetcher: Tushare vip fundamental fetcher
 - infra/fetcher/tushare_fundamental_single_fetcher: Tushare non-vip fundamental fetcher
 - infra/tushare/client: Tushare client wrapper for SDK access
@@ -98,12 +101,17 @@ Notes:
 - core/clean/stock_hist_unadj_cleaner: Cleaner for stock_hist_unadj
 - core/clean/adj_factor_cleaner: Cleaner for adj_factor
 - core/clean/index_info_cleaner: Cleaner for index_info
+- core/clean/index_hist_stock_cleaner: Cleaner for stock index history
+- core/clean/index_hist_bond_cleaner: Cleaner for bond index history
+- core/clean/index_hist_gold_cleaner: Cleaner for gold index history
+- core/indexing/index_codes: index code parsing and API mapping helpers
 - core/clean/fundamental_data_cleaner: Cleaner for fundamental_data
 - infra/queue: task queue interfaces/implementations
 - infra/worker_runtime: background worker runtime
 - services/worker_handler: task execution handler for pipelines
 - services/workflow_engine: pipeline-aware workflow orchestrator
 - services/pipelines: pipeline implementations (stock_info, etc.)
+- infra/index_catalog: index_info lookup helpers
 - config/task_pipeline_mapping.py: static spec→pipeline mapping
 ```
 

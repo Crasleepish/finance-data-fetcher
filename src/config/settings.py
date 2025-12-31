@@ -32,11 +32,26 @@ class TushareConfig(BaseModel):
     exchange: str = Field(default="SSE")
 
 
+class IndexDataConfig(BaseModel):
+    """Index universe configuration by data source."""
+
+    stock: str = Field(default="")
+    bond: str = Field(default="")
+    gold: str = Field(default="")
+
+
+class DataConfig(BaseModel):
+    """Data configuration for pipeline inputs."""
+
+    index: IndexDataConfig = Field(default_factory=IndexDataConfig)
+
+
 class AppConfig(BaseModel):
     """Root application configuration assembled from file + environment."""
 
     environment: str = Field(default="local")
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
     tushare: TushareConfig = Field(default_factory=TushareConfig)
+    data: DataConfig = Field(default_factory=DataConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     pipeline_mapping_path: str = Field(default="config/task_pipeline_mapping.py")

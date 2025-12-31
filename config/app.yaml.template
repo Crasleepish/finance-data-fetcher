@@ -4,6 +4,11 @@ database:
 tushare:
   token_private: ""
   token_public: ""
+data:
+  index:
+    stock: ""
+    bond: ""
+    gold: ""
 logging:
   level: INFO
   log_dir: logs

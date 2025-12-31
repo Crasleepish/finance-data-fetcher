@@ -112,3 +112,60 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
     "options": {}
   }'
 ```
+
+## Example: start get_index_hist_stock
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_index_hist_stock",
+    "source": "manual",
+    "task_type": "index_hist_stock",
+    "arguments": {
+      "params": {
+        "start_date": "2024-01-02",
+        "end_date": "2024-01-05"
+      }
+    },
+    "options": {}
+  }'
+```
+
+## Example: start get_index_hist_bond
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_index_hist_bond",
+    "source": "manual",
+    "task_type": "index_hist_bond",
+    "arguments": {
+      "params": {
+        "start_date": "2024-01-02",
+        "end_date": "2024-01-05"
+      }
+    },
+    "options": {}
+  }'
+```
+
+## Example: start get_index_hist_gold
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_index_hist_gold",
+    "source": "manual",
+    "task_type": "index_hist_gold",
+    "arguments": {
+      "params": {
+        "start_date": "2024-01-02",
+        "end_date": "2024-01-05"
+      }
+    },
+    "options": {}
+  }'
+```

@@ -62,6 +62,12 @@ class TushareClient(Protocol):
     ) -> list[dict[str, object]]:
         """Return index_basic rows as a list of dicts."""
 
+    def index_daily(self, ts_code: str, trade_date: str, fields: str) -> list[dict[str, object]]:
+        """Return index_daily rows as a list of dicts."""
+
+    def sge_daily(self, ts_code: str, trade_date: str, fields: str) -> list[dict[str, object]]:
+        """Return sge_daily rows as a list of dicts."""
+
 
 @dataclass(frozen=True)
 class TushareProClient(TushareClient):
@@ -233,6 +239,28 @@ class TushareProClient(TushareClient):
         self._rate_limiter.wait()
         pro = ts.pro_api(self.token)
         data = pro.index_basic(market=market, fields=fields, offset=offset, limit=limit)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def index_daily(self, ts_code: str, trade_date: str, fields: str) -> list[dict[str, object]]:
+        """Query index_daily data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.index_daily(ts_code=ts_code, trade_date=trade_date, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def sge_daily(self, ts_code: str, trade_date: str, fields: str) -> list[dict[str, object]]:
+        """Query sge_daily data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.sge_daily(ts_code=ts_code, trade_date=trade_date, fields=fields)
         if data is None or data.empty:
             return []
         return cast(list[dict[str, object]], data.to_dict("records"))

@@ -78,6 +78,22 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
     if tushare_config:
         merged["tushare"] = tushare_config
 
+    data_config = dict(merged.get("data", {}))
+    index_config = dict(data_config.get("index", {}))
+    index_stock = os.environ.get("APP_DATA_INDEX_STOCK")
+    if index_stock:
+        index_config["stock"] = index_stock
+    index_bond = os.environ.get("APP_DATA_INDEX_BOND")
+    if index_bond:
+        index_config["bond"] = index_bond
+    index_gold = os.environ.get("APP_DATA_INDEX_GOLD")
+    if index_gold:
+        index_config["gold"] = index_gold
+    if index_config:
+        data_config["index"] = index_config
+    if data_config:
+        merged["data"] = data_config
+
     logging_config = dict(merged.get("logging", {}))
     pipeline_mapping_path = os.environ.get("APP_PIPELINE_MAPPING_PATH")
     if pipeline_mapping_path:

@@ -13,3 +13,6 @@ class TaskSpec(StrEnum):
     GET_FUNDAMENTAL_DATA = "get_fundamental_data"
     GET_ADJ_FACTOR = "get_adj_factor"
     GET_INDEX_INFO = "get_index_info"
+    GET_INDEX_HIST_STOCK = "get_index_hist_stock"
+    GET_INDEX_HIST_BOND = "get_index_hist_bond"
+    GET_INDEX_HIST_GOLD = "get_index_hist_gold"
