@@ -40,10 +40,17 @@ class IndexDataConfig(BaseModel):
     gold: str = Field(default="")
 
 
+class FundDataConfig(BaseModel):
+    """Fund configuration for pipeline inputs."""
+
+    money: str = Field(default="")
+
+
 class DataConfig(BaseModel):
     """Data configuration for pipeline inputs."""
 
     index: IndexDataConfig = Field(default_factory=IndexDataConfig)
+    fund: FundDataConfig = Field(default_factory=FundDataConfig)
 
 
 class AppConfig(BaseModel):

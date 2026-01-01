@@ -9,6 +9,8 @@ data:
     stock: ""
     bond: ""
     gold: ""
+  fund:
+    money: ""
 logging:
   level: INFO
   log_dir: logs

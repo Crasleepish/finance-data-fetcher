@@ -130,7 +130,6 @@ fund_hist = Table(
     Column("date", Date, primary_key=True),
     Column("value", Float(precision=53)),
     Column("net_value", Float(precision=53)),
-    Column("change_percent", Float(precision=53)),
 )
 
 fund_info = Table(

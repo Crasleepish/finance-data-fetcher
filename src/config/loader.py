@@ -94,6 +94,14 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
     if data_config:
         merged["data"] = data_config
 
+    fund_config = dict(data_config.get("fund", {}))
+    fund_money = os.environ.get("APP_DATA_FUND_MONEY")
+    if fund_money:
+        fund_config["money"] = fund_money
+    if fund_config:
+        data_config["fund"] = fund_config
+        merged["data"] = data_config
+
     logging_config = dict(merged.get("logging", {}))
     pipeline_mapping_path = os.environ.get("APP_PIPELINE_MAPPING_PATH")
     if pipeline_mapping_path:

@@ -95,6 +95,7 @@ Notes:
 - infra/fetcher/tushare_sge_daily_fetcher: Tushare sge_daily fetcher
 - infra/fetcher/akshare_index_hist_fetcher: Akshare csindex fetcher
 - infra/fetcher/tushare_fund_basic_fetcher: Tushare fund_basic fetcher
+- infra/fetcher/tushare_fund_nav_fetcher: Tushare fund_nav fetcher
 - infra/fetcher/tushare_fundamental_fetcher: Tushare vip fundamental fetcher
 - infra/fetcher/tushare_fundamental_single_fetcher: Tushare non-vip fundamental fetcher
 - infra/tushare/client: Tushare client wrapper for SDK access
@@ -106,6 +107,7 @@ Notes:
 - core/clean/index_hist_bond_cleaner: Cleaner for bond index history
 - core/clean/index_hist_gold_cleaner: Cleaner for gold index history
 - core/clean/fund_info_cleaner: Cleaner for fund_info
+- core/clean/fund_hist_cleaner: Cleaner for fund_hist
 - core/indexing/index_codes: index code parsing and API mapping helpers
 - core/clean/fundamental_data_cleaner: Cleaner for fundamental_data
 - infra/queue: task queue interfaces/implementations
@@ -114,6 +116,9 @@ Notes:
 - services/workflow_engine: pipeline-aware workflow orchestrator
 - services/pipelines: pipeline implementations (stock_info, etc.)
 - infra/index_catalog: index_info lookup helpers
+- infra/fund_catalog: fund_info lookup helpers
+- services/pipelines/fund_hist_index_pipeline: index fund NAV pipeline
+- services/pipelines/fund_hist_money_pipeline: money fund NAV pipeline
 - config/task_pipeline_mapping.py: static spec→pipeline mapping
 ```
 
