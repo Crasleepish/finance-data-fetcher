@@ -15,4 +15,5 @@ TASK_PIPELINE_MAPPING = {
     TaskSpec.GET_FUND_INFO: ["fund_info"],
     TaskSpec.GET_FUND_HIST_INDEX: ["fund_hist_index"],
     TaskSpec.GET_FUND_HIST_MONEY: ["fund_hist_money"],
+    TaskSpec.GET_ETF_INFO: ["etf_info"],
 }

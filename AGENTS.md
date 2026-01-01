@@ -108,6 +108,7 @@ Notes:
 - core/clean/index_hist_gold_cleaner: Cleaner for gold index history
 - core/clean/fund_info_cleaner: Cleaner for fund_info
 - core/clean/fund_hist_cleaner: Cleaner for fund_hist
+- core/clean/etf_info_cleaner: Cleaner for etf_info
 - core/indexing/index_codes: index code parsing and API mapping helpers
 - core/clean/fundamental_data_cleaner: Cleaner for fundamental_data
 - infra/queue: task queue interfaces/implementations
@@ -119,6 +120,7 @@ Notes:
 - infra/fund_catalog: fund_info lookup helpers
 - services/pipelines/fund_hist_index_pipeline: index fund NAV pipeline
 - services/pipelines/fund_hist_money_pipeline: money fund NAV pipeline
+- services/pipelines/etf_info_pipeline: ETF fund_basic pipeline
 - config/task_pipeline_mapping.py: static spec→pipeline mapping
 ```
 

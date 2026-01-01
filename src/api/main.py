@@ -17,6 +17,7 @@ from infra.db.engine import create_engine_from_config
 from infra.db.repository import Repository
 from infra.db.tables import (
     adj_factor,
+    etf_info,
     fund_hist,
     fund_info,
     fundamental_data,
@@ -35,6 +36,7 @@ from infra.worker_runtime.runtime import WorkerRuntime
 from services.calendar_service import build_calendar_service
 from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
 from services.pipelines.adj_factor_pipeline import AdjFactorPipeline
+from services.pipelines.etf_info_pipeline import EtfInfoPipeline
 from services.pipelines.fund_hist_index_pipeline import FundHistIndexPipeline
 from services.pipelines.fund_hist_money_pipeline import FundHistMoneyPipeline
 from services.pipelines.fund_info_pipeline import FundInfoPipeline
@@ -95,6 +97,13 @@ def create_app() -> FastAPI:
         registry.register(
             "fund_info",
             FundInfoPipeline(
+                client=tushare_client,
+                retry_policy=retry_policy,
+            ),
+        )
+        registry.register(
+            "etf_info",
+            EtfInfoPipeline(
                 client=tushare_client,
                 retry_policy=retry_policy,
             ),
@@ -189,6 +198,7 @@ def create_app() -> FastAPI:
             "index_hist_bond": Repository(engine=engine, table=index_hist),
             "index_hist_gold": Repository(engine=engine, table=index_hist),
             "fund_info": Repository(engine=engine, table=fund_info),
+            "etf_info": Repository(engine=engine, table=etf_info),
             "fund_hist_index": Repository(engine=engine, table=fund_hist),
             "fund_hist_money": Repository(engine=engine, table=fund_hist),
             "fundamental_data": Repository(engine=engine, table=fundamental_data),
@@ -209,6 +219,7 @@ def create_app() -> FastAPI:
                 "index_hist_bond": ["index_code", "date"],
                 "index_hist_gold": ["index_code", "date"],
                 "fund_info": ["fund_code"],
+                "etf_info": ["etf_code"],
                 "fund_hist_index": ["fund_code", "date"],
                 "fund_hist_money": ["fund_code", "date"],
                 "fundamental_data": ["stock_code", "report_date"],
