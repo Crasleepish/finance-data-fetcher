@@ -31,8 +31,11 @@ def test_fund_nav_fetcher_batches_codes() -> None:
 
 def test_fund_hist_cleaner_maps_fields() -> None:
     cleaner = FundHistCleaner()
-    raw = [{"ts_code": "000001.OF", "nav_date": "20240102", "unit_nav": 1.1, "adj_nav": 1.2}]
+    raw = [
+        {"ts_code": "000001.OF", "nav_date": "20240102", "unit_nav": 1.1, "adj_nav": 1.2},
+        {"ts_code": "000001.OF", "nav_date": "20240102", "unit_nav": 1.3, "adj_nav": 1.4},
+    ]
     cleaned = list(cleaner.clean(raw))
     assert cleaned == [
-        {"fund_code": "000001.OF", "date": date(2024, 1, 2), "value": 1.1, "net_value": 1.2}
+        {"fund_code": "000001.OF", "date": date(2024, 1, 2), "value": 1.3, "net_value": 1.4}
     ]

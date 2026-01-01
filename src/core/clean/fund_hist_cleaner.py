@@ -33,7 +33,15 @@ class FundHistCleaner:
 
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
         """Normalize raw fund_nav rows into fund_hist records."""
-        return self._cleaner.clean(raw_batch)
+        normalized = list(self._cleaner.clean(raw_batch))
+        by_key: dict[tuple[str, date], dict[str, Any]] = {}
+        for row in normalized:
+            record = dict(row)
+            fund_code = record.get("fund_code")
+            nav_date = record.get("date")
+            if isinstance(fund_code, str) and isinstance(nav_date, date):
+                by_key[(fund_code, nav_date)] = record
+        return [by_key[key] for key in sorted(by_key.keys())]
 
 
 def _parse_date(value: Any) -> Any:
