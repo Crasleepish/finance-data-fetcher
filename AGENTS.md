@@ -100,6 +100,7 @@ Notes:
 - infra/fetcher/tushare_fundamental_fetcher: Tushare vip fundamental fetcher
 - infra/fetcher/tushare_fundamental_single_fetcher: Tushare non-vip fundamental fetcher
 - infra/tushare/client: Tushare client wrapper for SDK access
+- infra/factor_data_fetcher: Factor backtest data fetchers (stock/index/calendar)
 - core/clean/csv_cleaner: CSV cleaner for test_messages
 - core/clean/stock_hist_unadj_cleaner: Cleaner for stock_hist_unadj
 - core/clean/adj_factor_cleaner: Cleaner for adj_factor
@@ -125,6 +126,12 @@ Notes:
 - services/pipelines/fund_hist_money_pipeline: money fund NAV pipeline
 - services/pipelines/etf_info_pipeline: ETF fund_basic pipeline
 - services/pipelines/etf_hist_pipeline: ETF daily history pipeline
+- services/portfolio_driver: Portfolio construction/backtest orchestration
+- services/factor_fetcher: Factor backtest entrypoint returning RawBatch
+- core/backtest/backtest_engine: VectorBT-based backtest engine
+- core/backtest/stock_selector: Factor portfolio selectors
+- core/backtest/weight_allocator: Portfolio weight allocation strategies
+- core/backtest/rebalance_date_generator: Rebalance date generation helpers
 - config/task_pipeline_mapping.py: static spec→pipeline mapping
 ```
 

@@ -14,6 +14,11 @@ dependencies = [
   "requests>=2.32",
   "tushare>=1.2.10",
   "akshare>=1.14.0",
+  "pandas>=2.2",
+  "numpy>=1.26",
+  "numba>=0.59",
+  "vectorbt>=0.25",
+  "tqdm>=4.66",
 ]
 
 [project.optional-dependencies]
@@ -30,6 +35,7 @@ dev = [
 [tool.ruff]
 target-version = "py312"
 line-length = 100
+exclude = ["docs/a_factor_compute_module"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
