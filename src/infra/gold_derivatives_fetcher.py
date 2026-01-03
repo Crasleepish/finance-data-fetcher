@@ -60,7 +60,30 @@ class GoldDerivativesFetcher:
 
         records: dict[tuple[date, str | None, str | None], dict[str, Any]] = {}
         for year in sorted(years_to_fetch):
-            zip_path = self._download_cftc_zip_if_needed(year)
+            try:
+                zip_path = self._download_cftc_zip_if_needed(year)
+            except requests.HTTPError as exc:
+                response = exc.response
+                if response is not None and response.status_code == 404:
+                    fallback_year = year - 1
+                    logger.warning(
+                        "CFTC history zip not found for %s; trying %s instead",
+                        year,
+                        fallback_year,
+                    )
+                    try:
+                        zip_path = self._download_cftc_zip_if_needed(fallback_year)
+                    except requests.HTTPError as fallback_exc:
+                        fallback_response = fallback_exc.response
+                        if fallback_response is not None and fallback_response.status_code == 404:
+                            logger.warning(
+                                "CFTC history zip not found for fallback %s; skipping",
+                                fallback_year,
+                            )
+                            continue
+                        raise
+                else:
+                    raise
             for item in self._parse_cftc_zip(zip_path):
                 key = (
                     item["report_date"],
