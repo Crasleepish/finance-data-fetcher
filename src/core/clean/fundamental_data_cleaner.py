@@ -64,12 +64,13 @@ def _build_record(
     total_liabilities = _parse_amount(balance_row.get("total_liab"))
 
     # Prefer a safe total_liabilities: use max(cur+ncur, total_liab) when missing or overwrite.
+    # Keep None when all inputs are missing to avoid writing 0 for absent data.
     if overwrite or _is_missing(total_liabilities):
-        safe_total = max(
-            _safe_num(current_liabilities) + _safe_num(noncurrent_liabilities),
-            _safe_num(total_liabilities),
-        )
-        total_liabilities = safe_total
+        sum_parts = None
+        if not (_is_missing(current_liabilities) and _is_missing(noncurrent_liabilities)):
+            sum_parts = _safe_num(current_liabilities) + _safe_num(noncurrent_liabilities)
+        candidates = [value for value in (total_liabilities, sum_parts) if not _is_missing(value)]
+        total_liabilities = max(candidates) if candidates else None
 
     net_profit = _net_profit(income_row)
     operating_profit = _parse_amount(income_row.get("operate_profit"))
@@ -100,14 +101,16 @@ def _build_record(
 
 
 def _net_profit(row: dict[str, Any]) -> float | None:
-    # Prefer attributable net profit, then net income, else continued+end net profit.
+    # Prefer attributable net profit, then net income, else continued+end net profit (only if both present).
     continued = _parse_amount(row.get("continued_net_profit"))
     end_net = _parse_amount(row.get("end_net_profit"))
+    fallback = None
     if continued is not None and end_net is not None:
-        return _safe_num(continued) + _safe_num(end_net)
+        fallback = _safe_num(continued) + _safe_num(end_net)
     return _first_non_none(
         _parse_amount(row.get("n_income_attr_p")),
         _parse_amount(row.get("n_income")),
+        fallback,
     )
 
 

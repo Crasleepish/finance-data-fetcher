@@ -85,6 +85,29 @@ def test_fundamental_data_cleaner_net_profit_fallback() -> None:
     assert records[0]["net_profit"] == 10.0
 
 
+def test_fundamental_data_cleaner_net_profit_partial_fallback() -> None:
+    cleaner = FundamentalDataCleaner(overwrite=False)
+    raw = [
+        {
+            "income": [
+                {
+                    "ts_code": "000005.SZ",
+                    "end_date": "20241231",
+                    "n_income_attr_p": None,
+                    "n_income": None,
+                    "continued_net_profit": 3.0,
+                    "end_net_profit": None,
+                }
+            ],
+            "balance": [{"ts_code": "000005.SZ", "end_date": "20241231"}],
+            "cashflow": [{"ts_code": "000005.SZ", "end_date": "20241231"}],
+        }
+    ]
+
+    records = list(cleaner.clean(raw))
+    assert records[0]["net_profit"] is None
+
+
 def test_fundamental_data_cleaner_net_profit_secondary() -> None:
     cleaner = FundamentalDataCleaner(overwrite=False)
     raw = [
@@ -106,6 +129,20 @@ def test_fundamental_data_cleaner_net_profit_secondary() -> None:
 
     records = list(cleaner.clean(raw))
     assert records[0]["net_profit"] == 12.5
+
+
+def test_fundamental_data_cleaner_total_liabilities_missing() -> None:
+    cleaner = FundamentalDataCleaner(overwrite=False)
+    raw = [
+        {
+            "income": [{"ts_code": "000006.SZ", "end_date": "20240331"}],
+            "balance": [{"ts_code": "000006.SZ", "end_date": "20240331"}],
+            "cashflow": [{"ts_code": "000006.SZ", "end_date": "20240331"}],
+        }
+    ]
+
+    records = list(cleaner.clean(raw))
+    assert records[0]["total_liabilities"] is None
 
 
 def test_fundamental_data_ttm_forward_fill(postgres_engine) -> None:

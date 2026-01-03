@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import math
 from abc import ABC, abstractmethod
-from typing import List, Optional, Set
+from typing import List, Optional, Set, cast
 
 import pandas as pd
 
@@ -79,7 +79,7 @@ class AmountSelector(Selector):
         amount_series = amount_series.sort_values(ascending=True)
         n = len(amount_series)
         cutoff = int(math.ceil(n * self.percentile))
-        return [str(code) for code in amount_series.iloc[cutoff:].index]
+        return cast(List[str], amount_series.iloc[cutoff:].index.tolist())
 
 
 class HSExchangeSelector(Selector):
@@ -94,8 +94,8 @@ class HSExchangeSelector(Selector):
             self.stock_info[self.stock_info["exchange"].isin(["SSE", "SZSE"])].index
         )
         if universe is None:
-            return [str(code) for code in hs_exchange_stocks]
-        return [str(code) for code in hs_exchange_stocks.intersection(universe)]
+            return []
+        return cast(List[str], list(hs_exchange_stocks.intersection(universe)))
 
 
 class ListedMoreThanOneYearSelector(Selector):
@@ -116,8 +116,8 @@ class ListedMoreThanOneYearSelector(Selector):
             self.stock_info["listing_date"] <= self.asof_date - pd.DateOffset(years=1)
         ].index
         if universe is None:
-            return [str(code) for code in listed]
-        return [str(code) for code in listed.intersection(universe)]
+            return []
+        return cast(List[str], list(listed.intersection(universe)))
 
 
 class HasPriceSelector(Selector):
@@ -138,8 +138,8 @@ class HasPriceSelector(Selector):
             return []
         available = self.price_df.columns[self.price_df.loc[self.asof_date].notna()]
         if universe is None:
-            return [str(code) for code in available]
-        return [str(code) for code in set(available).intersection(universe)]
+            return []
+        return cast(List[str], list(set(available).intersection(universe)))
 
 
 class ExcludeBlacklistSelector(Selector):
@@ -204,7 +204,7 @@ class MktCapPercentileSelector(Selector):
         if n == 0:
             return []
         lower, upper = int(n * self.percentile[0]), int(n * self.percentile[1])
-        return [str(code) for code in sorted_caps.iloc[lower:upper].index]
+        return cast(List[str], sorted_caps.iloc[lower:upper].index.tolist())
 
 
 class QualityScoreSelector(Selector):
@@ -302,7 +302,7 @@ class QualityScoreSelector(Selector):
         if n < 10:
             return []
         lower, upper = int(n * self.score_percentile[0]), int(n * self.score_percentile[1])
-        return [str(code) for code in score.iloc[lower:upper].index]
+        return cast(List[str], score.iloc[lower:upper].index.tolist())
 
 
 class BMScoreSelector(Selector):
@@ -358,4 +358,4 @@ class BMScoreSelector(Selector):
         if n < 10:
             return []
         lower, upper = int(n * self.bm_percentile[0]), int(n * self.bm_percentile[1])
-        return [str(code) for code in bm.iloc[lower:upper].index]
+        return cast(List[str], bm.iloc[lower:upper].index.tolist())

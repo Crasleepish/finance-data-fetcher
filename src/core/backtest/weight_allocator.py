@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Dict, List
+from typing import Dict, List, cast
 
 import pandas as pd
 
@@ -53,4 +53,4 @@ class MktCapWeightAllocator(WeightAllocator):
         if total == 0:
             return {}
         weights = cap_series / total
-        return {str(stock): float(weight) for stock, weight in weights.items()}
+        return cast(Dict[str, float], weights.to_dict())
