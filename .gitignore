@@ -37,3 +37,6 @@ logs/
 
 # config files
 config/app.yaml
+
+# runtime files
+bt_result/
