@@ -208,3 +208,37 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
     "options": {}
   }'
 ```
+
+## Example: start get_gold_cftc_report
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_gold_cftc_report",
+    "source": "manual",
+    "task_type": "gold_cftc_report",
+    "arguments": {
+      "params": {
+        "as_of_date": "2026-01-02"
+      }
+    },
+    "options": {}
+  }'
+```
+
+## Example: start get_gold_future_curve
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_gold_future_curve",
+    "source": "manual",
+    "task_type": "gold_future_curve",
+    "arguments": {
+      "params": {}
+    },
+    "options": {}
+  }'
+```

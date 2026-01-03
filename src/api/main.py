@@ -22,6 +22,8 @@ from infra.db.tables import (
     fund_hist,
     fund_info,
     fundamental_data,
+    gold_cftc_report,
+    gold_future_curve,
     index_hist,
     index_info,
     market_factors,
@@ -45,6 +47,8 @@ from services.pipelines.fund_hist_money_pipeline import FundHistMoneyPipeline
 from services.pipelines.fund_info_pipeline import FundInfoPipeline
 from services.pipelines.fundamental_data_pipeline import FundamentalDataPipeline
 from services.pipelines.fundamental_data_single_pipeline import FundamentalDataSinglePipeline
+from services.pipelines.gold_cftc_report_pipeline import GoldCftcReportPipeline
+from services.pipelines.gold_future_curve_pipeline import GoldFutureCurvePipeline
 from services.pipelines.index_hist_bond_pipeline import IndexHistBondPipeline
 from services.pipelines.index_hist_gold_pipeline import IndexHistGoldPipeline
 from services.pipelines.index_hist_stock_pipeline import IndexHistStockPipeline
@@ -207,6 +211,20 @@ def create_app() -> FastAPI:
                 engine=engine,
             ),
         )
+        registry.register(
+            "gold_cftc_report",
+            GoldCftcReportPipeline(
+                engine=engine,
+                config=config.gold,
+            ),
+        )
+        registry.register(
+            "gold_future_curve",
+            GoldFutureCurvePipeline(
+                engine=engine,
+                config=config.gold,
+            ),
+        )
         selector = PipelineSelector(mapping=load_pipeline_mapping(config.pipeline_mapping_path))
         repo = Repository(engine=engine, table=test_messages)
         repo_by_pipeline = {
@@ -225,6 +243,8 @@ def create_app() -> FastAPI:
             "fundamental_data": Repository(engine=engine, table=fundamental_data),
             "fundamental_data_single": Repository(engine=engine, table=fundamental_data),
             "market_factors": Repository(engine=engine, table=market_factors),
+            "gold_cftc_report": Repository(engine=engine, table=gold_cftc_report),
+            "gold_future_curve": Repository(engine=engine, table=gold_future_curve),
         }
         workflow = WorkflowEngine(
             store=task_store,
@@ -248,6 +268,8 @@ def create_app() -> FastAPI:
                 "fundamental_data": ["stock_code", "report_date"],
                 "fundamental_data_single": ["stock_code", "report_date"],
                 "market_factors": ["date"],
+                "gold_cftc_report": ["report_date", "contract_market_code", "market_code"],
+                "gold_future_curve": ["trade_date", "symbol"],
             },
         )
         app.state.task_store = task_store

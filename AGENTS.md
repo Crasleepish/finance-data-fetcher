@@ -116,6 +116,8 @@ Notes:
 - core/clean/market_factors_cleaner: Pass-through cleaner for market_factors
 - core/indexing/index_codes: index code parsing and API mapping helpers
 - core/clean/fundamental_data_cleaner: Cleaner for fundamental_data
+- core/clean/gold_cftc_report_cleaner: Cleaner for gold_cftc_report
+- core/clean/gold_future_curve_cleaner: Cleaner for gold_future_curve
 - infra/queue: task queue interfaces/implementations
 - infra/worker_runtime: background worker runtime
 - services/worker_handler: task execution handler for pipelines
@@ -129,6 +131,8 @@ Notes:
 - services/pipelines/etf_info_pipeline: ETF fund_basic pipeline
 - services/pipelines/etf_hist_pipeline: ETF daily history pipeline
 - services/pipelines/market_factors_pipeline: Factor computation pipeline to persist market_factors
+- services/pipelines/gold_cftc_report_pipeline: Gold CFTC report pipeline
+- services/pipelines/gold_future_curve_pipeline: Gold futures curve pipeline
 - services/portfolio_driver: Portfolio construction/backtest orchestration
 - services/factor_fetcher: Factor backtest entrypoint returning RawBatch
 - core/backtest/backtest_engine: VectorBT-based backtest engine

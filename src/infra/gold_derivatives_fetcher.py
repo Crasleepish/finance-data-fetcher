@@ -8,6 +8,7 @@ import zipfile
 from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote
 
 import requests
 from sqlalchemy import func, select
@@ -36,8 +37,7 @@ class GoldDerivativesFetcher:
                 select(func.max(gold_cftc_report.c.report_date))
             ).scalar_one_or_none()
             total_rows = (
-                connection.execute(select(func.count(gold_cftc_report.c.id))).scalar_one()
-                or 0
+                connection.execute(select(func.count(gold_cftc_report.c.id))).scalar_one() or 0
             )
 
         need_update = False
@@ -198,7 +198,10 @@ class GoldDerivativesFetcher:
 
     def _parse_cftc_zip(self, zip_path: Path) -> list[dict[str, Any]]:
         with zipfile.ZipFile(zip_path, "r") as archive:
-            txt_name = next((name for name in archive.namelist() if name.lower().endswith(".txt")), None)
+            txt_name = next(
+                (name for name in archive.namelist() if name.lower().endswith(".txt")),
+                None,
+            )
             if not txt_name:
                 raise RuntimeError(f"No txt in {zip_path}")
             text = archive.read(txt_name).decode("latin-1")
@@ -244,7 +247,9 @@ class GoldDerivativesFetcher:
                 "m_money_spread_all": self._int_field(row.get("M_Money_Positions_Spread_All")),
                 "other_rept_long_all": self._int_field(row.get("Other_Rept_Positions_Long_All")),
                 "other_rept_short_all": self._int_field(row.get("Other_Rept_Positions_Short_All")),
-                "other_rept_spread_all": self._int_field(row.get("Other_Rept_Positions_Spread_All")),
+                "other_rept_spread_all": self._int_field(
+                    row.get("Other_Rept_Positions_Spread_All")
+                ),
                 "tot_rept_long_all": self._int_field(row.get("Tot_Rept_Positions_Long_All")),
                 "tot_rept_short_all": self._int_field(row.get("Tot_Rept_Positions_Short_All")),
                 "nonrept_long_all": self._int_field(row.get("NonRept_Positions_Long_All")),
@@ -266,10 +271,19 @@ class GoldDerivativesFetcher:
     def _int_field(self, value: object) -> int | None:
         if value is None:
             return None
-        try:
+        if isinstance(value, int):
+            return value
+        if isinstance(value, float):
             return int(value)
-        except (TypeError, ValueError):
-            return None
+        if isinstance(value, str):
+            raw = value.strip()
+            if not raw:
+                return None
+            try:
+                return int(raw)
+            except ValueError:
+                return None
+        return None
 
     def _fetch_barchart_raw(self) -> list[dict[str, Any]]:
         html_url = "https://www.barchart.com/futures/quotes/GC*0/futures-prices"
@@ -296,7 +310,7 @@ class GoldDerivativesFetcher:
                 "Unable to fetch XSRF-TOKEN from Barchart cookies.",
             )
 
-        xsrf_header = requests.utils.unquote(xsrf)
+        xsrf_header = unquote(xsrf)
 
         headers = {
             "User-Agent": session.headers["User-Agent"],

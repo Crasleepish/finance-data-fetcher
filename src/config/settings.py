@@ -52,7 +52,9 @@ class GoldDataConfig(BaseModel):
     cftc_history_url_template: str = Field(
         default="https://www.cftc.gov/files/dea/history/com_disagg_txt_{year}.zip"
     )
-    barchart_quotes_url: str = Field(default="https://www.barchart.com/proxies/core-api/v1/quotes/get")
+    barchart_quotes_url: str = Field(
+        default="https://www.barchart.com/proxies/core-api/v1/quotes/get"
+    )
     tmp_dir: str = Field(default="/tmp")
 
 
