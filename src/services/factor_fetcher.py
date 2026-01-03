@@ -65,14 +65,17 @@ class FactorFetcher:
             "000985.CSI", start=start_date, end=end_date, fields=["date", "change_percent"]
         )
         if index_df.empty:
-            logger.warning("No index data found for MKT between %s and %s", start_date, end_date)
-            return pd.DataFrame()
+            message = f"No index data found for MKT between {start_date} and {end_date}"
+            logger.error(message)
+            raise ValueError(message)
+        else:
+            index_df = index_df.rename(columns={"change_percent": "MKT"})
+            index_df = index_df.set_index("date", drop=True)
+            index_df["MKT"] = index_df["MKT"] / 100.0
+            index_df = index_df.reindex(merged_df.index)
+            index_df["MKT"] = index_df["MKT"].fillna(0.0)
 
-        index_df = index_df.rename(columns={"change_percent": "MKT"})
-        index_df = index_df.set_index("date", drop=True)
-        index_df["MKT"] = index_df["MKT"] / 100.0
-
-        merged_df = merged_df.join(index_df, how="inner")
+        merged_df = merged_df.join(index_df, how="left")
         if merged_df.empty:
             logger.warning("No overlapping dates after joining index returns.")
             return pd.DataFrame()
