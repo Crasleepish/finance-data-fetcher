@@ -75,6 +75,26 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
   }'
 ```
 
+## Example: start get_market_factors
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_market_factors",
+    "source": "manual",
+    "task_type": "market_factors",
+    "arguments": {
+      "params": {
+        "start_date": "2023-01-02",
+        "end_date": "2023-06-30",
+        "mode": "history"
+      }
+    },
+    "options": {}
+  }'
+```
+
 ## Example: start get_fund_info
 
 ```sh

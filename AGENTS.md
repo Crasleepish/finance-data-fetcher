@@ -112,6 +112,7 @@ Notes:
 - core/clean/fund_hist_cleaner: Cleaner for fund_hist
 - core/clean/etf_info_cleaner: Cleaner for etf_info
 - core/clean/etf_hist_cleaner: Cleaner for etf_hist
+- core/clean/market_factors_cleaner: Pass-through cleaner for market_factors
 - core/indexing/index_codes: index code parsing and API mapping helpers
 - core/clean/fundamental_data_cleaner: Cleaner for fundamental_data
 - infra/queue: task queue interfaces/implementations
@@ -126,6 +127,7 @@ Notes:
 - services/pipelines/fund_hist_money_pipeline: money fund NAV pipeline
 - services/pipelines/etf_info_pipeline: ETF fund_basic pipeline
 - services/pipelines/etf_hist_pipeline: ETF daily history pipeline
+- services/pipelines/market_factors_pipeline: Factor computation pipeline to persist market_factors
 - services/portfolio_driver: Portfolio construction/backtest orchestration
 - services/factor_fetcher: Factor backtest entrypoint returning RawBatch
 - core/backtest/backtest_engine: VectorBT-based backtest engine

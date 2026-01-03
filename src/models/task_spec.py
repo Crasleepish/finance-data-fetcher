@@ -21,3 +21,4 @@ class TaskSpec(StrEnum):
     GET_FUND_HIST_MONEY = "get_fund_hist_money"
     GET_ETF_INFO = "get_etf_info"
     GET_ETF_HIST = "get_etf_hist"
+    GET_MARKET_FACTORS = "get_market_factors"

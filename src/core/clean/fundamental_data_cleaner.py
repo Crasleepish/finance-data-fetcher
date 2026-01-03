@@ -70,7 +70,10 @@ def _build_record(
         if not (_is_missing(current_liabilities) and _is_missing(noncurrent_liabilities)):
             sum_parts = _safe_num(current_liabilities) + _safe_num(noncurrent_liabilities)
         candidates = [value for value in (total_liabilities, sum_parts) if not _is_missing(value)]
-        total_liabilities = max(candidates) if candidates else None
+        if candidates:
+            total_liabilities = max(_safe_num(value) for value in candidates)
+        else:
+            total_liabilities = None
 
     net_profit = _net_profit(income_row)
     operating_profit = _parse_amount(income_row.get("operate_profit"))
@@ -101,7 +104,8 @@ def _build_record(
 
 
 def _net_profit(row: dict[str, Any]) -> float | None:
-    # Prefer attributable net profit, then net income, else continued+end net profit (only if both present).
+    # Prefer attributable net profit, then net income, else continued+end net profit.
+    # Only use continued+end when both are present.
     continued = _parse_amount(row.get("continued_net_profit"))
     end_net = _parse_amount(row.get("end_net_profit"))
     fallback = None
