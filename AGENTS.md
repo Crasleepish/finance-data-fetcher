@@ -101,6 +101,7 @@ Notes:
 - infra/fetcher/tushare_fundamental_single_fetcher: Tushare non-vip fundamental fetcher
 - infra/tushare/client: Tushare client wrapper for SDK access
 - infra/factor_data_fetcher: Factor backtest data fetchers (stock/index/calendar)
+- infra/gold_derivatives_fetcher: Fetcher for gold CFTC reports and futures curve (raw batches)
 - core/clean/csv_cleaner: CSV cleaner for test_messages
 - core/clean/stock_hist_unadj_cleaner: Cleaner for stock_hist_unadj
 - core/clean/adj_factor_cleaner: Cleaner for adj_factor

@@ -46,6 +46,16 @@ class FundDataConfig(BaseModel):
     money: str = Field(default="")
 
 
+class GoldDataConfig(BaseModel):
+    """Gold derivatives fetcher configuration."""
+
+    cftc_history_url_template: str = Field(
+        default="https://www.cftc.gov/files/dea/history/com_disagg_txt_{year}.zip"
+    )
+    barchart_quotes_url: str = Field(default="https://www.barchart.com/proxies/core-api/v1/quotes/get")
+    tmp_dir: str = Field(default="/tmp")
+
+
 class DataConfig(BaseModel):
     """Data configuration for pipeline inputs."""
 
@@ -60,5 +70,6 @@ class AppConfig(BaseModel):
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
     tushare: TushareConfig = Field(default_factory=TushareConfig)
     data: DataConfig = Field(default_factory=DataConfig)
+    gold: GoldDataConfig = Field(default_factory=GoldDataConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     pipeline_mapping_path: str = Field(default="config/task_pipeline_mapping.py")

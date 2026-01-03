@@ -11,6 +11,10 @@ data:
     gold: ""
   fund:
     money: ""
+gold:
+  cftc_history_url_template: "https://www.cftc.gov/files/dea/history/com_disagg_txt_{year}.zip"
+  barchart_quotes_url: "https://www.barchart.com/proxies/core-api/v1/quotes/get"
+  tmp_dir: "/tmp"
 logging:
   level: INFO
   log_dir: logs

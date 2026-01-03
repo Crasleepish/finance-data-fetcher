@@ -121,4 +121,17 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
     if logging_config:
         merged["logging"] = logging_config
 
+    gold_config = dict(merged.get("gold", {}))
+    gold_cftc_url = os.environ.get("APP_GOLD_CFTC_HISTORY_URL_TEMPLATE")
+    if gold_cftc_url:
+        gold_config["cftc_history_url_template"] = gold_cftc_url
+    gold_barchart_url = os.environ.get("APP_GOLD_BARCHART_QUOTES_URL")
+    if gold_barchart_url:
+        gold_config["barchart_quotes_url"] = gold_barchart_url
+    gold_tmp_dir = os.environ.get("APP_GOLD_TMP_DIR")
+    if gold_tmp_dir:
+        gold_config["tmp_dir"] = gold_tmp_dir
+    if gold_config:
+        merged["gold"] = gold_config
+
     return merged
