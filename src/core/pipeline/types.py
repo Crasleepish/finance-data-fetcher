@@ -9,10 +9,8 @@ class Arguments(TypedDict, total=False):
     params: dict[str, Any]
 
 
-class Options(TypedDict, total=False):
-    """Lightweight, JSON-serializable task options."""
-
-    chunk_size: int
+Options = dict[str, Any]
+# Lightweight, JSON-serializable task options (arbitrary keys allowed).
 
 
 class ChunkArgs(TypedDict, total=False):
