@@ -102,6 +102,7 @@ Notes:
 - infra/tushare/client: Tushare client wrapper for SDK access
 - infra/factor_data_fetcher: Factor backtest data fetchers (stock/index/calendar)
 - infra/gold_derivatives_fetcher: Fetcher for gold CFTC reports and futures curve (raw batches)
+- infra/fund_beta_data_fetcher: Data access for fund beta estimation
 - core/clean/csv_cleaner: CSV cleaner for test_messages
 - core/clean/stock_hist_unadj_cleaner: Cleaner for stock_hist_unadj
 - core/clean/adj_factor_cleaner: Cleaner for adj_factor
@@ -114,8 +115,12 @@ Notes:
 - core/clean/etf_info_cleaner: Cleaner for etf_info
 - core/clean/etf_hist_cleaner: Cleaner for etf_hist
 - core/clean/market_factors_cleaner: Pass-through cleaner for market_factors
+- core/clean/fund_beta_cleaner: Cleaner for fund_beta
 - core/indexing/index_codes: index code parsing and API mapping helpers
 - core/clean/fundamental_data_cleaner: Cleaner for fundamental_data
+- core/beta/kalman_filter: Kalman filter with ECM support
+- core/beta/q_r_estimator: Q/R estimator for beta regression
+- core/beta/covariance: Covariance pack/unpack helpers
 - core/clean/gold_cftc_report_cleaner: Cleaner for gold_cftc_report
 - core/clean/gold_future_curve_cleaner: Cleaner for gold_future_curve
 - infra/queue: task queue interfaces/implementations
@@ -133,8 +138,10 @@ Notes:
 - services/pipelines/market_factors_pipeline: Factor computation pipeline to persist market_factors
 - services/pipelines/gold_cftc_report_pipeline: Gold CFTC report pipeline
 - services/pipelines/gold_future_curve_pipeline: Gold futures curve pipeline
+- services/pipelines/fund_beta_pipeline: Fund beta pipeline
 - services/portfolio_driver: Portfolio construction/backtest orchestration
 - services/factor_fetcher: Factor backtest entrypoint returning RawBatch
+- services/fund_beta_estimator: Fund beta estimation logic
 - core/backtest/backtest_engine: VectorBT-based backtest engine
 - core/backtest/stock_selector: Factor portfolio selectors
 - core/backtest/weight_allocator: Portfolio weight allocation strategies

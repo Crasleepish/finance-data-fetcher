@@ -24,3 +24,4 @@ class TaskSpec(StrEnum):
     GET_MARKET_FACTORS = "get_market_factors"
     GET_GOLD_CFTC_REPORT = "get_gold_cftc_report"
     GET_GOLD_FUTURE_CURVE = "get_gold_future_curve"
+    GET_FUND_BETA = "get_fund_beta"

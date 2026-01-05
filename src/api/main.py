@@ -19,6 +19,7 @@ from infra.db.tables import (
     adj_factor,
     etf_hist,
     etf_info,
+    fund_beta,
     fund_hist,
     fund_info,
     fundamental_data,
@@ -42,6 +43,7 @@ from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
 from services.pipelines.adj_factor_pipeline import AdjFactorPipeline
 from services.pipelines.etf_hist_pipeline import EtfHistPipeline
 from services.pipelines.etf_info_pipeline import EtfInfoPipeline
+from services.pipelines.fund_beta_pipeline import FundBetaPipeline
 from services.pipelines.fund_hist_index_pipeline import FundHistIndexPipeline
 from services.pipelines.fund_hist_money_pipeline import FundHistMoneyPipeline
 from services.pipelines.fund_info_pipeline import FundInfoPipeline
@@ -148,6 +150,13 @@ def create_app() -> FastAPI:
             ),
         )
         registry.register(
+            "fund_beta",
+            FundBetaPipeline(
+                engine=engine,
+                calendar=app.state.calendar_service.calendar,
+            ),
+        )
+        registry.register(
             "index_info",
             IndexInfoPipeline(
                 client=tushare_client,
@@ -245,6 +254,7 @@ def create_app() -> FastAPI:
             "market_factors": Repository(engine=engine, table=market_factors),
             "gold_cftc_report": Repository(engine=engine, table=gold_cftc_report),
             "gold_future_curve": Repository(engine=engine, table=gold_future_curve),
+            "fund_beta": Repository(engine=engine, table=fund_beta),
         }
         workflow = WorkflowEngine(
             store=task_store,
@@ -270,6 +280,7 @@ def create_app() -> FastAPI:
                 "market_factors": ["date"],
                 "gold_cftc_report": ["report_date", "contract_market_code", "market_code"],
                 "gold_future_curve": ["trade_date", "symbol"],
+                "fund_beta": ["code", "date"],
             },
         )
         app.state.task_store = task_store
