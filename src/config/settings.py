@@ -63,6 +63,7 @@ class DataConfig(BaseModel):
 
     index: IndexDataConfig = Field(default_factory=IndexDataConfig)
     fund: FundDataConfig = Field(default_factory=FundDataConfig)
+    rt_fetch_interval: int = Field(default=600)
 
 
 class AppConfig(BaseModel):

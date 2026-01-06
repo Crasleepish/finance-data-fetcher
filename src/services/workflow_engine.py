@@ -41,6 +41,7 @@ class WorkflowEngine:
     repo: Repository
     repo_by_pipeline: dict[str, Repository] = field(default_factory=dict)
     upsert_keys_by_pipeline: dict[str, list[str]] = field(default_factory=dict)
+    replace_by_pipeline: set[str] = field(default_factory=set)
     failover: PipelineFailoverPolicy = FetchCleanFailoverPolicy()
 
     def handle(self, task_id: int, task: PipelineTask) -> None:
@@ -199,6 +200,7 @@ class WorkflowEngine:
                     normalized,
                     repo,
                     self.upsert_keys_by_pipeline.get(pipeline_id),
+                    replace=pipeline_id in self.replace_by_pipeline,
                 )
             except Exception as exc:
                 failed_stage = (
@@ -257,11 +259,15 @@ class WorkflowEngine:
         normalized: NormalizedBatch,
         repo: Repository,
         upsert_keys: list[str] | None,
+        *,
+        replace: bool,
     ) -> tuple[int, int]:
         records = list(normalized)
         if not records:
             return 0, 0
-        if upsert_keys:
+        if replace:
+            persisted = repo.replace_all(records)
+        elif upsert_keys:
             persisted = repo.upsert_batch(records, upsert_keys)
         else:
             persisted = repo.insert_batch(records)

@@ -5,7 +5,7 @@ import time
 from dataclasses import dataclass
 from typing import Any, Mapping, Protocol, Sequence
 
-from sqlalchemy import Engine, Table, insert
+from sqlalchemy import Engine, Table, delete, insert
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.engine import CursorResult
 from sqlalchemy.exc import DBAPIError
@@ -96,6 +96,40 @@ class Repository:
             extra={
                 "inserted": 0,
                 "updated": affected,
+                "skipped": 0,
+                "duration_ms": int((time.monotonic() - started_at) * 1000),
+            },
+        )
+        return affected
+
+    def replace_all(self, records: Sequence[Mapping[str, Any]]) -> int:
+        """Replace table contents with the provided records in one transaction."""
+        if not records:
+            return 0
+
+        logger.info("persist start", extra={"batch_size": len(records)})
+        started_at = time.monotonic()
+        try:
+            with transaction(self.engine) as connection:
+                connection.execute(delete(self.table))
+                result = connection.execute(insert(self.table).values(list(records)))
+            affected = _rowcount(result)
+        except DBAPIError as exc:
+            sql_state = getattr(getattr(exc, "orig", None), "pgcode", None)
+            logger.error(
+                "database write failed",
+                extra={
+                    "sql_state": sql_state,
+                    "deadlock": sql_state == "40P01",
+                    "duration_ms": int((time.monotonic() - started_at) * 1000),
+                },
+            )
+            raise
+        logger.info(
+            "persist commit",
+            extra={
+                "inserted": affected,
+                "updated": 0,
                 "skipped": 0,
                 "duration_ms": int((time.monotonic() - started_at) * 1000),
             },

@@ -312,6 +312,20 @@ stock_hist_unadj = Table(
     ),
 )
 
+rt_stock_hist_unadj = Table(
+    "rt_stock_hist_unadj",
+    metadata,
+    Column("stock_code", String(length=10), primary_key=True, comment="ts_code"),
+    Column("open", Float(precision=53), comment="open price"),
+    Column("close", Float(precision=53), comment="latest price"),
+    Column("high", Float(precision=53), comment="high price"),
+    Column("low", Float(precision=53), comment="low price"),
+    Column("pre_close", Float(precision=53), comment="previous close price"),
+    Column("volume", BigInteger, comment="volume in shares"),
+    Column("amount", Float(precision=53), comment="turnover amount in CNY"),
+    Column("latest_time", DateTime(timezone=False), nullable=False),
+)
+
 stock_info = Table(
     "stock_info",
     metadata,

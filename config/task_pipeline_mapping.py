@@ -21,4 +21,8 @@ TASK_PIPELINE_MAPPING = {
     TaskSpec.GET_GOLD_CFTC_REPORT: ["gold_cftc_report"],
     TaskSpec.GET_GOLD_FUTURE_CURVE: ["gold_future_curve"],
     TaskSpec.GET_FUND_BETA: ["fund_beta"],
+    TaskSpec.GET_RT_STOCK_HIST_UNADJ: [
+        "rt_stock_hist_unadj_tushare",
+        "rt_stock_hist_unadj_akshare",
+    ],
 }

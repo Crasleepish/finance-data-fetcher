@@ -99,6 +99,8 @@ Notes:
 - infra/fetcher/tushare_fund_daily_fetcher: Tushare fund_daily fetcher
 - infra/fetcher/tushare_fundamental_fetcher: Tushare vip fundamental fetcher
 - infra/fetcher/tushare_fundamental_single_fetcher: Tushare non-vip fundamental fetcher
+- infra/fetcher/tushare_rt_k_fetcher: Tushare rt_k fetcher for real-time snapshots
+- infra/fetcher/akshare_stock_spot_fetcher: Akshare A-share spot fetcher
 - infra/tushare/client: Tushare client wrapper for SDK access
 - infra/factor_data_fetcher: Factor backtest data fetchers (stock/index/calendar)
 - infra/gold_derivatives_fetcher: Fetcher for gold CFTC reports and futures curve (raw batches)
@@ -118,6 +120,7 @@ Notes:
 - core/clean/fund_beta_cleaner: Cleaner for fund_beta
 - core/indexing/index_codes: index code parsing and API mapping helpers
 - core/clean/fundamental_data_cleaner: Cleaner for fundamental_data
+- core/clean/rt_stock_hist_unadj_cleaner: Cleaner for real-time stock snapshots
 - core/beta/kalman_filter: Kalman filter with ECM support
 - core/beta/q_r_estimator: Q/R estimator for beta regression
 - core/beta/covariance: Covariance pack/unpack helpers
@@ -139,6 +142,7 @@ Notes:
 - services/pipelines/gold_cftc_report_pipeline: Gold CFTC report pipeline
 - services/pipelines/gold_future_curve_pipeline: Gold futures curve pipeline
 - services/pipelines/fund_beta_pipeline: Fund beta pipeline
+- services/pipelines/rt_stock_hist_unadj_pipeline: Real-time stock snapshot pipelines
 - services/portfolio_driver: Portfolio construction/backtest orchestration
 - services/factor_fetcher: Factor backtest entrypoint returning RawBatch
 - services/fund_beta_estimator: Fund beta estimation logic

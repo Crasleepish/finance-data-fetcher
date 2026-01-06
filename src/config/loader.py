@@ -102,6 +102,11 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
         data_config["fund"] = fund_config
         merged["data"] = data_config
 
+    rt_fetch_interval = os.environ.get("APP_DATA_RT_FETCH_INTERVAL")
+    if rt_fetch_interval:
+        data_config["rt_fetch_interval"] = int(rt_fetch_interval)
+        merged["data"] = data_config
+
     logging_config = dict(merged.get("logging", {}))
     pipeline_mapping_path = os.environ.get("APP_PIPELINE_MAPPING_PATH")
     if pipeline_mapping_path:

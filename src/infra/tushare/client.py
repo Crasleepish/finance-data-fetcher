@@ -86,6 +86,9 @@ class TushareClient(Protocol):
     ) -> list[dict[str, object]]:
         """Return fund_daily rows as a list of dicts."""
 
+    def rt_k(self, ts_code: str, fields: str, offset: int, limit: int) -> list[dict[str, object]]:
+        """Return rt_k rows as a list of dicts."""
+
 
 @dataclass(frozen=True)
 class TushareProClient(TushareClient):
@@ -332,6 +335,17 @@ class TushareProClient(TushareClient):
             offset=offset,
             limit=limit,
         )
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def rt_k(self, ts_code: str, fields: str, offset: int, limit: int) -> list[dict[str, object]]:
+        """Query rt_k data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.rt_k(ts_code=ts_code, fields=fields, offset=offset, limit=limit)
         if data is None or data.empty:
             return []
         return cast(list[dict[str, object]], data.to_dict("records"))
