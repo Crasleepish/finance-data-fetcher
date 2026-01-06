@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from typing import Iterable
 
@@ -23,6 +23,62 @@ class FundBetaDataFetcher:
 
     engine: Engine
     calendar: TradingCalendarService
+    _factor_cache: dict[tuple[str, str], pd.DataFrame] = field(
+        default_factory=dict, init=False, repr=False
+    )
+    _trade_days_cache: dict[tuple[str, str], list[date]] = field(
+        default_factory=dict, init=False, repr=False
+    )
+    _fund_net_cache: dict[tuple[str, str], dict[str, pd.Series]] = field(
+        default_factory=dict, init=False, repr=False
+    )
+    _fund_query_start_cache: dict[tuple[str, str], date] = field(
+        default_factory=dict, init=False, repr=False
+    )
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "_factor_cache", {})
+        object.__setattr__(self, "_trade_days_cache", {})
+        object.__setattr__(self, "_fund_net_cache", {})
+        object.__setattr__(self, "_fund_query_start_cache", {})
+
+    def prime_fund_net_values(
+        self, fund_codes: Iterable[str], start_date: str, end_date: str
+    ) -> None:
+        """Preload net_value series for a date range to reduce per-fund queries."""
+        cache_key = (start_date, end_date)
+        if cache_key in self._fund_net_cache:
+            return
+
+        start = pd.to_datetime(start_date).date()
+        end = pd.to_datetime(end_date).date()
+        prev_date = self.calendar.prev_trade_day(start)
+        query_start = prev_date or start
+        codes = list({code for code in fund_codes if code})
+        if not codes:
+            self._fund_net_cache[cache_key] = {}
+            self._fund_query_start_cache[cache_key] = query_start
+            return
+
+        stmt = (
+            select(fund_hist.c.fund_code, fund_hist.c.date, fund_hist.c.net_value)
+            .where(
+                and_(
+                    fund_hist.c.fund_code.in_(codes),
+                    fund_hist.c.date >= query_start,
+                    fund_hist.c.date <= end,
+                )
+            )
+            .order_by(fund_hist.c.fund_code, fund_hist.c.date)
+        )
+        df = pd.read_sql(stmt, self.engine)
+        df["date"] = pd.to_datetime(df["date"])
+        cache: dict[str, pd.Series] = {}
+        for fund_code, group in df.groupby("fund_code"):
+            series = group.set_index("date")["net_value"].astype(float)
+            cache[fund_code] = series
+        self._fund_net_cache[cache_key] = cache
+        self._fund_query_start_cache[cache_key] = query_start
 
     def load_fund_codes(self, invest_types: Iterable[str]) -> list[str]:
         """Load fund codes matching the provided invest types."""
@@ -31,8 +87,37 @@ class FundBetaDataFetcher:
         codes = sorted({code for code in df["fund_code"].dropna().tolist() if code})
         return codes
 
+    def load_fund_codes_with_data(
+        self, invest_types: Iterable[str], start_date: str, end_date: str
+    ) -> list[str]:
+        """Load fund codes with net_value data and sufficient listing history."""
+        start = pd.to_datetime(start_date).date()
+        min_listed_date = (pd.to_datetime(start_date) - pd.DateOffset(years=1)).date()
+        prev_date = self.calendar.prev_trade_day(start)
+        query_start = prev_date or start
+        stmt = (
+            select(fund_info.c.fund_code)
+            .join(fund_hist, fund_hist.c.fund_code == fund_info.c.fund_code)
+            .where(
+                fund_info.c.invest_type.in_(list(invest_types)),
+                fund_info.c.found_date.is_not(None),
+                fund_info.c.found_date <= min_listed_date,
+                fund_hist.c.date >= query_start,
+                fund_hist.c.date <= pd.to_datetime(end_date).date(),
+                fund_hist.c.net_value.is_not(None),
+            )
+            .distinct()
+        )
+        df = pd.read_sql(stmt, self.engine)
+        codes = sorted({code for code in df["fund_code"].dropna().tolist() if code})
+        return codes
+
     def get_market_factors(self, start_date: str, end_date: str) -> pd.DataFrame:
         """Return market factor DataFrame indexed by date."""
+        cache_key = (start_date, end_date)
+        cached = self._factor_cache.get(cache_key)
+        if cached is not None:
+            return cached
         stmt = (
             select(
                 market_factors.c.date,
@@ -49,37 +134,44 @@ class FundBetaDataFetcher:
             return pd.DataFrame()
         df["date"] = pd.to_datetime(df["date"])
         df = df.set_index("date", drop=True)
-        return df[FACTOR_NAMES]
+        result = df[FACTOR_NAMES]
+        self._factor_cache[cache_key] = result
+        return result
 
     def get_fund_daily_return(self, fund_code: str, start_date: str, end_date: str) -> pd.DataFrame:
         """Return fund daily returns indexed by date with forward-filled net value."""
         start = pd.to_datetime(start_date).date()
         end = pd.to_datetime(end_date).date()
-        prev_date = self.calendar.prev_trade_day(start)
-        query_start = prev_date or start
-
-        stmt = (
-            select(fund_hist.c.date, fund_hist.c.net_value)
-            .where(
-                and_(
-                    fund_hist.c.fund_code == fund_code,
-                    fund_hist.c.date >= query_start,
-                    fund_hist.c.date <= end,
+        cache_key = (start_date, end_date)
+        cached = self._fund_net_cache.get(cache_key)
+        if cached is not None and fund_code in cached:
+            net_series = cached[fund_code]
+            query_start = self._fund_query_start_cache.get(cache_key, start)
+        else:
+            prev_date = self.calendar.prev_trade_day(start)
+            query_start = prev_date or start
+            stmt = (
+                select(fund_hist.c.date, fund_hist.c.net_value)
+                .where(
+                    and_(
+                        fund_hist.c.fund_code == fund_code,
+                        fund_hist.c.date >= query_start,
+                        fund_hist.c.date <= end,
+                    )
                 )
+                .order_by(fund_hist.c.date)
             )
-            .order_by(fund_hist.c.date)
-        )
-        df = pd.read_sql(stmt, self.engine)
-        if df.empty:
-            raise RuntimeError("No net value data")
+            df = pd.read_sql(stmt, self.engine)
+            if df.empty:
+                raise RuntimeError("No net value data")
 
-        df["date"] = pd.to_datetime(df["date"])
-        df = df.set_index("date", drop=True)
-        net_series = df["net_value"].astype(float)
+            df["date"] = pd.to_datetime(df["date"])
+            df = df.set_index("date", drop=True)
+            net_series = df["net_value"].astype(float)
 
         trade_days = self.get_trade_days(start_date, end_date)
-        if prev_date:
-            trade_days = [prev_date] + trade_days
+        if query_start < start:
+            trade_days = [query_start] + trade_days
         if not trade_days:
             raise RuntimeError("No trade days for fund return range")
         trade_index = pd.to_datetime(trade_days)
@@ -98,7 +190,7 @@ class FundBetaDataFetcher:
         prev_values = prev_values.ffill()
 
         daily_return = net_series / prev_values - 1.0
-        daily_return = daily_return.iloc[1:] if prev_date else daily_return
+        daily_return = daily_return.iloc[1:] if query_start < start else daily_return
         result = pd.DataFrame({"daily_return": daily_return})
         result = result.sort_index()
         if result["daily_return"].isna().any():
@@ -107,10 +199,29 @@ class FundBetaDataFetcher:
 
     def get_trade_days(self, start_date: str, end_date: str) -> list[date]:
         """Return trade days within the date range."""
+        cache_key = (start_date, end_date)
+        cached = self._trade_days_cache.get(cache_key)
+        if cached is not None:
+            return cached
         start = pd.to_datetime(start_date).date()
         end = pd.to_datetime(end_date).date()
         chunks = self.calendar.normalize_trade_day_chunks(start, end, chunk_size=10000)
-        return [day for chunk in chunks for day in chunk]
+        days = [day for chunk in chunks for day in chunk]
+        self._trade_days_cache[cache_key] = days
+        return days
+
+    def get_bootstrap_range(self, ref_date: str, window_size: int) -> tuple[str, str] | None:
+        """Return the date range needed to bootstrap QR estimation."""
+        trade_days = self.get_trade_days("1990-01-01", ref_date)
+        ref = pd.to_datetime(ref_date).date()
+        filtered = [day for day in trade_days if day < ref]
+        if not filtered:
+            return None
+        limit = 2 * window_size + 1
+        window = filtered[-limit:] if len(filtered) >= limit else filtered
+        start_hist = window[0].strftime("%Y-%m-%d")
+        end_hist = window[-1].strftime("%Y-%m-%d")
+        return start_hist, end_hist
 
     def prev_trade_day(self, day: date) -> date | None:
         """Return previous trade day for a given date."""

@@ -95,6 +95,27 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
   }'
 ```
 
+## Example: start get_fund_beta (filtered fund_codes)
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_fund_beta",
+    "source": "manual",
+    "task_type": "fund_beta",
+    "arguments": {
+      "params": {
+        "start_date": "2025-10-13",
+        "end_date": "2025-10-15",
+        "mode": "historical",
+        "fund_codes": ["019919.OF", "000001.OF"]
+      }
+    },
+    "options": {}
+  }'
+```
+
 ## Example: start get_fund_info
 
 ```sh
