@@ -12,7 +12,15 @@ def test_fund_beta_pipeline_plan_chunks() -> None:
     engine = Mock(spec=Engine)
     calendar = Mock(spec=TradingCalendarService)
     pipeline = FundBetaPipeline(engine=engine, calendar=calendar)
-    object.__setattr__(pipeline, "_fetcher", Mock(load_fund_codes=Mock(return_value=["A", "B"])))
+    object.__setattr__(
+        pipeline,
+        "_fetcher",
+        Mock(
+            load_fund_codes_with_data=Mock(return_value=["A", "B"]),
+            get_bootstrap_range=Mock(return_value=None),
+            prime_fund_net_values=Mock(),
+        ),
+    )
 
     chunks = pipeline.plan_chunks(
         {"params": {"start_date": "2024-01-02", "end_date": "2024-01-05"}}

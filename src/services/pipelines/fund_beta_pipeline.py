@@ -10,9 +10,10 @@ from core.clean.fund_beta_cleaner import FundBetaCleaner
 from core.pipeline.pipeline import IngestionPipeline
 from core.pipeline.types import Arguments, ChunkArgs, NormalizedBatch, RawBatch
 from infra.fund_beta_data_fetcher import FundBetaDataFetcher
-from services.fund_beta_estimator import FundBetaEstimator, WINDOW_SIZE
+from services.fund_beta_estimator import WINDOW_SIZE, FundBetaEstimator
 
 logger = logging.getLogger(__name__)
+
 
 @dataclass(frozen=True)
 class FundBetaPipeline(IngestionPipeline):
