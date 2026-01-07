@@ -102,6 +102,7 @@ Notes:
 - infra/fetcher/tushare_rt_k_fetcher: Tushare rt_k fetcher for real-time snapshots
 - infra/fetcher/akshare_stock_spot_fetcher: Akshare A-share spot fetcher
 - infra/tushare/client: Tushare client wrapper for SDK access
+- infra/xueqiu_token_fetcher: Xueqiu xq_a_token fetcher and local persistence
 - infra/factor_data_fetcher: Factor backtest data fetchers (stock/index/calendar)
 - infra/gold_derivatives_fetcher: Fetcher for gold CFTC reports and futures curve (raw batches)
 - infra/fund_beta_data_fetcher: Data access for fund beta estimation

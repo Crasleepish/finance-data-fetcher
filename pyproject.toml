@@ -61,3 +61,6 @@ warn_unreachable = true
 minversion = "8.0"
 testpaths = ["tests"]
 pythonpath = ["src"]
+markers = [
+  "integration: live network or external dependency tests",
+]
