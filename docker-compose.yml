@@ -2,7 +2,8 @@ version: "3.9"
 
 services:
   finance-data-fetcher:
-    build: .
+    # build: .
+    image: crpi-c2b33nrixtqgrl83.cn-shanghai.personal.cr.aliyuncs.com/crasleepish/finance-data-fetcher:1.0.0
     ports:
       - "8000:8000"
     volumes:
