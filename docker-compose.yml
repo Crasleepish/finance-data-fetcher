@@ -7,7 +7,8 @@ services:
       - "8000:8000"
     volumes:
       - ./bt_result:/app/bt_result
-      - ./app.yaml:/app/config/app.yaml
+      - ./config/app.yaml:/app/config/app.yaml
+      - ./logs:/app/logs
     restart: always
     # environment:
     #   APP_ENVIRONMENT: "production"
