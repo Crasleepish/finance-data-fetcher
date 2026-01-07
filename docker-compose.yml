@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  finance-data-fetcher:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./bt_result:/app/bt_result
+      - ./app.yaml:/app/config/app.yaml
+    restart: always
+    # environment:
+    #   APP_ENVIRONMENT: "production"
+    #   APP_DB_URL: "postgresql+psycopg2://user:pass@host:5432/db"
+    #   APP_TUSHARE_TOKEN_PRIVATE: ""
+    #   APP_TUSHARE_TOKEN_PUBLIC: ""
+    #   APP_TUSHARE_EXCHANGE: "SSE"
+    #   APP_DATA_INDEX_STOCK: ""
+    #   APP_DATA_INDEX_BOND: ""
+    #   APP_DATA_INDEX_GOLD: ""
+    #   APP_DATA_FUND_MONEY: ""
+    #   APP_DATA_RT_FETCH_INTERVAL: "600"
+    #   APP_LOG_LEVEL: "INFO"
+    #   APP_LOG_DIR: "logs"
+    #   APP_LOG_FILE: "logs/app.log"
+    #   APP_PIPELINE_MAPPING_PATH: "config/task_pipeline_mapping.py"
+    #   APP_GOLD_CFTC_HISTORY_URL_TEMPLATE: ""
+    #   APP_GOLD_BARCHART_QUOTES_URL: ""
+    #   APP_GOLD_TMP_DIR: "/tmp"
+    networks:
+      - shennong-net
+
+networks:
+  shennong-net:
+    external: true
