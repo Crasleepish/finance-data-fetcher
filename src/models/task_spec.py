@@ -27,3 +27,4 @@ class TaskSpec(StrEnum):
     GET_FUND_BETA = "get_fund_beta"
     GET_RT_STOCK_HIST_UNADJ = "get_rt_stock_hist_unadj"
     GET_RT_INDEX_HIST = "get_rt_index_hist"
+    GET_RT_ETF_HIST = "get_rt_etf_hist"

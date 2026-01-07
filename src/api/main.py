@@ -28,12 +28,14 @@ from infra.db.tables import (
     index_hist,
     index_info,
     market_factors,
+    rt_etf_hist,
     rt_index_hist,
     rt_stock_hist_unadj,
     stock_hist_unadj,
     stock_info,
     test_messages,
 )
+from infra.fetcher.akshare_etf_sina_fetcher import AkshareEtfSinaFetcher
 from infra.fetcher.akshare_index_hist_min_fetcher import AkshareIndexHistMinFetcher
 from infra.fetcher.akshare_stock_spot_fetcher import AkshareStockSpotFetcher
 from infra.fetcher.tushare_rt_k_fetcher import TushareRtKFetcher
@@ -61,6 +63,10 @@ from services.pipelines.index_hist_gold_pipeline import IndexHistGoldPipeline
 from services.pipelines.index_hist_stock_pipeline import IndexHistStockPipeline
 from services.pipelines.index_info_pipeline import IndexInfoPipeline
 from services.pipelines.market_factors_pipeline import MarketFactorsPipeline
+from services.pipelines.rt_etf_hist_pipeline import (
+    RtEtfHistAksharePipeline,
+    RtEtfHistXueqiuPipeline,
+)
 from services.pipelines.rt_index_hist_pipeline import (
     RtIndexHistAksharePipeline,
     RtIndexHistXueqiuPipeline,
@@ -210,6 +216,23 @@ def create_app() -> FastAPI:
             ),
         )
         registry.register(
+            "rt_etf_hist_akshare",
+            RtEtfHistAksharePipeline(
+                engine=engine,
+                rt_fetch_interval_s=config.data.rt_fetch_interval,
+                fetcher=AkshareEtfSinaFetcher(
+                    retry_policy=retry_policy,
+                ),
+            ),
+        )
+        registry.register(
+            "rt_etf_hist_xueqiu",
+            RtEtfHistXueqiuPipeline(
+                engine=engine,
+                rt_fetch_interval_s=config.data.rt_fetch_interval,
+            ),
+        )
+        registry.register(
             "index_info",
             IndexInfoPipeline(
                 client=tushare_client,
@@ -312,6 +335,8 @@ def create_app() -> FastAPI:
             "rt_stock_hist_unadj_akshare": Repository(engine=engine, table=rt_stock_hist_unadj),
             "rt_index_hist_xueqiu": Repository(engine=engine, table=rt_index_hist),
             "rt_index_hist_akshare": Repository(engine=engine, table=rt_index_hist),
+            "rt_etf_hist_akshare": Repository(engine=engine, table=rt_etf_hist),
+            "rt_etf_hist_xueqiu": Repository(engine=engine, table=rt_etf_hist),
         }
         workflow = WorkflowEngine(
             store=task_store,
@@ -344,6 +369,8 @@ def create_app() -> FastAPI:
                 "rt_stock_hist_unadj_akshare",
                 "rt_index_hist_xueqiu",
                 "rt_index_hist_akshare",
+                "rt_etf_hist_akshare",
+                "rt_etf_hist_xueqiu",
             },
         )
         app.state.task_store = task_store

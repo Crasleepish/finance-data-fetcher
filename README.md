@@ -148,6 +148,22 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
   }'
 ```
 
+## Example: start get_rt_etf_hist
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_rt_etf_hist",
+    "source": "manual",
+    "task_type": "rt_etf_hist",
+    "arguments": {
+      "params": {}
+    },
+    "options": {}
+  }'
+```
+
 ## Example: start get_fund_info
 
 ```sh

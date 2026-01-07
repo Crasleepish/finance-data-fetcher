@@ -29,4 +29,8 @@ TASK_PIPELINE_MAPPING = {
         "rt_index_hist_xueqiu",
         "rt_index_hist_akshare",
     ],
+    TaskSpec.GET_RT_ETF_HIST: [
+        "rt_etf_hist_akshare",
+        "rt_etf_hist_xueqiu",
+    ],
 }

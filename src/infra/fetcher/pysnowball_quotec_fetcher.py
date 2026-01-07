@@ -2,20 +2,22 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Iterable
 
 from core.fetch.fetcher import Fetcher
 from core.indexing.index_codes import IndexCodeMapping
 from core.pipeline.types import ChunkArgs, RawBatch
-from infra.xueqiu_token_fetcher import PROJECT_ROOT, XueqiuTokenFetcher
+from infra.xueqiu_token_cache import (
+    TOKEN_ERROR_REFRESH_SECONDS,
+    TOKEN_REFRESH_DAYS,
+    load_latest_token,
+    refresh_token,
+    token_age_days,
+    token_age_seconds,
+)
+from infra.xueqiu_token_fetcher import XueqiuTokenFetcher
 
 logger = logging.getLogger(__name__)
-
-TOKEN_PREFIX = "xq_a_token_"
-TOKEN_SUFFIX = ".txt"
-TOKEN_REFRESH_DAYS = 7
-TOKEN_ERROR_REFRESH_SECONDS = 60
 
 
 @dataclass(frozen=True)
@@ -28,18 +30,18 @@ class PysnowballQuotecFetcher(Fetcher):
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Fetch index snapshots for all configured codes."""
         _ = chunk_args
-        token_info = _load_latest_token()
+        token_info = load_latest_token()
         refreshed = False
-        if token_info is None or _age_days(token_info[1]) > TOKEN_REFRESH_DAYS:
-            token_info = _refresh_token(self.token_fetcher)
+        if token_info is None or token_age_days(token_info[1]) > TOKEN_REFRESH_DAYS:
+            token_info = refresh_token(self.token_fetcher)
             refreshed = True
 
         token, token_time = token_info
         try:
             return _fetch_with_token(token, self.codes)
         except Exception as exc:
-            if not refreshed and _age_seconds(token_time) > TOKEN_ERROR_REFRESH_SECONDS:
-                token, _refreshed_time = _refresh_token(self.token_fetcher)
+            if not refreshed and token_age_seconds(token_time) > TOKEN_ERROR_REFRESH_SECONDS:
+                token, _refreshed_time = refresh_token(self.token_fetcher)
                 return _fetch_with_token(token, self.codes)
             raise RuntimeError(f"pysnowball quotec failed: {exc}") from exc
 
@@ -76,43 +78,3 @@ def _fetch_with_token(token: str, codes: Iterable[IndexCodeMapping]) -> list[dic
         extra={"row_count": len(rows)},
     )
     return rows
-
-
-def _load_latest_token() -> tuple[str, datetime] | None:
-    latest: tuple[str, datetime] | None = None
-    for path in PROJECT_ROOT.glob(f"{TOKEN_PREFIX}*{TOKEN_SUFFIX}"):
-        timestamp = _parse_token_timestamp(path.name)
-        if timestamp is None:
-            continue
-        if latest is None or timestamp > latest[1]:
-            token = path.read_text(encoding="utf-8").strip()
-            if token:
-                latest = (token, timestamp)
-    return latest
-
-
-def _refresh_token(fetcher: XueqiuTokenFetcher) -> tuple[str, datetime]:
-    path = fetcher.fetch_and_store()
-    token = path.read_text(encoding="utf-8").strip()
-    timestamp = _parse_token_timestamp(path.name)
-    if not token or timestamp is None:
-        raise RuntimeError("failed to refresh xq_a_token")
-    return token, timestamp
-
-
-def _parse_token_timestamp(name: str) -> datetime | None:
-    if not name.startswith(TOKEN_PREFIX) or not name.endswith(TOKEN_SUFFIX):
-        return None
-    stem = name[len(TOKEN_PREFIX) : -len(TOKEN_SUFFIX)]
-    try:
-        return datetime.strptime(stem, "%Y%m%d%H%M%S")
-    except ValueError:
-        return None
-
-
-def _age_days(token_time: datetime) -> int:
-    return (datetime.now() - token_time).days
-
-
-def _age_seconds(token_time: datetime) -> int:
-    return int((datetime.now() - token_time).total_seconds())

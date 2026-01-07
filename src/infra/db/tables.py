@@ -340,6 +340,20 @@ rt_index_hist = Table(
     Column("latest_time", DateTime(timezone=False), nullable=False),
 )
 
+rt_etf_hist = Table(
+    "rt_etf_hist",
+    metadata,
+    Column("etf_code", String(length=20), primary_key=True),
+    Column("open", Float(precision=53)),
+    Column("close", Float(precision=53)),
+    Column("high", Float(precision=53)),
+    Column("low", Float(precision=53)),
+    Column("pre_close", Float(precision=53)),
+    Column("volume", BigInteger),
+    Column("amount", Float(precision=53)),
+    Column("latest_time", DateTime(timezone=False), nullable=False),
+)
+
 stock_info = Table(
     "stock_info",
     metadata,
