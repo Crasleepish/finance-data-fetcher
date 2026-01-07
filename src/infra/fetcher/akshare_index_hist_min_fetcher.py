@@ -36,7 +36,7 @@ def _safe_index_min(symbol: str, start_date: str, end_date: str) -> list[dict[st
     try:
         import akshare as ak
 
-        data = ak.stock_zh_index_hist_min_em(
+        data = ak.index_zh_a_hist_min_em(
             symbol=symbol,
             period="30",
             start_date=start_date,
