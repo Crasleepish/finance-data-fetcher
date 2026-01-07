@@ -269,8 +269,6 @@ market_factors = Table(
     Column("SMB", Numeric(precision=10, scale=6)),
     Column("HML", Numeric(precision=10, scale=6)),
     Column("QMJ", Numeric(precision=10, scale=6)),
-    Column("VOL", Numeric(precision=10, scale=6)),
-    Column("LIQ", Numeric(precision=10, scale=6)),
 )
 
 stock_hist_unadj = Table(
