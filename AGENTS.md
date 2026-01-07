@@ -100,9 +100,9 @@ Notes:
 - infra/fetcher/tushare_fundamental_fetcher: Tushare vip fundamental fetcher
 - infra/fetcher/tushare_fundamental_single_fetcher: Tushare non-vip fundamental fetcher
 - infra/fetcher/tushare_rt_k_fetcher: Tushare rt_k fetcher for real-time snapshots
-- infra/fetcher/tushare_rt_idx_k_fetcher: Tushare rt_idx_k fetcher for real-time index snapshots
 - infra/fetcher/akshare_stock_spot_fetcher: Akshare A-share spot fetcher
 - infra/fetcher/pysnowball_quotec_fetcher: pysnowball quotec fetcher for index snapshots
+- infra/fetcher/akshare_index_hist_min_fetcher: Akshare index min fetcher for real-time index snapshots
 - infra/tushare/client: Tushare client wrapper for SDK access
 - infra/xueqiu_token_fetcher: Xueqiu xq_a_token fetcher and local persistence
 - infra/factor_data_fetcher: Factor backtest data fetchers (stock/index/calendar)

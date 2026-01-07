@@ -27,6 +27,6 @@ TASK_PIPELINE_MAPPING = {
     ],
     TaskSpec.GET_RT_INDEX_HIST: [
         "rt_index_hist_xueqiu",
-        "rt_index_hist_tushare",
+        "rt_index_hist_akshare",
     ],
 }

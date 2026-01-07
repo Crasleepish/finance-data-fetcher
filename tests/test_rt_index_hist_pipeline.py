@@ -7,7 +7,7 @@ from sqlalchemy.engine import Engine
 
 from services.pipelines import rt_index_hist_pipeline
 from services.pipelines.rt_index_hist_pipeline import (
-    RtIndexHistTusharePipeline,
+    RtIndexHistAksharePipeline,
     RtIndexHistXueqiuPipeline,
 )
 
@@ -28,7 +28,7 @@ def test_rt_index_hist_xueqiu_plan_chunks(monkeypatch: pytest.MonkeyPatch) -> No
     assert pipeline._codes == [{"index_code": "000985.CSI", "api_code": "CSI000985"}]
 
 
-def test_rt_index_hist_tushare_plan_chunks(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_rt_index_hist_akshare_plan_chunks(monkeypatch: pytest.MonkeyPatch) -> None:
     engine = Mock(spec=Engine)
     monkeypatch.setattr(
         rt_index_hist_pipeline,
@@ -37,7 +37,7 @@ def test_rt_index_hist_tushare_plan_chunks(monkeypatch: pytest.MonkeyPatch) -> N
     )
     monkeypatch.setattr(rt_index_hist_pipeline, "_should_fetch", lambda *_: True)
 
-    pipeline = RtIndexHistTusharePipeline(
+    pipeline = RtIndexHistAksharePipeline(
         engine=engine,
         rt_fetch_interval_s=600,
         fetcher=Mock(),
@@ -45,4 +45,7 @@ def test_rt_index_hist_tushare_plan_chunks(monkeypatch: pytest.MonkeyPatch) -> N
     )
 
     chunks = pipeline.plan_chunks({"params": {}})
-    assert chunks == [{"params": {"codes": ["000985.CSI", "000001.SH"]}}]
+    assert chunks == [
+        {"params": {"index_code": "000985.CSI", "api_code": "000985"}},
+        {"params": {"index_code": "000001.SH", "api_code": "000001"}},
+    ]
