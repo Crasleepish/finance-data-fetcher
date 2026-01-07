@@ -29,16 +29,18 @@ class FundHistMoneyPipeline(IngestionPipeline):
     _fetcher: TushareFundNavFetcher = field(init=False, repr=False)
     _cleaner: FundHistCleaner = field(init=False, repr=False)
     _codes: list[str] = field(init=False, repr=False)
+    _validated: bool = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         codes = parse_fund_codes(self.codes_raw)
-        codes = validate_money_fund_codes(self.engine, self.fund_info_table, codes)
         object.__setattr__(self, "_codes", codes)
+        object.__setattr__(self, "_validated", not codes)
         object.__setattr__(self, "_fetcher", TushareFundNavFetcher(self.client, self.retry_policy))
         object.__setattr__(self, "_cleaner", FundHistCleaner())
 
     def plan_chunks(self, arguments: Arguments) -> list[ChunkArgs]:
         """Plan one chunk per trade date."""
+        self._ensure_validated()
         if not self._codes:
             return []
         params = dict(arguments.get("params", {}))
@@ -58,6 +60,13 @@ class FundHistMoneyPipeline(IngestionPipeline):
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
         """Clean raw fund_nav data into fund_hist records."""
         return self._cleaner.clean(raw_batch)
+
+    def _ensure_validated(self) -> None:
+        if self._validated:
+            return
+        codes = validate_money_fund_codes(self.engine, self.fund_info_table, self._codes)
+        object.__setattr__(self, "_codes", codes)
+        object.__setattr__(self, "_validated", True)
 
 
 def _require_param(params: dict[str, object], key: str) -> str:

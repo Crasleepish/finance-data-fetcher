@@ -33,19 +33,17 @@ class IndexHistBondPipeline(IngestionPipeline):
     _fetcher: AkshareIndexHistFetcher = field(init=False, repr=False)
     _cleaner: IndexHistBondCleaner = field(init=False, repr=False)
     _codes: list[IndexCodeMapping] = field(init=False, repr=False)
+    _validated: bool = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
-        codes = require_index_codes(
-            self.engine,
-            self.index_info_table,
-            parse_index_codes(self.codes_raw),
-        )
-        object.__setattr__(self, "_codes", build_code_mappings(codes, strip_suffix))
+        object.__setattr__(self, "_codes", [])
+        object.__setattr__(self, "_validated", False)
         object.__setattr__(self, "_fetcher", AkshareIndexHistFetcher(self.retry_policy))
         object.__setattr__(self, "_cleaner", IndexHistBondCleaner())
 
     def plan_chunks(self, arguments: Arguments) -> list[ChunkArgs]:
         """Plan one chunk per trade date."""
+        self._ensure_initialized()
         if not self._codes:
             return []
         params = dict(arguments.get("params", {}))
@@ -65,6 +63,17 @@ class IndexHistBondPipeline(IngestionPipeline):
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
         """Clean raw bond index history into index_hist records."""
         return self._cleaner.clean(raw_batch)
+
+    def _ensure_initialized(self) -> None:
+        if self._validated:
+            return
+        codes = require_index_codes(
+            self.engine,
+            self.index_info_table,
+            parse_index_codes(self.codes_raw),
+        )
+        object.__setattr__(self, "_codes", build_code_mappings(codes, strip_suffix))
+        object.__setattr__(self, "_validated", True)
 
 
 def _require_param(params: dict[str, object], key: str) -> str:

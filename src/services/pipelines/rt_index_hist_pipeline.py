@@ -28,11 +28,44 @@ class RtIndexHistXueqiuPipeline(IngestionPipeline):
     engine: Engine
     rt_fetch_interval_s: int
     codes_raw: str
-    _fetcher: PysnowballQuotecFetcher = field(init=False, repr=False)
+    _fetcher: PysnowballQuotecFetcher | None = field(init=False, repr=False)
     _cleaner: RtIndexHistCleaner = field(init=False, repr=False)
     _codes: list[IndexCodeMapping] = field(init=False, repr=False)
+    _validated: bool = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "_codes", [])
+        object.__setattr__(self, "_fetcher", None)
+        object.__setattr__(self, "_validated", False)
+        object.__setattr__(self, "_cleaner", RtIndexHistCleaner())
+
+    def plan_chunks(self, _: Arguments) -> list[ChunkArgs]:
+        """Plan a single chunk if interval allows fetching."""
+        self._ensure_initialized()
+        if not self._codes:
+            return []
+        if not _should_fetch(self.engine, self.rt_fetch_interval_s):
+            return []
+        return [{"params": {}}]
+
+    def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
+        """Fetch raw index snapshot rows."""
+        self._ensure_initialized()
+        if self._fetcher is None:
+            raise RuntimeError("pysnowball fetcher not initialized")
+        rows = self._fetcher.fetch(chunk_args)
+        if not rows:
+            raise RuntimeError("pysnowball returned empty snapshot data")
+        latest_time = datetime.now()
+        return [{**row, "latest_time": latest_time} for row in rows]
+
+    def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
+        """Normalize raw snapshot rows into rt_index_hist records."""
+        return self._cleaner.clean(raw_batch)
+
+    def _ensure_initialized(self) -> None:
+        if self._validated:
+            return
         codes = require_index_codes(self.engine, index_info, parse_index_codes(self.codes_raw))
         mappings = build_code_mappings(codes, _to_xueqiu_code)
         object.__setattr__(self, "_codes", mappings)
@@ -44,27 +77,7 @@ class RtIndexHistXueqiuPipeline(IngestionPipeline):
                 codes=mappings,
             ),
         )
-        object.__setattr__(self, "_cleaner", RtIndexHistCleaner())
-
-    def plan_chunks(self, _: Arguments) -> list[ChunkArgs]:
-        """Plan a single chunk if interval allows fetching."""
-        if not self._codes:
-            return []
-        if not _should_fetch(self.engine, self.rt_fetch_interval_s):
-            return []
-        return [{"params": {}}]
-
-    def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
-        """Fetch raw index snapshot rows."""
-        rows = self._fetcher.fetch(chunk_args)
-        if not rows:
-            raise RuntimeError("pysnowball returned empty snapshot data")
-        latest_time = datetime.now()
-        return [{**row, "latest_time": latest_time} for row in rows]
-
-    def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
-        """Normalize raw snapshot rows into rt_index_hist records."""
-        return self._cleaner.clean(raw_batch)
+        object.__setattr__(self, "_validated", True)
 
 
 @dataclass(frozen=True)
@@ -77,15 +90,16 @@ class RtIndexHistAksharePipeline(IngestionPipeline):
     codes_raw: str
     _cleaner: RtIndexHistCleaner = field(init=False, repr=False)
     _codes: list[IndexCodeMapping] = field(init=False, repr=False)
+    _validated: bool = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
-        codes = require_index_codes(self.engine, index_info, parse_index_codes(self.codes_raw))
-        mappings = build_code_mappings(codes, _to_akshare_code)
-        object.__setattr__(self, "_codes", mappings)
+        object.__setattr__(self, "_codes", [])
+        object.__setattr__(self, "_validated", False)
         object.__setattr__(self, "_cleaner", RtIndexHistCleaner())
 
     def plan_chunks(self, _: Arguments) -> list[ChunkArgs]:
         """Plan a single chunk if interval allows fetching."""
+        self._ensure_initialized()
         if not self._codes:
             return []
         if not _should_fetch(self.engine, self.rt_fetch_interval_s):
@@ -124,6 +138,14 @@ class RtIndexHistAksharePipeline(IngestionPipeline):
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
         """Normalize raw snapshot rows into rt_index_hist records."""
         return self._cleaner.clean(raw_batch)
+
+    def _ensure_initialized(self) -> None:
+        if self._validated:
+            return
+        codes = require_index_codes(self.engine, index_info, parse_index_codes(self.codes_raw))
+        mappings = build_code_mappings(codes, _to_akshare_code)
+        object.__setattr__(self, "_codes", mappings)
+        object.__setattr__(self, "_validated", True)
 
 
 def _should_fetch(engine: Engine, interval_s: int) -> bool:
