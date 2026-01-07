@@ -30,6 +30,7 @@ from infra.db.tables import (
     market_factors,
     rt_etf_hist,
     rt_index_hist,
+    rt_market_factors,
     rt_stock_hist_unadj,
     stock_hist_unadj,
     stock_info,
@@ -71,6 +72,7 @@ from services.pipelines.rt_index_hist_pipeline import (
     RtIndexHistAksharePipeline,
     RtIndexHistXueqiuPipeline,
 )
+from services.pipelines.rt_market_factors_pipeline import RtMarketFactorsPipeline
 from services.pipelines.rt_stock_hist_unadj_pipeline import (
     RtStockHistUnadjAksharePipeline,
     RtStockHistUnadjTusharePipeline,
@@ -297,6 +299,13 @@ def create_app() -> FastAPI:
             ),
         )
         registry.register(
+            "rt_market_factors",
+            RtMarketFactorsPipeline(
+                engine=engine,
+                rt_fetch_interval_s=config.data.rt_fetch_interval,
+            ),
+        )
+        registry.register(
             "gold_cftc_report",
             GoldCftcReportPipeline(
                 engine=engine,
@@ -328,6 +337,7 @@ def create_app() -> FastAPI:
             "fundamental_data": Repository(engine=engine, table=fundamental_data),
             "fundamental_data_single": Repository(engine=engine, table=fundamental_data),
             "market_factors": Repository(engine=engine, table=market_factors),
+            "rt_market_factors": Repository(engine=engine, table=rt_market_factors),
             "gold_cftc_report": Repository(engine=engine, table=gold_cftc_report),
             "gold_future_curve": Repository(engine=engine, table=gold_future_curve),
             "fund_beta": Repository(engine=engine, table=fund_beta),
@@ -371,6 +381,7 @@ def create_app() -> FastAPI:
                 "rt_index_hist_akshare",
                 "rt_etf_hist_akshare",
                 "rt_etf_hist_xueqiu",
+                "rt_market_factors",
             },
         )
         app.state.task_store = task_store

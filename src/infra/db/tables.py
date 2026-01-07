@@ -271,6 +271,16 @@ market_factors = Table(
     Column("QMJ", Numeric(precision=10, scale=6)),
 )
 
+rt_market_factors = Table(
+    "rt_market_factors",
+    metadata,
+    Column("latest_date", DateTime(timezone=False), nullable=False),
+    Column("MKT", Numeric(precision=10, scale=6)),
+    Column("SMB", Numeric(precision=10, scale=6)),
+    Column("HML", Numeric(precision=10, scale=6)),
+    Column("QMJ", Numeric(precision=10, scale=6)),
+)
+
 stock_hist_unadj = Table(
     "stock_hist_unadj",
     metadata,

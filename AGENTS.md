@@ -108,6 +108,7 @@ Notes:
 - infra/tushare/client: Tushare client wrapper for SDK access
 - infra/xueqiu_token_fetcher: Xueqiu xq_a_token fetcher and local persistence
 - infra/xueqiu_token_cache: Token cache/refresh helpers for Xueqiu APIs
+- services/rt_market_factors_fetcher: Intraday factor snapshot computation using rt_stock_hist_unadj + bt_result
 - infra/factor_data_fetcher: Factor backtest data fetchers (stock/index/calendar)
 - infra/gold_derivatives_fetcher: Fetcher for gold CFTC reports and futures curve (raw batches)
 - infra/fund_beta_data_fetcher: Data access for fund beta estimation
@@ -129,6 +130,7 @@ Notes:
 - core/clean/rt_stock_hist_unadj_cleaner: Cleaner for real-time stock snapshots
 - core/clean/rt_index_hist_cleaner: Cleaner for real-time index snapshots
 - core/clean/rt_etf_hist_cleaner: Cleaner for real-time ETF snapshots
+- core/clean/rt_market_factors_cleaner: Cleaner for real-time market_factors snapshots
 - core/beta/kalman_filter: Kalman filter with ECM support
 - core/beta/q_r_estimator: Q/R estimator for beta regression
 - core/beta/covariance: Covariance pack/unpack helpers
@@ -153,6 +155,7 @@ Notes:
 - services/pipelines/rt_stock_hist_unadj_pipeline: Real-time stock snapshot pipelines
 - services/pipelines/rt_index_hist_pipeline: Real-time index snapshot pipelines
 - services/pipelines/rt_etf_hist_pipeline: Real-time ETF snapshot pipelines
+- services/pipelines/rt_market_factors_pipeline: Real-time market_factors snapshot pipeline
 - services/portfolio_driver: Portfolio construction/backtest orchestration
 - services/factor_fetcher: Factor backtest entrypoint returning RawBatch
 - services/fund_beta_estimator: Fund beta estimation logic

@@ -33,4 +33,5 @@ TASK_PIPELINE_MAPPING = {
         "rt_etf_hist_akshare",
         "rt_etf_hist_xueqiu",
     ],
+    TaskSpec.GET_RT_MARKET_FACTORS: ["rt_market_factors"],
 }
