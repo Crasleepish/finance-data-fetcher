@@ -326,6 +326,20 @@ rt_stock_hist_unadj = Table(
     Column("latest_time", DateTime(timezone=False), nullable=False),
 )
 
+rt_index_hist = Table(
+    "rt_index_hist",
+    metadata,
+    Column("index_code", String(length=20), primary_key=True),
+    Column("open", Float(precision=53)),
+    Column("close", Float(precision=53)),
+    Column("high", Float(precision=53)),
+    Column("low", Float(precision=53)),
+    Column("pre_close", Float(precision=53)),
+    Column("volume", BigInteger),
+    Column("amount", Float(precision=53)),
+    Column("latest_time", DateTime(timezone=False), nullable=False),
+)
+
 stock_info = Table(
     "stock_info",
     metadata,

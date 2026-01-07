@@ -403,6 +403,7 @@ dependencies = [
     { name = "pandas" },
     { name = "psycopg2-binary" },
     { name = "pydantic" },
+    { name = "pysnowball" },
     { name = "pyyaml" },
     { name = "requests" },
     { name = "scikit-learn" },
@@ -435,6 +436,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.2" },
     { name = "psycopg2-binary", specifier = ">=2.9" },
     { name = "pydantic", specifier = ">=2.6" },
+    { name = "pysnowball", specifier = ">=0.1.8" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "requests", specifier = ">=2.32" },
@@ -1177,6 +1179,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/33/c1/1d9de9aeaa1b89b0186e5fe23294ff6517fce1bc69149185577cd31016b2/pyparsing-3.3.1.tar.gz", hash = "sha256:47fad0f17ac1e2cad3de3b458570fbc9b03560aa029ed5e16ee5554da9a2251c", size = 1550512, upload-time = "2025-12-23T03:14:04.391Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8b/40/2614036cdd416452f5bf98ec037f38a1afb17f327cb8e6b652d4729e0af8/pyparsing-3.3.1-py3-none-any.whl", hash = "sha256:023b5e7e5520ad96642e2c6db4cb683d3970bd640cdf7115049a6e9c3682df82", size = 121793, upload-time = "2025-12-23T03:14:02.103Z" },
+]
+
+[[package]]
+name = "pysnowball"
+version = "0.1.8"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "beautifulsoup4" },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a0/bf/8af34d6bf7fed0be465d3964775272e6d5135a42386cec67582def9e9b46/pysnowball-0.1.8.tar.gz", hash = "sha256:9166448f5e8142b96a8004f7362eaafae0192e61bf8a042f6ac48f2c8f6a660a", size = 28496, upload-time = "2025-09-21T13:40:00.87Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ef/89/8b07f8714b60739575ff110e54085e32e0784e20f1bc412899e876fa8919/pysnowball-0.1.8-py3-none-any.whl", hash = "sha256:1073bdfb77636cbc598535602fa6778e031118aee4bd00a1354e2e000763e2fc", size = 16397, upload-time = "2025-09-21T13:39:58.568Z" },
 ]
 
 [[package]]

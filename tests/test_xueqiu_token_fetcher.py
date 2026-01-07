@@ -11,9 +11,7 @@ from infra import xueqiu_token_fetcher
 from infra.xueqiu_token_fetcher import XueqiuTokenFetcher
 
 
-def test_xueqiu_token_fetcher_mocked(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_xueqiu_token_fetcher_mocked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fixed_time = datetime(2025, 1, 2, 3, 4, 5)
     token_value = "token-abc123"
 
