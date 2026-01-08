@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import math
 from dataclasses import dataclass, field
 from datetime import date, datetime, time
 from typing import TypedDict
@@ -250,7 +251,8 @@ def _to_float(value: object) -> float | None:
         return None
     if isinstance(value, (int, float, str)):
         try:
-            return float(value)
+            num = float(value)
+            return None if math.isnan(num) else num
         except ValueError:
             return None
     return None
@@ -261,7 +263,8 @@ def _to_int(value: object) -> int | None:
         return None
     if isinstance(value, (int, float, str)):
         try:
-            return int(float(value))
+            num = float(value)
+            return None if math.isnan(num) else int(num)
         except ValueError:
             return None
     return None

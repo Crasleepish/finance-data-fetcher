@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from datetime import date, datetime
 from typing import Any
 
@@ -72,16 +73,25 @@ def _parse_date(value: Any) -> Any:
 def _as_float(value: Any) -> Any:
     if value is None:
         return None
-    return float(value)
+    num = float(value)
+    if math.isnan(num):
+        return None
+    return num
 
 
 def _as_int_shares(value: Any) -> Any:
     if value is None:
         return None
-    return int(float(value) * 100)
+    num = float(value)
+    if math.isnan(num):
+        return None
+    return int(num * 100)
 
 
 def _as_amount(value: Any) -> Any:
     if value is None:
         return None
-    return float(value) * 1000
+    num = float(value)
+    if math.isnan(num):
+        return None
+    return num * 1000

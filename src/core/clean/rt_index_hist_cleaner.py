@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from datetime import datetime
 from typing import Any
 
@@ -58,10 +59,12 @@ def _to_float(value: Any) -> Any:
     if value is None:
         return None
     if isinstance(value, (int, float)):
-        return float(value)
+        num = float(value)
+        return None if math.isnan(num) else num
     if isinstance(value, str) and value.strip() == "":
         return None
-    return float(value)
+    num = float(value)
+    return None if math.isnan(num) else num
 
 
 def _to_int(value: Any) -> Any:
@@ -70,10 +73,11 @@ def _to_int(value: Any) -> Any:
     if isinstance(value, int):
         return value
     if isinstance(value, float):
-        return int(value)
+        return None if math.isnan(value) else int(value)
     if isinstance(value, str) and value.strip() == "":
         return None
-    return int(float(value))
+    num = float(value)
+    return None if math.isnan(num) else int(num)
 
 
 def _to_datetime(value: Any) -> Any:

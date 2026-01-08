@@ -199,6 +199,44 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
   }'
 ```
 
+## Example: start get_fund_hist_index
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_fund_hist_index",
+    "source": "manual",
+    "task_type": "fund_hist_index",
+    "arguments": {
+      "params": {
+        "start_date": "2024-01-02",
+        "end_date": "2024-01-05"
+      }
+    },
+    "options": {}
+  }'
+```
+
+## Example: start get_fund_hist_money
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_fund_hist_money",
+    "source": "manual",
+    "task_type": "fund_hist_money",
+    "arguments": {
+      "params": {
+        "start_date": "2024-01-02",
+        "end_date": "2024-01-05"
+      }
+    },
+    "options": {}
+  }'
+```
+
 ## Example: start get_adj_factor
 
 ```sh

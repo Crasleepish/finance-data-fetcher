@@ -4,6 +4,7 @@ import csv
 import io
 import json
 import logging
+import math
 import zipfile
 from datetime import UTC, date, datetime
 from pathlib import Path
@@ -138,12 +139,14 @@ class GoldDerivativesFetcher:
         if value is None:
             return None
         if isinstance(value, (int, float)):
-            return float(value)
+            num = float(value)
+            return None if math.isnan(num) else num
         raw = str(value).replace(",", "").strip()
         if raw in ("", "-", "N/A"):
             return None
         try:
-            return float(raw)
+            num = float(raw)
+            return None if math.isnan(num) else num
         except ValueError:
             return None
 
@@ -153,12 +156,13 @@ class GoldDerivativesFetcher:
         if isinstance(value, int):
             return value
         if isinstance(value, float):
-            return int(value)
+            return None if math.isnan(value) else int(value)
         raw = str(value).replace(",", "").strip()
         if not raw or raw in ("N/A", "-"):
             return None
         try:
-            return int(float(raw))
+            num = float(raw)
+            return None if math.isnan(num) else int(num)
         except ValueError:
             return None
 
