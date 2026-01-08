@@ -34,24 +34,31 @@ class FactorFetcher:
         end_date: str,
         mode: str,
         progress_callback: Callable[[float, float], None] | None = None,
+        cancel_check: Callable[[], None] | None = None,
     ) -> RawBatch:
         """Run portfolio backtests and return daily factor records."""
         logger.info("Starting factor fetch from %s to %s", start_date, end_date)
+        if cancel_check is not None:
+            cancel_check()
         build_all_portfolios(start_date, end_date, mode, self.engine)
-        factors_df = self._compute_daily_factors(start_date, end_date)
+        if cancel_check is not None:
+            cancel_check()
+        factors_df = self._compute_daily_factors(start_date, end_date, cancel_check=cancel_check)
 
         if progress_callback:
             progress_callback(100, 100)
 
         return self._to_raw_batch(factors_df)
 
-    def _compute_daily_factors(self, start_date: str, end_date: str) -> pd.DataFrame:
+    def _compute_daily_factors(
+        self, start_date: str, end_date: str, cancel_check: Callable[[], None] | None = None
+    ) -> pd.DataFrame:
         """Compute MKT/SMB/HML/QMJ factor series from portfolio returns."""
         logger.info("Reading backtest output: %s", self.output_dir)
         returns_dict: dict[str, pd.DataFrame] = {}
 
-        returns_dict.update(self._load_portfolio_returns("bm"))
-        returns_dict.update(self._load_portfolio_returns("qmj"))
+        returns_dict.update(self._load_portfolio_returns("bm", cancel_check=cancel_check))
+        returns_dict.update(self._load_portfolio_returns("qmj", cancel_check=cancel_check))
 
         if not returns_dict:
             logger.warning("No portfolio returns loaded from %s", self.output_dir)
@@ -109,11 +116,15 @@ class FactorFetcher:
         logger.info("Factor computation finished: %d rows", len(factors_df))
         return factors_df
 
-    def _load_portfolio_returns(self, factor: str) -> dict[str, pd.DataFrame]:
+    def _load_portfolio_returns(
+        self, factor: str, cancel_check: Callable[[], None] | None = None
+    ) -> dict[str, pd.DataFrame]:
         """Load portfolio return CSVs for a factor prefix."""
         returns_dict: dict[str, pd.DataFrame] = {}
         for size in ["S", "B"]:
             for score in ["L", "M", "H"]:
+                if cancel_check is not None:
+                    cancel_check()
                 file_name = f"{factor}_{size}{score}_daily_returns.csv"
                 path = os.path.join(self.output_dir, file_name)
                 if not os.path.exists(path):

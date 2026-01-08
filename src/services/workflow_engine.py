@@ -5,6 +5,7 @@ import time
 from dataclasses import dataclass, field
 from decimal import Decimal
 from time import sleep
+from typing import cast
 
 from core.pipeline.pipeline import IngestionPipeline
 from core.pipeline.registry import PipelineRegistry
@@ -209,17 +210,19 @@ class WorkflowEngine:
         total_persisted = 0
         for index, chunk_args in enumerate(chunks, start=1):
             self._ensure_not_cancelled(task_id, task)
-            current_chunk = chunk_args
-            chunk_digest = _safe_digest(current_chunk)
+            chunk_digest = _safe_digest(chunk_args)
+            current_chunk = dict(chunk_args)
+            current_chunk["cancel_check"] = lambda: self._ensure_not_cancelled(task_id, task)
             chunk_started_at = time.monotonic()
             logger.info(
                 "chunk started",
                 extra={"task_id": task_id, "chunk_id": index, "chunk_args_digest": chunk_digest},
             )
+            current_chunk_typed = cast(ChunkArgs, current_chunk)
             try:
-                raw_batch = self._fetch(pipeline, current_chunk)
+                raw_batch = self._fetch(pipeline, current_chunk_typed)
                 self._ensure_not_cancelled(task_id, task)
-                normalized = self._clean(pipeline, raw_batch, current_chunk)
+                normalized = self._clean(pipeline, raw_batch, current_chunk_typed)
                 self._ensure_not_cancelled(task_id, task)
                 persisted, normalized_count = self._persist(
                     normalized,

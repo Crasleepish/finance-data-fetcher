@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from datetime import date, datetime
+from typing import Callable
 
 from core.fetch.errors import RetryableError
 from core.fetch.fetcher import Fetcher
@@ -31,6 +32,7 @@ class TushareFundamentalFetcher(Fetcher):
 
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Fetch raw data for the requested quarterly range."""
+        cancel_check = _get_cancel_check(chunk_args)
         params = chunk_args.get("params") or {}
         start_period = _require_param(params, "start_period")
         end_period = _require_param(params, "end_period")
@@ -39,6 +41,8 @@ class TushareFundamentalFetcher(Fetcher):
 
         payloads: list[dict[str, object]] = []
         for period in periods:
+            if cancel_check is not None:
+                cancel_check()
             income_rows = self.retry_policy.execute(
                 lambda: _safe_call(self.client.income_vip, period, _INCOME_FIELDS)
             )
@@ -111,3 +115,8 @@ def _next_quarter_end(value: date) -> date:
     if value.month == 9:
         return date(value.year, 12, 31)
     return date(value.year + 1, 3, 31)
+
+
+def _get_cancel_check(chunk_args: ChunkArgs) -> Callable[[], None] | None:
+    check = chunk_args.get("cancel_check")
+    return check if callable(check) else None

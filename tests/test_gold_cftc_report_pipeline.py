@@ -30,7 +30,9 @@ def test_gold_cftc_report_pipeline_fetch_and_clean(monkeypatch) -> None:
         }
     ]
 
-    def _fake_fetch(self, as_of_date: date) -> list[dict[str, object]]:
+    def _fake_fetch(
+        self, as_of_date: date, *, cancel_check=None
+    ) -> list[dict[str, object]]:
         assert as_of_date == date(2026, 1, 2)
         return expected
 

@@ -27,7 +27,7 @@ def test_gold_future_curve_pipeline_fetch_and_clean(monkeypatch) -> None:
         }
     ]
 
-    def _fake_fetch(self) -> list[dict[str, object]]:
+    def _fake_fetch(self, *, cancel_check=None) -> list[dict[str, object]]:
         return expected
 
     monkeypatch.setattr(GoldDerivativesFetcher, "update_barchart_future_curve", _fake_fetch)

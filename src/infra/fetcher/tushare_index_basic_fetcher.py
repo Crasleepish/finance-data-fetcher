@@ -4,6 +4,7 @@ import csv
 import logging
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable
 
 from core.fetch.errors import RetryableError
 from core.fetch.fetcher import Fetcher
@@ -27,6 +28,7 @@ class TushareIndexBasicFetcher(Fetcher):
 
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Fetch raw index_basic rows for target markets and CSV overrides."""
+        cancel_check = _get_cancel_check(chunk_args)
         params = chunk_args.get("params") or {}
         fields = str(params.get("fields", _DEFAULT_FIELDS))
         markets = _normalize_markets(params.get("markets", _DEFAULT_MARKETS))
@@ -37,6 +39,8 @@ class TushareIndexBasicFetcher(Fetcher):
             offset = 0
             pages = 0
             while True:
+                if cancel_check is not None:
+                    cancel_check()
                 batch = self.retry_policy.execute(
                     lambda: _safe_index_basic(
                         self.client,
@@ -119,3 +123,8 @@ def _load_csv(path: str) -> list[dict[str, str]]:
                 }
             )
     return rows
+
+
+def _get_cancel_check(chunk_args: ChunkArgs) -> Callable[[], None] | None:
+    check = chunk_args.get("cancel_check")
+    return check if callable(check) else None

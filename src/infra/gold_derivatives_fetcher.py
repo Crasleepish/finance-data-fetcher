@@ -8,7 +8,7 @@ import math
 import zipfile
 from datetime import UTC, date, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from urllib.parse import unquote
 
 import requests
@@ -29,7 +29,9 @@ class GoldDerivativesFetcher:
         self.engine = engine
         self.config = config
 
-    def ensure_cftc_reports(self, as_of_date: date) -> RawBatch:
+    def ensure_cftc_reports(
+        self, as_of_date: date, cancel_check: Callable[[], None] | None = None
+    ) -> RawBatch:
         """Return CFTC report rows if updates are needed; otherwise empty."""
         latest_report_date: date | None
         total_rows: int
@@ -61,6 +63,8 @@ class GoldDerivativesFetcher:
 
         records: dict[tuple[date, str | None, str | None], dict[str, Any]] = {}
         for year in sorted(years_to_fetch):
+            if cancel_check is not None:
+                cancel_check()
             try:
                 zip_path = self._download_cftc_zip_if_needed(year)
             except requests.HTTPError as exc:
@@ -86,6 +90,8 @@ class GoldDerivativesFetcher:
                 else:
                     raise
             for item in self._parse_cftc_zip(zip_path):
+                if cancel_check is not None:
+                    cancel_check()
                 key = (
                     item["report_date"],
                     item.get("contract_market_code"),
@@ -95,7 +101,9 @@ class GoldDerivativesFetcher:
 
         return list(records.values())
 
-    def update_barchart_future_curve(self) -> RawBatch:
+    def update_barchart_future_curve(
+        self, cancel_check: Callable[[], None] | None = None
+    ) -> RawBatch:
         """Return futures curve rows from Barchart."""
         data = self._fetch_barchart_raw()
         if not data:
@@ -104,6 +112,8 @@ class GoldDerivativesFetcher:
         now = datetime.now(UTC).replace(tzinfo=None)
         records: list[dict[str, Any]] = []
         for item in data:
+            if cancel_check is not None:
+                cancel_check()
             raw = item.get("raw") or {}
             symbol = raw.get("symbol") or item.get("symbol")
             trade_ts = raw.get("tradeTime")

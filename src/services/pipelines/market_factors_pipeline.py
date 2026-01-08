@@ -34,10 +34,12 @@ class MarketFactorsPipeline(IngestionPipeline):
         mode = params.get("mode", "history")
         if not isinstance(mode, str):
             raise ValueError("mode must be a string")
+        cancel_check = chunk_args.get("cancel_check")
         return FactorFetcher(engine=self.engine).fetch_all(
             start_date=start_date,
             end_date=end_date,
             mode=mode,
+            cancel_check=cancel_check if callable(cancel_check) else None,
         )
 
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:

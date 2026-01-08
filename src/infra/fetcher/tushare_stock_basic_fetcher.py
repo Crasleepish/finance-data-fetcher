@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import Callable
 
 from core.fetch.errors import RetryableError
 from core.fetch.fetcher import Fetcher
@@ -24,6 +25,7 @@ class TushareStockBasicFetcher(Fetcher):
 
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Fetch raw data for the given chunk arguments."""
+        cancel_check = _get_cancel_check(chunk_args)
         params = chunk_args.get("params") or {}
         exchange = str(params.get("exchange", ""))
         list_statuses = _normalize_list_statuses(params.get("list_statuses"))
@@ -34,6 +36,8 @@ class TushareStockBasicFetcher(Fetcher):
             offset = 0
             pages = 0
             while True:
+                if cancel_check is not None:
+                    cancel_check()
                 batch = self.retry_policy.execute(
                     lambda: _safe_stock_basic(
                         self.client,
@@ -99,3 +103,8 @@ def _normalize_list_statuses(value: object) -> list[str]:
     if isinstance(value, str):
         return [item.strip() for item in value.split(",") if item.strip()]
     raise ValueError("list_statuses must be list[str] or comma-separated string")
+
+
+def _get_cancel_check(chunk_args: ChunkArgs) -> Callable[[], None] | None:
+    check = chunk_args.get("cancel_check")
+    return check if callable(check) else None

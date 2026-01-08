@@ -35,8 +35,10 @@ class GoldFutureCurvePipeline(IngestionPipeline):
 
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Fetch gold futures curve records."""
-        _ = chunk_args
-        return self._fetcher.update_barchart_future_curve()
+        cancel_check = chunk_args.get("cancel_check")
+        return self._fetcher.update_barchart_future_curve(
+            cancel_check=cancel_check if callable(cancel_check) else None
+        )
 
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
         """Normalize futures curve records for persistence."""

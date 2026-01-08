@@ -39,7 +39,11 @@ class GoldCftcReportPipeline(IngestionPipeline):
         """Fetch CFTC report records for the provided as-of date."""
         params = chunk_args.get("params") or {}
         as_of_date = _parse_date(_require_param(params, "as_of_date"))
-        return self._fetcher.ensure_cftc_reports(as_of_date)
+        cancel_check = chunk_args.get("cancel_check")
+        return self._fetcher.ensure_cftc_reports(
+            as_of_date,
+            cancel_check=cancel_check if callable(cancel_check) else None,
+        )
 
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
         """Normalize CFTC report records for persistence."""

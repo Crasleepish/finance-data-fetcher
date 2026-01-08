@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import Callable
 
 from core.fetch.errors import RetryableError
 from core.fetch.fetcher import Fetcher
@@ -24,6 +25,7 @@ class TushareFundBasicFetcher(Fetcher):
 
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Fetch raw fund_basic data for the given chunk arguments."""
+        cancel_check = _get_cancel_check(chunk_args)
         params = chunk_args.get("params") or {}
         market = str(params.get("market", "O"))
         status = str(params.get("status", "L"))
@@ -33,6 +35,8 @@ class TushareFundBasicFetcher(Fetcher):
         offset = 0
         pages = 0
         while True:
+            if cancel_check is not None:
+                cancel_check()
             batch = self.retry_policy.execute(
                 lambda: _safe_fund_basic(
                     self.client,
@@ -88,3 +92,8 @@ def _safe_fund_basic(
         )
     except Exception as exc:
         raise RetryableError(str(exc)) from exc
+
+
+def _get_cancel_check(chunk_args: ChunkArgs) -> Callable[[], None] | None:
+    check = chunk_args.get("cancel_check")
+    return check if callable(check) else None

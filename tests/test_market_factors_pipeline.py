@@ -45,7 +45,9 @@ def test_market_factors_pipeline_fetch_and_clean(monkeypatch) -> None:
         }
     ]
 
-    def _fake_fetch_all(self, start_date: str, end_date: str, mode: str) -> list[dict[str, object]]:
+    def _fake_fetch_all(
+        self, start_date: str, end_date: str, mode: str, *, cancel_check=None
+    ) -> list[dict[str, object]]:
         assert start_date == "2023-01-02"
         assert end_date == "2023-01-31"
         assert mode == "history"

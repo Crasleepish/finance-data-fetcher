@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from datetime import date, datetime
-import logging
 from math import isnan
 from typing import Any, Iterable
 
