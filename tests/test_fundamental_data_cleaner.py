@@ -131,6 +131,20 @@ def test_fundamental_data_cleaner_net_profit_secondary() -> None:
     assert records[0]["net_profit"] == 12.5
 
 
+def test_fundamental_data_cleaner_truncates_long_stock_code() -> None:
+    cleaner = FundamentalDataCleaner(overwrite=False)
+    raw = [
+        {
+            "income": [{"ts_code": "12345678901.SH", "end_date": "20241231"}],
+            "balance": [{"ts_code": "12345678901.SH", "end_date": "20241231"}],
+            "cashflow": [{"ts_code": "12345678901.SH", "end_date": "20241231"}],
+        }
+    ]
+
+    records = list(cleaner.clean(raw))
+    assert records[0]["stock_code"] == "1234567890"
+
+
 def test_fundamental_data_cleaner_total_liabilities_missing() -> None:
     cleaner = FundamentalDataCleaner(overwrite=False)
     raw = [

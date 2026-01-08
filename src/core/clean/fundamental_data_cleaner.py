@@ -2,10 +2,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date, datetime
+import logging
 from math import isnan
 from typing import Any, Iterable
 
 from core.pipeline.types import NormalizedBatch, RawBatch
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -45,10 +48,12 @@ def _build_record(
     cashflow_row: dict[str, Any],
     overwrite: bool,
 ) -> dict[str, Any]:
-    ts_code = _first_non_empty(
-        income_row.get("ts_code"),
-        balance_row.get("ts_code"),
-        cashflow_row.get("ts_code"),
+    ts_code = _normalize_stock_code(
+        _first_non_empty(
+            income_row.get("ts_code"),
+            balance_row.get("ts_code"),
+            cashflow_row.get("ts_code"),
+        )
     )
     end_date = _parse_date(
         _first_non_empty(
@@ -193,3 +198,21 @@ def _first_non_empty(*values: Any) -> Any:
         if value is not None and value != "":
             return value
     return None
+
+
+def _normalize_stock_code(value: Any) -> str | None:
+    if value is None:
+        return None
+    original = value
+    code = value if isinstance(value, str) else str(value)
+    code = code.strip()
+    if not code:
+        return None
+    if len(code) > 10:
+        code = code[:10]
+    if code != original:
+        logger.warning(
+            "stock_code normalized",
+            extra={"raw_stock_code": original, "normalized_stock_code": code},
+        )
+    return code

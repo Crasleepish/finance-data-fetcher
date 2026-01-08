@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import logging
 import math
 from datetime import datetime
 from typing import Any
 
 from core.pipeline.types import NormalizedBatch, RawBatch
+
+logger = logging.getLogger(__name__)
 
 
 class StockHistUnadjCleaner:
@@ -21,19 +24,19 @@ class StockHistUnadjCleaner:
         suspend_rows = _list_of_dicts(payload.get("suspend"))
 
         daily_by_code = {
-            str(row.get("ts_code")): row
+            code: row
             for row in daily_rows
-            if isinstance(row.get("ts_code"), str) and row.get("ts_code")
+            if (code := _normalize_stock_code(row.get("ts_code"))) is not None
         }
         basic_by_code = {
-            str(row.get("ts_code")): row
+            code: row
             for row in daily_basic_rows
-            if isinstance(row.get("ts_code"), str) and row.get("ts_code")
+            if (code := _normalize_stock_code(row.get("ts_code"))) is not None
         }
         suspend_set = {
-            str(row.get("ts_code"))
+            code
             for row in suspend_rows
-            if isinstance(row.get("ts_code"), str) and row.get("ts_code")
+            if (code := _normalize_stock_code(row.get("ts_code"))) is not None
         }
 
         codes = sorted({*daily_by_code.keys(), *suspend_set})
@@ -124,3 +127,21 @@ def _first_non_none(*values: Any) -> Any:
         if value is not None:
             return value
     return None
+
+
+def _normalize_stock_code(value: Any) -> str | None:
+    if value is None:
+        return None
+    original = value
+    code = value if isinstance(value, str) else str(value)
+    code = code.strip()
+    if not code:
+        return None
+    if len(code) > 10:
+        code = code[:10]
+    if code != original:
+        logger.warning(
+            "stock_code normalized",
+            extra={"raw_stock_code": original, "normalized_stock_code": code},
+        )
+    return code
