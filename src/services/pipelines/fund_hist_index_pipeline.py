@@ -28,17 +28,17 @@ class FundHistIndexPipeline(IngestionPipeline):
     _fetcher: TushareFundNavFetcher = field(init=False, repr=False)
     _cleaner: FundHistCleaner = field(init=False, repr=False)
     _codes: list[str] = field(init=False, repr=False)
+    _loaded: bool = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
-        codes = load_index_fund_codes(self.engine, self.fund_info_table)
-        object.__setattr__(self, "_codes", codes)
+        object.__setattr__(self, "_codes", [])
+        object.__setattr__(self, "_loaded", False)
         object.__setattr__(self, "_fetcher", TushareFundNavFetcher(self.client, self.retry_policy))
         object.__setattr__(self, "_cleaner", FundHistCleaner())
 
     def plan_chunks(self, arguments: Arguments) -> list[ChunkArgs]:
         """Plan one chunk per trade date."""
-        if not self._codes:
-            return []
+        self._ensure_codes()
         params = dict(arguments.get("params", {}))
         start = _parse_date(_require_param(params, "start_date"))
         end = _parse_date(_require_param(params, "end_date"))
@@ -56,6 +56,15 @@ class FundHistIndexPipeline(IngestionPipeline):
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
         """Clean raw fund_nav data into fund_hist records."""
         return self._cleaner.clean(raw_batch)
+
+    def _ensure_codes(self) -> None:
+        if self._loaded:
+            return
+        codes = load_index_fund_codes(self.engine, self.fund_info_table)
+        if not codes:
+            raise ValueError("fund_hist_index requires fund_info with index fund codes")
+        object.__setattr__(self, "_codes", codes)
+        object.__setattr__(self, "_loaded", True)
 
 
 def _require_param(params: dict[str, object], key: str) -> str:
