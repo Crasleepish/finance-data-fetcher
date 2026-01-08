@@ -22,3 +22,15 @@ class InMemoryTaskQueue(TaskQueue):
             return self._queue.get(timeout=timeout)
         except queue.Empty:
             return None
+
+    def remove(self, task_id: int) -> bool:
+        """Remove a pending task by id if it is still in the queue."""
+        removed = False
+        with self._queue.mutex:
+            items = list(self._queue.queue)
+            remaining = [item for item in items if item.task_id != task_id]
+            removed = len(remaining) != len(items)
+            if removed:
+                self._queue.queue.clear()
+                self._queue.queue.extend(remaining)
+        return removed

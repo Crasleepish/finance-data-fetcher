@@ -31,6 +31,10 @@ class StageError(RuntimeError):
         self.chunk_args = chunk_args
 
 
+class CancelledError(RuntimeError):
+    """Raised when a task is cancelled mid-execution."""
+
+
 @dataclass
 class WorkflowEngine:
     """Pipeline-aware workflow orchestrator."""
@@ -46,14 +50,23 @@ class WorkflowEngine:
 
     def handle(self, task_id: int, task: PipelineTask) -> None:
         """Run a task through pipeline execution and persistence."""
-        _ = self.store.get_by_id(task_id)
         task_payload = self.store.get_task_payload(task_id)
         arguments_digest = ensure_hashable(task_payload.arguments)
         run_started_at = time.monotonic()
 
+        if self._is_cancelled(task_id):
+            self._release_resources(task_id, task_payload)
+            logger.info("run cancelled", extra={"task_id": task_id})
+            return
+
         if task_payload.spec == TaskSpec.NOOP_SLEEP:
             self.store.update_state(task_id, TaskState.RUNNING)
-            sleep(5)
+            for _ in range(5):
+                sleep(1)
+                if self._is_cancelled(task_id):
+                    self._release_resources(task_id, task_payload)
+                    logger.info("run cancelled", extra={"task_id": task_id})
+                    return
             self.store.update_progress(task_id, Decimal("100"))
             self.store.update_state(task_id, TaskState.SUCCEEDED)
             return
@@ -89,6 +102,10 @@ class WorkflowEngine:
                     pipeline,
                     current_pipeline_id,
                 )
+                if self._is_cancelled(task_id):
+                    self._release_resources(task_id, task_payload)
+                    logger.info("run cancelled", extra={"task_id": task_id})
+                    return
                 self.store.update_state(task_id, TaskState.SUCCEEDED)
                 total_duration_ms = int((time.monotonic() - run_started_at) * 1000)
                 logger.info(
@@ -100,6 +117,10 @@ class WorkflowEngine:
                         "final_stats": {"persisted": total_persisted},
                     },
                 )
+                return
+            except CancelledError:
+                self._release_resources(task_id, task_payload)
+                logger.info("run cancelled", extra={"task_id": task_id})
                 return
             except Exception as exc:
                 if isinstance(exc, StageError):
@@ -163,6 +184,7 @@ class WorkflowEngine:
         pipeline_id: str,
     ) -> tuple[int, int]:
         repo = self.repo_by_pipeline.get(pipeline_id, self.repo)
+        self._ensure_not_cancelled(task_id, task)
         chunks = pipeline.plan_chunks(task.arguments)
         total = len(chunks)
         strategy_label = getattr(pipeline, "chunk_strategy", type(pipeline).__name__)
@@ -186,6 +208,7 @@ class WorkflowEngine:
         done = 0
         total_persisted = 0
         for index, chunk_args in enumerate(chunks, start=1):
+            self._ensure_not_cancelled(task_id, task)
             current_chunk = chunk_args
             chunk_digest = _safe_digest(current_chunk)
             chunk_started_at = time.monotonic()
@@ -195,7 +218,9 @@ class WorkflowEngine:
             )
             try:
                 raw_batch = self._fetch(pipeline, current_chunk)
+                self._ensure_not_cancelled(task_id, task)
                 normalized = self._clean(pipeline, raw_batch, current_chunk)
+                self._ensure_not_cancelled(task_id, task)
                 persisted, normalized_count = self._persist(
                     normalized,
                     repo,
@@ -239,6 +264,24 @@ class WorkflowEngine:
                 },
             )
         return total, total_persisted
+
+    def _ensure_not_cancelled(self, task_id: int, task: PipelineTask) -> None:
+        if self._is_cancelled(task_id):
+            self._release_resources(task_id, task)
+            raise CancelledError("task cancelled")
+
+    def _is_cancelled(self, task_id: int) -> bool:
+        try:
+            return self.store.get_by_id(task_id).state == TaskState.CANCELLED
+        except Exception:
+            return False
+
+    def _release_resources(self, task_id: int, task: PipelineTask) -> None:
+        """Release resources after task cancellation."""
+        logger.info(
+            "release resources after cancellation",
+            extra={"task_id": task_id, "pipeline_id": task.pipeline_id or "selector"},
+        )
 
     def _fetch(self, pipeline: IngestionPipeline, chunk_args: ChunkArgs) -> RawBatch:
         try:

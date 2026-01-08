@@ -7,6 +7,7 @@ from infra.queue.in_memory import InMemoryTaskQueue
 from infra.task_state.store import TaskStatusStore
 from models.task_payload import PipelineTask
 from models.task_spec import TaskSpec
+from models.task_status import TaskState
 from services.task_service import TaskService
 
 
@@ -31,3 +32,25 @@ def test_repeated_start_returns_existing_task(postgres_engine: Engine) -> None:
     assert first.task_id == second.task_id
     assert first.attempt == second.attempt == 1
     assert first.state == second.state
+
+
+def test_cancel_pending_task_removes_queue(postgres_engine: Engine) -> None:
+    store = TaskStatusStore(engine=postgres_engine)
+    queue = InMemoryTaskQueue()
+    guard = IdempotencyGuard(engine=postgres_engine)
+    service = TaskService(store=store, queue=queue, guard=guard)
+
+    task_payload = PipelineTask(
+        spec=TaskSpec.PIPELINE,
+        pipeline_id="dummy",
+        source="unit-test",
+        task_type="noop",
+        arguments={"params": {"start_date": "2024-01-01"}},
+        options={},
+    )
+
+    record = service.start_task(task_payload)
+    cancelled = service.cancel_task(record.task_id)
+
+    assert cancelled.state == TaskState.CANCELLED
+    assert queue.dequeue(timeout=0) is None

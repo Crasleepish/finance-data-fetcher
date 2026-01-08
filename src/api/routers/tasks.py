@@ -120,6 +120,20 @@ def get_task_status(
     return _to_response(record)
 
 
+@router.post("/cancel/{task_id}", response_model=TaskStatusResponse)
+def cancel_task(
+    task_id: int,
+    service: TaskService = Depends(get_task_service),
+) -> TaskStatusResponse:
+    """Cancel a pending or running task by id."""
+    try:
+        record = service.cancel_task(task_id)
+    except Exception:
+        logger.exception("task cancel failed", extra={"task_id": task_id})
+        raise HTTPException(status_code=500, detail="task cancel failed")
+    return _to_response(record)
+
+
 def _to_response(record: TaskStatusRecord) -> TaskStatusResponse:
     return TaskStatusResponse(
         task_id=record.task_id,

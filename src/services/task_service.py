@@ -11,7 +11,7 @@ from infra.idempotency.guard import IdempotencyGuard
 from infra.queue.base import TaskItem, TaskQueue
 from infra.task_state.store import TaskStatusStore
 from models.task_payload import PipelineTask
-from models.task_status import TaskStatusRecord
+from models.task_status import TaskState, TaskStatusRecord
 
 logger = logging.getLogger(__name__)
 
@@ -90,3 +90,24 @@ class TaskService:
             },
         )
         return record
+
+    def cancel_task(self, task_id: int) -> TaskStatusRecord:
+        """Cancel a pending or running task."""
+        record = self.store.get_by_id(task_id)
+        if record.state in {TaskState.SUCCEEDED, TaskState.FAILED, TaskState.CANCELLED}:
+            return record
+        if record.state == TaskState.PENDING:
+            removed = self.queue.remove(task_id)
+            if not removed:
+                logger.warning(
+                    "pending task not found in queue",
+                    extra={"task_id": task_id},
+                )
+        try:
+            return self.store.update_state(
+                task_id,
+                TaskState.CANCELLED,
+                error="cancelled by request",
+            )
+        except ValueError:
+            return self.store.get_by_id(task_id)

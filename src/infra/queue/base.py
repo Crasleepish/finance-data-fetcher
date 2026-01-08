@@ -24,3 +24,6 @@ class TaskQueue(Protocol):
 
     def dequeue(self, timeout: float | None = None) -> TaskItem | None:
         """Get a task item from the queue; return None on timeout."""
+
+    def remove(self, task_id: int) -> bool:
+        """Remove a pending task by id; return True if removed."""
