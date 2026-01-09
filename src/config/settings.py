@@ -46,6 +46,12 @@ class FundDataConfig(BaseModel):
     money: str = Field(default="")
 
 
+class FundBetaConfig(BaseModel):
+    """Fund beta configuration options."""
+
+    plaintext_pjson: bool = Field(default=False)
+
+
 class GoldDataConfig(BaseModel):
     """Gold derivatives fetcher configuration."""
 
@@ -63,6 +69,7 @@ class DataConfig(BaseModel):
 
     index: IndexDataConfig = Field(default_factory=IndexDataConfig)
     fund: FundDataConfig = Field(default_factory=FundDataConfig)
+    fund_beta: FundBetaConfig = Field(default_factory=FundBetaConfig)
     rt_fetch_interval: int = Field(default=600)
 
 

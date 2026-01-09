@@ -102,6 +102,19 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
         data_config["fund"] = fund_config
         merged["data"] = data_config
 
+    fund_beta_config = dict(data_config.get("fund_beta", {}))
+    fund_beta_plaintext = os.environ.get("APP_DATA_FUND_BETA_PLAINTEXT_PJSON")
+    if fund_beta_plaintext is not None:
+        fund_beta_config["plaintext_pjson"] = fund_beta_plaintext.lower() in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }
+    if fund_beta_config:
+        data_config["fund_beta"] = fund_beta_config
+        merged["data"] = data_config
+
     rt_fetch_interval = os.environ.get("APP_DATA_RT_FETCH_INTERVAL")
     if rt_fetch_interval:
         data_config["rt_fetch_interval"] = int(rt_fetch_interval)

@@ -31,6 +31,7 @@ class FundBetaEstimator:
     """Compute fund beta exposures using Kalman + ECM + QR."""
 
     data_fetcher: FundBetaDataFetcher
+    store_plaintext_pjson: bool = False
 
     def run_historical_beta(self, fund_code: str, start_date: str, end_date: str) -> RawBatch:
         """Run historical beta estimation for a fund."""
@@ -107,7 +108,9 @@ class FundBetaEstimator:
                     "QMJ": beta_dict["QMJ"],
                     "const": beta_dict["const"],
                     "gamma": beta_dict["gamma"],
-                    "P_json": covariance_to_json(kf.current_cov()),
+                    "P_json": covariance_to_json(kf.current_cov())
+                    if self.store_plaintext_pjson
+                    else None,
                     "P_bin": pack_covariance(kf.current_cov()),
                     "log_nav_true": float(log_nav_true),
                     "log_nav_fit": float(log_nav_fit),
@@ -273,7 +276,9 @@ class FundBetaEstimator:
                     "QMJ": beta_dict["QMJ"],
                     "const": beta_dict["const"],
                     "gamma": beta_dict["gamma"],
-                    "P_json": covariance_to_json(kf.current_cov()),
+                    "P_json": covariance_to_json(kf.current_cov())
+                    if self.store_plaintext_pjson
+                    else None,
                     "P_bin": pack_covariance(kf.current_cov()),
                     "log_nav_true": float(log_nav_true),
                     "log_nav_fit": float(log_nav_fit),

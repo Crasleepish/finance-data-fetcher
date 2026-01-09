@@ -22,6 +22,7 @@ class FundBetaPipeline(IngestionPipeline):
 
     engine: Engine
     calendar: TradingCalendarService
+    store_plaintext_pjson: bool = False
     _fetcher: FundBetaDataFetcher = field(init=False, repr=False)
     _estimator: FundBetaEstimator = field(init=False, repr=False)
     _cleaner: FundBetaCleaner = field(init=False, repr=False)
@@ -29,7 +30,13 @@ class FundBetaPipeline(IngestionPipeline):
     def __post_init__(self) -> None:
         fetcher = FundBetaDataFetcher(engine=self.engine, calendar=self.calendar)
         object.__setattr__(self, "_fetcher", fetcher)
-        object.__setattr__(self, "_estimator", FundBetaEstimator(data_fetcher=fetcher))
+        object.__setattr__(
+            self,
+            "_estimator",
+            FundBetaEstimator(
+                data_fetcher=fetcher, store_plaintext_pjson=self.store_plaintext_pjson
+            ),
+        )
         object.__setattr__(self, "_cleaner", FundBetaCleaner())
 
     def plan_chunks(self, arguments: Arguments) -> list[ChunkArgs]:

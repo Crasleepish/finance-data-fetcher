@@ -175,6 +175,7 @@ def create_app() -> FastAPI:
             FundBetaPipeline(
                 engine=engine,
                 calendar=app.state.calendar_service.calendar,
+                store_plaintext_pjson=config.data.fund_beta.plaintext_pjson,
             ),
         )
         registry.register(

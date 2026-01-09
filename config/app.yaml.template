@@ -11,6 +11,8 @@ data:
     gold: ""
   fund:
     money: ""
+  fund_beta:
+    plaintext_pjson: false
   rt_fetch_interval: 600
 gold:
   cftc_history_url_template: "https://www.cftc.gov/files/dea/history/com_disagg_txt_{year}.zip"

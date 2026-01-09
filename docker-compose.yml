@@ -20,6 +20,7 @@ services:
     #   APP_DATA_INDEX_BOND: ""
     #   APP_DATA_INDEX_GOLD: ""
     #   APP_DATA_FUND_MONEY: ""
+    #   APP_DATA_FUND_BETA_PLAINTEXT_PJSON: "false"
     #   APP_DATA_RT_FETCH_INTERVAL: "600"
     #   APP_LOG_LEVEL: "INFO"
     #   APP_LOG_DIR: "logs"
