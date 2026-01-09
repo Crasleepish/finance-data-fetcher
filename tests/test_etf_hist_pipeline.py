@@ -1,11 +1,25 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, timedelta
 
 from core.clean.etf_hist_cleaner import EtfHistCleaner
 from core.fetch.retry import RetryPolicy
+from infra.db.tables import etf_info
 from infra.fetcher.tushare_fund_daily_fetcher import TushareFundDailyFetcher
+from services.pipelines.etf_hist_pipeline import EtfHistPipeline
+
+
+class FakeCalendarService:
+    def normalize_trade_day_chunks(
+        self, start: date, end: date, chunk_size: int = 1
+    ) -> list[list[date]]:
+        days: list[date] = []
+        current = start
+        while current <= end:
+            days.append(current)
+            current += timedelta(days=1)
+        return [days[i : i + chunk_size] for i in range(0, len(days), chunk_size)]
 
 
 @dataclass
@@ -91,3 +105,26 @@ def test_etf_hist_cleaner_maps_and_converts() -> None:
             "amount": None,
         },
     ]
+
+
+def test_etf_hist_pipeline_lazy_loads_codes(postgres_engine) -> None:
+    calendar = FakeCalendarService()
+    pipeline = EtfHistPipeline(
+        calendar=calendar,
+        client=FakeTushareClient(),
+        retry_policy=RetryPolicy(),
+        engine=postgres_engine,
+        etf_info_table=etf_info,
+    )
+
+    with postgres_engine.begin() as connection:
+        connection.execute(
+            etf_info.insert(),
+            [{"etf_code": "510300.SH", "etf_name": "Mock ETF"}],
+        )
+
+    chunks = pipeline.plan_chunks(
+        {"params": {"start_date": "2024-01-02", "end_date": "2024-01-03"}}
+    )
+
+    assert len(chunks) == 2

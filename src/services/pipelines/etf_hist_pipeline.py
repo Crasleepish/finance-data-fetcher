@@ -28,10 +28,11 @@ class EtfHistPipeline(IngestionPipeline):
     _fetcher: TushareFundDailyFetcher = field(init=False, repr=False)
     _cleaner: EtfHistCleaner = field(init=False, repr=False)
     _codes: list[str] = field(init=False, repr=False)
+    _validated: bool = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
-        codes = load_etf_codes(self.engine, self.etf_info_table)
-        object.__setattr__(self, "_codes", codes)
+        object.__setattr__(self, "_codes", [])
+        object.__setattr__(self, "_validated", False)
         object.__setattr__(
             self,
             "_fetcher",
@@ -41,6 +42,7 @@ class EtfHistPipeline(IngestionPipeline):
 
     def plan_chunks(self, arguments: Arguments) -> list[ChunkArgs]:
         """Plan one chunk per trade date."""
+        self._ensure_initialized()
         if not self._codes:
             return []
         params = dict(arguments.get("params", {}))
@@ -60,6 +62,13 @@ class EtfHistPipeline(IngestionPipeline):
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
         """Clean raw fund_daily data into etf_hist records."""
         return self._cleaner.clean(raw_batch)
+
+    def _ensure_initialized(self) -> None:
+        if self._validated and self._codes:
+            return
+        codes = load_etf_codes(self.engine, self.etf_info_table)
+        object.__setattr__(self, "_codes", codes)
+        object.__setattr__(self, "_validated", True)
 
 
 def _require_param(params: dict[str, object], key: str) -> str:

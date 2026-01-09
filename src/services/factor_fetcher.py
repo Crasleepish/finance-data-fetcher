@@ -150,8 +150,6 @@ class FactorFetcher:
                     "SMB": _safe_value(row["SMB"]),
                     "HML": _safe_value(row["HML"]),
                     "QMJ": _safe_value(row["QMJ"]),
-                    "VOL": None,
-                    "LIQ": None,
                 }
             )
         return records
