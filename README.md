@@ -199,6 +199,44 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
   }'
 ```
 
+## Example: start get_etf_info
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_etf_info",
+    "source": "manual",
+    "task_type": "etf_info",
+    "arguments": {
+      "params": {
+        "market": "E",
+        "status": "L"
+      }
+    },
+    "options": {}
+  }'
+```
+
+## Example: start get_etf_hist
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_etf_hist",
+    "source": "manual",
+    "task_type": "etf_hist",
+    "arguments": {
+      "params": {
+        "start_date": "2024-01-02",
+        "end_date": "2024-01-05"
+      }
+    },
+    "options": {}
+  }'
+```
+
 ## Example: start get_fund_hist_index
 
 ```sh
