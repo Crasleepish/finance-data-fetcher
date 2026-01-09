@@ -75,6 +75,7 @@ def build_all_portfolios(start_date: str, end_date: str, mode: str, engine: Engi
             "net_profit",
             "net_cash_from_operating",
         ],
+        mode=mode,
     )
     price.to_csv(os.path.join(output_path, "price.csv"))
     mkt_cap.to_csv(os.path.join(output_path, "mkt_cap.csv"))

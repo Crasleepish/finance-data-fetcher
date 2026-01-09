@@ -201,11 +201,14 @@ class DataFetcher:
         return df.astype("float32")
 
     def fetch_fundamentals_on_all(
-        self, start_date: str, end_date: str, fields: list[str]
+        self, start_date: str, end_date: str, fields: list[str], mode: str
     ) -> pd.DataFrame:
         """Fetch multiple fundamental fields with a lookback window."""
         adj_start = pd.to_datetime(start_date) - pd.Timedelta(days=500)
-        adj_end = pd.to_datetime(end_date) - pd.Timedelta(days=120)
+        if mode == "realtime":
+            adj_end = pd.to_datetime(end_date)
+        else:
+            adj_end = pd.to_datetime(end_date) - pd.Timedelta(days=120)
         try:
             stmt = select(
                 fundamental_data.c.report_date,
