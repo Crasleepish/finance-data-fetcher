@@ -17,7 +17,7 @@ _DEFAULT_FIELDS = "ts_code,trade_date,open,close,high,low,pre_close,change,pct_c
 
 @dataclass(frozen=True)
 class TushareIndexDailyFetcher(Fetcher):
-    """Fetch index_daily rows for configured indices on a trade date."""
+    """Fetch index_daily rows for configured indices within a date range."""
 
     client: TushareClient
     retry_policy: RetryPolicy
@@ -25,26 +25,41 @@ class TushareIndexDailyFetcher(Fetcher):
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Fetch raw index_daily rows for each configured index code."""
         params = chunk_args.get("params") or {}
-        trade_date = _require_param(params, "trade_date")
-        trade_date_compact = _to_yyyymmdd(trade_date)
+        start_date = _require_param(params, "start_date")
+        end_date = _require_param(params, "end_date")
+        start_date_compact = _to_yyyymmdd(start_date)
+        end_date_compact = _to_yyyymmdd(end_date)
         fields = str(params.get("fields", _DEFAULT_FIELDS))
         codes = _require_codes(params.get("codes"))
+        limit = _require_limit(params.get("limit", 6000))
 
         rows: list[dict[str, object]] = []
         for mapping in codes:
-            batch = self.retry_policy.execute(
-                lambda: _safe_index_daily(
-                    self.client, mapping["api_code"], trade_date_compact, fields
+            offset = 0
+            while True:
+                batch = self.retry_policy.execute(
+                    lambda: _safe_index_daily(
+                        self.client,
+                        mapping["api_code"],
+                        start_date_compact,
+                        end_date_compact,
+                        fields,
+                        offset,
+                        limit,
+                    )
                 )
-            )
-            for item in batch:
-                if isinstance(item, dict):
-                    item["index_code"] = mapping["index_code"]
-            rows.extend(batch)
+                if not batch:
+                    break
+                for item in batch:
+                    if isinstance(item, dict):
+                        item["index_code"] = mapping["index_code"]
+                rows.extend(batch)
+                offset += limit
         logger.info(
             "tushare index_daily fetched",
             extra={
-                "trade_date": trade_date_compact,
+                "start_date": start_date_compact,
+                "end_date": end_date_compact,
                 "index_count": len(codes),
                 "row_count": len(rows),
             },
@@ -53,10 +68,23 @@ class TushareIndexDailyFetcher(Fetcher):
 
 
 def _safe_index_daily(
-    client: TushareClient, ts_code: str, trade_date: str, fields: str
+    client: TushareClient,
+    ts_code: str,
+    start_date: str,
+    end_date: str,
+    fields: str,
+    offset: int,
+    limit: int,
 ) -> list[dict[str, object]]:
     try:
-        return client.index_daily(ts_code=ts_code, trade_date=trade_date, fields=fields)
+        return client.index_daily(
+            ts_code=ts_code,
+            start_date=start_date,
+            end_date=end_date,
+            fields=fields,
+            offset=offset,
+            limit=limit,
+        )
     except Exception as exc:
         raise RetryableError(str(exc)) from exc
 
@@ -84,3 +112,9 @@ def _to_yyyymmdd(value: str) -> str:
     if len(value) == 8 and value.isdigit():
         return value
     return value.replace("-", "")
+
+
+def _require_limit(value: object) -> int:
+    if isinstance(value, int) and value > 0:
+        return value
+    raise ValueError("limit must be positive integer")

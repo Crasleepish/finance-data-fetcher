@@ -20,7 +20,7 @@ class TushareFundNavFetcher(Fetcher):
 
     client: TushareClient
     retry_policy: RetryPolicy
-    batch_size: int = 6000
+    batch_size: int = 1000
 
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Fetch raw fund_nav rows for each batch of fund codes."""
