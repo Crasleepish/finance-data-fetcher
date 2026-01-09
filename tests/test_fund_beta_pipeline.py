@@ -16,7 +16,7 @@ def test_fund_beta_pipeline_plan_chunks() -> None:
         pipeline,
         "_fetcher",
         Mock(
-            load_fund_codes_with_data=Mock(return_value=["A", "B"]),
+            load_fund_codes_with_data=Mock(return_value=[("A", "2024-01-02"), ("B", "2024-01-03")]),
             get_bootstrap_range=Mock(return_value=None),
             prime_fund_net_values=Mock(),
         ),
@@ -38,7 +38,7 @@ def test_fund_beta_pipeline_plan_chunks() -> None:
         {
             "params": {
                 "fund_code": "B",
-                "start_date": "2024-01-02",
+                "start_date": "2024-01-03",
                 "end_date": "2024-01-05",
                 "mode": "realtime",
             }

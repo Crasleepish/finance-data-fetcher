@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from datetime import datetime
 
 from sqlalchemy.engine import Engine
 
@@ -40,23 +41,32 @@ class FundBetaPipeline(IngestionPipeline):
         requested_codes = _optional_code_list(params.get("fund_codes"))
         if mode not in {"historical", "realtime"}:
             raise ValueError("mode must be historical or realtime")
-        codes = self._fetcher.load_fund_codes_with_data(
+        codes_with_start = self._fetcher.load_fund_codes_with_data(
             ["被动指数型", "增强指数型"], start_date, end_date
         )
+        if not codes_with_start:
+            return []
+        fund_start = {code: fund_start for code, fund_start in codes_with_start}
         if requested_codes is not None:
-            allowed = set(codes)
-            codes = [code for code in requested_codes if code in allowed]
+            allowed = set(fund_start)
+            fund_start = {code: fund_start[code] for code in requested_codes if code in allowed}
+        codes = list(fund_start.keys())
+        if not codes:
+            return []
+        min_start = min(_parse_date(value) for value in fund_start.values()).strftime("%Y-%m-%d")
         prefetch_start = start_date
         if mode == "realtime":
-            bootstrap_range = self._fetcher.get_bootstrap_range(start_date, WINDOW_SIZE)
+            bootstrap_range = self._fetcher.get_bootstrap_range(min_start, WINDOW_SIZE)
             if bootstrap_range is not None:
                 prefetch_start = bootstrap_range[0]
+        else:
+            prefetch_start = min_start
         self._fetcher.prime_fund_net_values(codes, prefetch_start, end_date)
         return [
             {
                 "params": {
                     "fund_code": code,
-                    "start_date": start_date,
+                    "start_date": fund_start[code],
                     "end_date": end_date,
                     "mode": mode,
                 }
@@ -111,3 +121,11 @@ def _optional_code_list(value: object) -> list[str] | None:
     if len(codes) != len(value):
         raise ValueError("fund_codes must be a list of non-empty strings")
     return codes
+
+
+def _parse_date(value: str) -> datetime:
+    if len(value) == 10:
+        return datetime.strptime(value, "%Y-%m-%d")
+    if len(value) == 8 and value.isdigit():
+        return datetime.strptime(value, "%Y%m%d")
+    raise ValueError("expected YYYY-MM-DD or YYYYMMDD date string")

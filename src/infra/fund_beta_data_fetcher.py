@@ -89,28 +89,63 @@ class FundBetaDataFetcher:
 
     def load_fund_codes_with_data(
         self, invest_types: Iterable[str], start_date: str, end_date: str
-    ) -> list[str]:
-        """Load fund codes with net_value data and sufficient listing history."""
+    ) -> list[tuple[str, str]]:
+        """Load fund codes with net_value data and per-fund computation start."""
+        end = pd.to_datetime(end_date).date()
+        min_listed_date = (pd.to_datetime(end_date) - pd.DateOffset(years=1)).date()
         start = pd.to_datetime(start_date).date()
-        min_listed_date = (pd.to_datetime(start_date) - pd.DateOffset(years=1)).date()
-        prev_date = self.calendar.prev_trade_day(start)
-        query_start = prev_date or start
-        stmt = (
-            select(fund_info.c.fund_code)
-            .join(fund_hist, fund_hist.c.fund_code == fund_info.c.fund_code)
+
+        stmt = select(fund_info.c.fund_code, fund_info.c.found_date).where(
+            fund_info.c.invest_type.in_(list(invest_types)),
+            fund_info.c.found_date.is_not(None),
+            fund_info.c.found_date <= min_listed_date,
+        )
+        fund_df = pd.read_sql(stmt, self.engine)
+        if fund_df.empty:
+            return []
+
+        fund_df = fund_df.dropna(subset=["fund_code", "found_date"])
+        fund_df["found_date"] = pd.to_datetime(fund_df["found_date"]).dt.date
+        fund_df["fund_start"] = (
+            pd.to_datetime(fund_df["found_date"]) + pd.DateOffset(years=1)
+        ).dt.date
+        fund_df["fund_start"] = fund_df["fund_start"].apply(
+            lambda value: value if value > start else start
+        )
+
+        min_start = fund_df["fund_start"].min()
+        if min_start is None:
+            return []
+
+        hist_stmt = (
+            select(fund_hist.c.fund_code, fund_hist.c.date)
             .where(
-                fund_info.c.invest_type.in_(list(invest_types)),
-                fund_info.c.found_date.is_not(None),
-                fund_info.c.found_date <= min_listed_date,
-                fund_hist.c.date >= query_start,
-                fund_hist.c.date <= pd.to_datetime(end_date).date(),
+                fund_hist.c.fund_code.in_(fund_df["fund_code"].tolist()),
+                fund_hist.c.date >= min_start,
+                fund_hist.c.date <= end,
                 fund_hist.c.net_value.is_not(None),
             )
-            .distinct()
+            .order_by(fund_hist.c.fund_code, fund_hist.c.date)
         )
-        df = pd.read_sql(stmt, self.engine)
-        codes = sorted({code for code in df["fund_code"].dropna().tolist() if code})
-        return codes
+        hist_df = pd.read_sql(hist_stmt, self.engine)
+        if hist_df.empty:
+            return []
+
+        hist_df["date"] = pd.to_datetime(hist_df["date"])
+        max_dates = hist_df.groupby("fund_code")["date"].max()
+        fund_df = fund_df.set_index("fund_code")
+        fund_df["max_date"] = max_dates
+        fund_df = fund_df.dropna(subset=["max_date"])
+        eligible = fund_df[fund_df["max_date"].dt.date >= fund_df["fund_start"]]
+        if eligible.empty:
+            return []
+
+        result = [
+            (code, start_value.strftime("%Y-%m-%d"))
+            for code, start_value in eligible["fund_start"].items()
+        ]
+        result.sort(key=lambda item: item[0])
+        return result
 
     def get_market_factors(self, start_date: str, end_date: str) -> pd.DataFrame:
         """Return market factor DataFrame indexed by date."""
