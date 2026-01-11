@@ -17,7 +17,7 @@ _DEFAULT_FIELDS = "ts_code,trade_date,open,close,high,low,change,pct_change,vol,
 
 @dataclass(frozen=True)
 class TushareSgeDailyFetcher(Fetcher):
-    """Fetch sge_daily rows for configured contracts on a trade date."""
+    """Fetch sge_daily rows for configured contracts in a date range."""
 
     client: TushareClient
     retry_policy: RetryPolicy
@@ -25,8 +25,10 @@ class TushareSgeDailyFetcher(Fetcher):
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Fetch raw sge_daily rows for each configured contract."""
         params = chunk_args.get("params") or {}
-        trade_date = _require_param(params, "trade_date")
-        trade_date_compact = _to_yyyymmdd(trade_date)
+        start_date = _require_param(params, "start_date")
+        end_date = _require_param(params, "end_date")
+        start_date_compact = _to_yyyymmdd(start_date)
+        end_date_compact = _to_yyyymmdd(end_date)
         fields = str(params.get("fields", _DEFAULT_FIELDS))
         codes = _require_codes(params.get("codes"))
 
@@ -34,7 +36,11 @@ class TushareSgeDailyFetcher(Fetcher):
         for mapping in codes:
             batch = self.retry_policy.execute(
                 lambda: _safe_sge_daily(
-                    self.client, mapping["api_code"], trade_date_compact, fields
+                    self.client,
+                    mapping["api_code"],
+                    start_date_compact,
+                    end_date_compact,
+                    fields,
                 )
             )
             for item in batch:
@@ -44,7 +50,8 @@ class TushareSgeDailyFetcher(Fetcher):
         logger.info(
             "tushare sge_daily fetched",
             extra={
-                "trade_date": trade_date_compact,
+                "start_date": start_date_compact,
+                "end_date": end_date_compact,
                 "index_count": len(codes),
                 "row_count": len(rows),
             },
@@ -53,10 +60,19 @@ class TushareSgeDailyFetcher(Fetcher):
 
 
 def _safe_sge_daily(
-    client: TushareClient, ts_code: str, trade_date: str, fields: str
+    client: TushareClient,
+    ts_code: str,
+    start_date: str,
+    end_date: str,
+    fields: str,
 ) -> list[dict[str, object]]:
     try:
-        return client.sge_daily(ts_code=ts_code, trade_date=trade_date, fields=fields)
+        return client.sge_daily(
+            ts_code=ts_code,
+            start_date=start_date,
+            end_date=end_date,
+            fields=fields,
+        )
     except Exception as exc:
         raise RetryableError(str(exc)) from exc
 

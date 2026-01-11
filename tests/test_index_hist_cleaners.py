@@ -85,11 +85,11 @@ def test_index_hist_gold_cleaner_units_and_fill() -> None:
             "low": None,
             "vol": 2.5,
             "amount": None,
-            "pct_change": 0.1,
             "change": 0.2,
         }
     ]
     cleaned = list(cleaner.clean(raw))
+    expected_percent = 0.2 / (420.0 - 0.2) * 100
     assert cleaned == [
         {
             "index_code": "Au99.99.SGE",
@@ -100,7 +100,7 @@ def test_index_hist_gold_cleaner_units_and_fill() -> None:
             "low": 420.0,
             "volume": 2500,
             "amount": None,
-            "change_percent": 0.1,
+            "change_percent": expected_percent,
             "change": 0.2,
         }
     ]

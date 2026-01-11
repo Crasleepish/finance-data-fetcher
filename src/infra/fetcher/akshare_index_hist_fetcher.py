@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import logging
 from dataclasses import dataclass
 from typing import cast
@@ -15,21 +16,23 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class AkshareIndexHistFetcher(Fetcher):
-    """Fetch csindex history rows for configured indices on a trade date."""
+    """Fetch csindex history rows for configured indices in a date range."""
 
     retry_policy: RetryPolicy
 
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Fetch raw csindex rows for each configured index code."""
         params = chunk_args.get("params") or {}
-        trade_date = _require_param(params, "trade_date")
-        trade_date_compact = _to_yyyymmdd(trade_date)
+        start_date = _require_param(params, "start_date")
+        end_date = _require_param(params, "end_date")
+        start_date_compact = _to_yyyymmdd(start_date)
+        end_date_compact = _to_yyyymmdd(end_date)
         codes = _require_codes(params.get("codes"))
 
         rows: list[dict[str, object]] = []
         for mapping in codes:
             batch = self.retry_policy.execute(
-                lambda: _safe_csindex(mapping["api_code"], trade_date_compact)
+                lambda: _safe_csindex(mapping["api_code"], start_date_compact, end_date_compact)
             )
             for item in batch:
                 if isinstance(item, dict):
@@ -38,7 +41,8 @@ class AkshareIndexHistFetcher(Fetcher):
         logger.info(
             "akshare csindex fetched",
             extra={
-                "trade_date": trade_date_compact,
+                "start_date": start_date_compact,
+                "end_date": end_date_compact,
                 "index_count": len(codes),
                 "row_count": len(rows),
             },
@@ -46,18 +50,29 @@ class AkshareIndexHistFetcher(Fetcher):
         return rows
 
 
-def _safe_csindex(symbol: str, trade_date: str) -> list[dict[str, object]]:
+def _safe_csindex(symbol: str, start_date: str, end_date: str) -> list[dict[str, object]]:
     try:
         import akshare as ak
 
         data = ak.stock_zh_index_hist_csindex(
             symbol=symbol,
-            start_date=trade_date,
-            end_date=trade_date,
+            start_date=start_date,
+            end_date=end_date,
         )
         if data is None or data.empty:
             return []
         return cast(list[dict[str, object]], data.to_dict("records"))
+    except json.JSONDecodeError as exc:
+        logger.warning(
+            "akshare csindex json decode error",
+            extra={
+                "symbol": symbol,
+                "start_date": start_date,
+                "end_date": end_date,
+                "error": str(exc),
+            },
+        )
+        return []
     except Exception as exc:
         raise RetryableError(str(exc)) from exc
 

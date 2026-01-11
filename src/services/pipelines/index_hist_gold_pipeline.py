@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from sqlalchemy import Table
 from sqlalchemy.engine import Engine
@@ -44,18 +44,23 @@ class IndexHistGoldPipeline(IngestionPipeline):
         object.__setattr__(self, "_cleaner", IndexHistGoldCleaner())
 
     def plan_chunks(self, arguments: Arguments) -> list[ChunkArgs]:
-        """Plan one chunk per trade date."""
+        """Plan chunks by natural year."""
         self._ensure_initialized()
         if not self._codes:
             return []
         params = dict(arguments.get("params", {}))
         start = _parse_date(_require_param(params, "start_date"))
         end = _parse_date(_require_param(params, "end_date"))
-        chunks = self.calendar.normalize_trade_day_chunks(start, end, chunk_size=1)
+        chunks = _plan_year_chunks(start, end)
         return [
-            {"params": {"trade_date": chunk[0].isoformat(), "codes": self._codes}}
-            for chunk in chunks
-            if chunk
+            {
+                "params": {
+                    "start_date": chunk_start.isoformat(),
+                    "end_date": chunk_end.isoformat(),
+                    "codes": self._codes,
+                }
+            }
+            for chunk_start, chunk_end in chunks
         ]
 
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
@@ -91,3 +96,14 @@ def _parse_date(value: str) -> date:
     if len(value) == 8 and value.isdigit():
         return datetime.strptime(value, "%Y%m%d").date()
     raise ValueError("expected YYYY-MM-DD or YYYYMMDD date string")
+
+
+def _plan_year_chunks(start: date, end: date) -> list[tuple[date, date]]:
+    chunks: list[tuple[date, date]] = []
+    current = start
+    while current <= end:
+        year_end = date(current.year, 12, 31)
+        chunk_end = min(end, year_end)
+        chunks.append((current, chunk_end))
+        current = chunk_end + timedelta(days=1)
+    return chunks

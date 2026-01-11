@@ -18,6 +18,7 @@ class IndexHistGoldCleaner:
             if not index_code:
                 continue
             close = _as_float(row.get("close"))
+            change = _as_float(row.get("change"))
             record = {
                 "index_code": index_code,
                 "date": _parse_date(row.get("trade_date")),
@@ -27,8 +28,8 @@ class IndexHistGoldCleaner:
                 "low": _fill_close(_as_float(row.get("low")), close),
                 "volume": _as_int(_scale(row.get("vol"), 1000)),
                 "amount": _as_float(row.get("amount")),
-                "change_percent": _as_float(row.get("pct_change")),
-                "change": _as_float(row.get("change")),
+                "change_percent": _compute_change_percent(change, close),
+                "change": change,
             }
             records.append(record)
         return records
@@ -87,3 +88,12 @@ def _as_str(value: Any) -> str | None:
 
 def _fill_close(value: Any, close: Any) -> Any:
     return close if value is None else value
+
+
+def _compute_change_percent(change: Any, close: Any) -> Any:
+    if change is None or close is None:
+        return None
+    denom = close - change
+    if denom == 0:
+        return None
+    return change / denom * 100
