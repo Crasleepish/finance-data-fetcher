@@ -88,7 +88,29 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
       "params": {
         "start_date": "2023-01-02",
         "end_date": "2023-06-30",
-        "mode": "history"
+        "mode": "history",
+        "dry_run": false
+      }
+    },
+    "options": {}
+  }'
+```
+
+## Example: start get_market_factors (dry-run)
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_market_factors",
+    "source": "manual",
+    "task_type": "market_factors",
+    "arguments": {
+      "params": {
+        "start_date": "2023-01-02",
+        "end_date": "2023-06-30",
+        "mode": "history",
+        "dry_run": true
       }
     },
     "options": {}
@@ -364,6 +386,25 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
       "params": {
         "start_date": "2024-01-02",
         "end_date": "2024-01-05"
+      }
+    },
+    "options": {}
+  }'
+```
+
+## Example: start get_internal_index
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_internal_index",
+    "source": "manual",
+    "task_type": "internal_index",
+    "arguments": {
+      "params": {
+        "start_date": "2006-04-03",
+        "end_date": "2006-04-30"
       }
     },
     "options": {}

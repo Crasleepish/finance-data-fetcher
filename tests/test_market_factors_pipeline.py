@@ -25,6 +25,7 @@ def test_market_factors_pipeline_plan_chunks_defaults() -> None:
                 "start_date": "2023-01-02",
                 "end_date": "2023-01-31",
                 "mode": "history",
+                "dry_run": False,
             }
         }
     ]
@@ -60,9 +61,47 @@ def test_market_factors_pipeline_fetch_and_clean(monkeypatch) -> None:
                 "start_date": "2023-01-02",
                 "end_date": "2023-01-31",
                 "mode": "history",
+                "dry_run": False,
             }
         }
     )
     assert raw == expected_raw
     normalized = pipeline.clean(raw)
     assert normalized == expected_raw
+
+
+def test_market_factors_pipeline_dry_run(monkeypatch) -> None:
+    engine = Mock(spec=Engine)
+    pipeline = MarketFactorsPipeline(engine=engine)
+    expected_raw = [
+        {
+            "date": "2023-01-02",
+            "MKT": 0.01,
+            "SMB": 0.02,
+            "HML": 0.03,
+            "QMJ": 0.04,
+            "VOL": None,
+            "LIQ": None,
+        }
+    ]
+    calls: list[tuple[str, str, str]] = []
+
+    def _fake_fetch_all(
+        self, start_date: str, end_date: str, mode: str, *, cancel_check=None
+    ) -> list[dict[str, object]]:
+        calls.append((start_date, end_date, mode))
+        return expected_raw
+
+    monkeypatch.setattr(FactorFetcher, "fetch_all", _fake_fetch_all)
+    raw = pipeline.fetch(
+        {
+            "params": {
+                "start_date": "2023-01-02",
+                "end_date": "2023-01-31",
+                "mode": "history",
+                "dry_run": True,
+            }
+        }
+    )
+    assert raw == []
+    assert calls == [("2023-01-02", "2023-01-31", "history")]

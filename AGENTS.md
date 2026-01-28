@@ -123,6 +123,7 @@ Notes:
 - core/clean/fund_hist_cleaner: Cleaner for fund_hist
 - core/clean/etf_info_cleaner: Cleaner for etf_info
 - core/clean/etf_hist_cleaner: Cleaner for etf_hist
+- core/clean/internal_index_cleaner: Cleaner for internal research indices
 - core/clean/market_factors_cleaner: Pass-through cleaner for market_factors
 - core/clean/fund_beta_cleaner: Cleaner for fund_beta
 - core/indexing/index_codes: index code parsing and API mapping helpers
@@ -149,6 +150,7 @@ Notes:
 - services/pipelines/etf_info_pipeline: ETF fund_basic pipeline
 - services/pipelines/etf_hist_pipeline: ETF daily history pipeline
 - services/pipelines/market_factors_pipeline: Factor computation pipeline to persist market_factors
+- services/pipelines/internal_index_pipeline: Internal research index pipeline
 - services/pipelines/gold_cftc_report_pipeline: Gold CFTC report pipeline
 - services/pipelines/gold_future_curve_pipeline: Gold futures curve pipeline
 - services/pipelines/fund_beta_pipeline: Fund beta pipeline

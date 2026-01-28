@@ -63,6 +63,7 @@ from services.pipelines.index_hist_bond_pipeline import IndexHistBondPipeline
 from services.pipelines.index_hist_gold_pipeline import IndexHistGoldPipeline
 from services.pipelines.index_hist_stock_pipeline import IndexHistStockPipeline
 from services.pipelines.index_info_pipeline import IndexInfoPipeline
+from services.pipelines.internal_index_pipeline import InternalIndexPipeline
 from services.pipelines.market_factors_pipeline import MarketFactorsPipeline
 from services.pipelines.rt_etf_hist_pipeline import (
     RtEtfHistAksharePipeline,
@@ -275,6 +276,13 @@ def create_app() -> FastAPI:
             ),
         )
         registry.register(
+            "internal_index",
+            InternalIndexPipeline(
+                engine=engine,
+                calendar=app.state.calendar_service.calendar,
+            ),
+        )
+        registry.register(
             "fundamental_data",
             FundamentalDataPipeline(
                 client=tushare_public_client,
@@ -330,6 +338,7 @@ def create_app() -> FastAPI:
             "index_hist_stock": Repository(engine=engine, table=index_hist),
             "index_hist_bond": Repository(engine=engine, table=index_hist),
             "index_hist_gold": Repository(engine=engine, table=index_hist),
+            "internal_index": Repository(engine=engine, table=index_hist),
             "fund_info": Repository(engine=engine, table=fund_info),
             "etf_info": Repository(engine=engine, table=etf_info),
             "fund_hist_index": Repository(engine=engine, table=fund_hist),
@@ -363,6 +372,7 @@ def create_app() -> FastAPI:
                 "index_hist_stock": ["index_code", "date"],
                 "index_hist_bond": ["index_code", "date"],
                 "index_hist_gold": ["index_code", "date"],
+                "internal_index": ["index_code", "date"],
                 "fund_info": ["fund_code"],
                 "etf_info": ["etf_code"],
                 "fund_hist_index": ["fund_code", "date"],

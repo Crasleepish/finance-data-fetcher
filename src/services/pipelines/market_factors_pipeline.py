@@ -22,9 +22,21 @@ class MarketFactorsPipeline(IngestionPipeline):
         start_date = _require_param(params, "start_date")
         end_date = _require_param(params, "end_date")
         mode = params.get("mode", "history")
+        dry_run = params.get("dry_run", False)
         if not isinstance(mode, str):
             raise ValueError("mode must be a string")
-        return [{"params": {"start_date": start_date, "end_date": end_date, "mode": mode}}]
+        if not isinstance(dry_run, bool):
+            raise ValueError("dry_run must be a boolean")
+        return [
+            {
+                "params": {
+                    "start_date": start_date,
+                    "end_date": end_date,
+                    "mode": mode,
+                    "dry_run": dry_run,
+                }
+            }
+        ]
 
     def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
         """Compute factor raw batch for the requested date range."""
@@ -32,15 +44,19 @@ class MarketFactorsPipeline(IngestionPipeline):
         start_date = _require_param(params, "start_date")
         end_date = _require_param(params, "end_date")
         mode = params.get("mode", "history")
+        dry_run = params.get("dry_run", False)
         if not isinstance(mode, str):
             raise ValueError("mode must be a string")
+        if not isinstance(dry_run, bool):
+            raise ValueError("dry_run must be a boolean")
         cancel_check = chunk_args.get("cancel_check")
-        return FactorFetcher(engine=self.engine).fetch_all(
+        raw = FactorFetcher(engine=self.engine).fetch_all(
             start_date=start_date,
             end_date=end_date,
             mode=mode,
             cancel_check=cancel_check if callable(cancel_check) else None,
         )
+        return [] if dry_run else raw
 
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
         """Return normalized market_factors records."""
