@@ -40,3 +40,7 @@ config/app.yaml
 
 # runtime files
 bt_result/
+
+# claude
+.claude/
+.mcp.json
