@@ -1,0 +1,1 @@
+INSERT INTO public.index_hist (index_code,"date","open","close",high,low,volume,amount,change_percent,"change") VALUES ('Au99.99.SGE','2022-08-12',391.0,390.17,391.0,389.0,8694460,3383932140.6,0.3781836892,1.47);
