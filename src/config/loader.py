@@ -89,6 +89,9 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
     index_gold = os.environ.get("APP_DATA_INDEX_GOLD")
     if index_gold:
         index_config["gold"] = index_gold
+    index_global = os.environ.get("APP_DATA_INDEX_GLOBAL")
+    if index_global:
+        index_config["global"] = index_global
     if index_config:
         data_config["index"] = index_config
     if data_config:

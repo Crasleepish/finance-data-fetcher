@@ -392,6 +392,25 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
   }'
 ```
 
+## Example: start get_index_hist_global
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_index_hist_global",
+    "source": "manual",
+    "task_type": "index_hist_global",
+    "arguments": {
+      "params": {
+        "start_date": "2024-01-02",
+        "end_date": "2024-01-05"
+      }
+    },
+    "options": {}
+  }'
+```
+
 ## Example: start get_internal_index
 
 ```sh

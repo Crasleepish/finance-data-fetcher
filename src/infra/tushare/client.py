@@ -73,6 +73,17 @@ class TushareClient(Protocol):
     ) -> list[dict[str, object]]:
         """Return index_daily rows as a list of dicts."""
 
+    def index_global(
+        self,
+        ts_code: str,
+        start_date: str,
+        end_date: str,
+        fields: str,
+        offset: int,
+        limit: int,
+    ) -> list[dict[str, object]]:
+        """Return index_global rows as a list of dicts."""
+
     def sge_daily(
         self, ts_code: str, start_date: str, end_date: str, fields: str
     ) -> list[dict[str, object]]:
@@ -292,6 +303,32 @@ class TushareProClient(TushareClient):
         self._rate_limiter.wait()
         pro = ts.pro_api(self.token)
         data = pro.index_daily(
+            ts_code=ts_code,
+            start_date=start_date,
+            end_date=end_date,
+            fields=fields,
+            offset=offset,
+            limit=limit,
+        )
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def index_global(
+        self,
+        ts_code: str,
+        start_date: str,
+        end_date: str,
+        fields: str,
+        offset: int,
+        limit: int,
+    ) -> list[dict[str, object]]:
+        """Query index_global data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.index_global(
             ts_code=ts_code,
             start_date=start_date,
             end_date=end_date,

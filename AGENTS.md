@@ -92,6 +92,7 @@ Notes:
 - infra/fetcher/tushare_adj_factor_fetcher: Tushare adj_factor fetcher
 - infra/fetcher/tushare_index_basic_fetcher: Tushare index_basic fetcher
 - infra/fetcher/tushare_index_daily_fetcher: Tushare index_daily fetcher
+- infra/fetcher/akshare_hk_index_daily_fetcher: Akshare HK index daily fetcher
 - infra/fetcher/tushare_sge_daily_fetcher: Tushare sge_daily fetcher
 - infra/fetcher/akshare_index_hist_fetcher: Akshare csindex fetcher
 - infra/fetcher/tushare_fund_basic_fetcher: Tushare fund_basic fetcher
@@ -119,6 +120,7 @@ Notes:
 - core/clean/index_hist_stock_cleaner: Cleaner for stock index history
 - core/clean/index_hist_bond_cleaner: Cleaner for bond index history
 - core/clean/index_hist_gold_cleaner: Cleaner for gold index history
+- core/clean/index_hist_global_cleaner: Cleaner for global index history
 - core/clean/fund_info_cleaner: Cleaner for fund_info
 - core/clean/fund_hist_cleaner: Cleaner for fund_hist
 - core/clean/etf_info_cleaner: Cleaner for etf_info
@@ -151,6 +153,7 @@ Notes:
 - services/pipelines/etf_hist_pipeline: ETF daily history pipeline
 - services/pipelines/market_factors_pipeline: Factor computation pipeline to persist market_factors
 - services/pipelines/internal_index_pipeline: Internal research index pipeline
+- services/pipelines/index_hist_global_pipeline: Global index history pipeline
 - services/pipelines/gold_cftc_report_pipeline: Gold CFTC report pipeline
 - services/pipelines/gold_future_curve_pipeline: Gold futures curve pipeline
 - services/pipelines/fund_beta_pipeline: Fund beta pipeline

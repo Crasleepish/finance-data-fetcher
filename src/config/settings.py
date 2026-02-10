@@ -38,6 +38,11 @@ class IndexDataConfig(BaseModel):
     stock: str = Field(default="")
     bond: str = Field(default="")
     gold: str = Field(default="")
+    global_: str = Field(default="", alias="global")
+
+    model_config = {
+        "populate_by_name": True,
+    }
 
 
 class FundDataConfig(BaseModel):

@@ -9,6 +9,7 @@ data:
     stock: ""
     bond: ""
     gold: ""
+    global: ""
   fund:
     money: ""
   fund_beta:

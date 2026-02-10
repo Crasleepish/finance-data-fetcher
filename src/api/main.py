@@ -60,6 +60,7 @@ from services.pipelines.fundamental_data_single_pipeline import FundamentalDataS
 from services.pipelines.gold_cftc_report_pipeline import GoldCftcReportPipeline
 from services.pipelines.gold_future_curve_pipeline import GoldFutureCurvePipeline
 from services.pipelines.index_hist_bond_pipeline import IndexHistBondPipeline
+from services.pipelines.index_hist_global_pipeline import IndexHistGlobalPipeline
 from services.pipelines.index_hist_gold_pipeline import IndexHistGoldPipeline
 from services.pipelines.index_hist_stock_pipeline import IndexHistStockPipeline
 from services.pipelines.index_info_pipeline import IndexInfoPipeline
@@ -276,6 +277,15 @@ def create_app() -> FastAPI:
             ),
         )
         registry.register(
+            "index_hist_global",
+            IndexHistGlobalPipeline(
+                retry_policy=retry_policy,
+                engine=engine,
+                index_info_table=index_info,
+                codes_raw=config.data.index.global_,
+            ),
+        )
+        registry.register(
             "internal_index",
             InternalIndexPipeline(
                 engine=engine,
@@ -338,6 +348,7 @@ def create_app() -> FastAPI:
             "index_hist_stock": Repository(engine=engine, table=index_hist),
             "index_hist_bond": Repository(engine=engine, table=index_hist),
             "index_hist_gold": Repository(engine=engine, table=index_hist),
+            "index_hist_global": Repository(engine=engine, table=index_hist),
             "internal_index": Repository(engine=engine, table=index_hist),
             "fund_info": Repository(engine=engine, table=fund_info),
             "etf_info": Repository(engine=engine, table=etf_info),
@@ -372,6 +383,7 @@ def create_app() -> FastAPI:
                 "index_hist_stock": ["index_code", "date"],
                 "index_hist_bond": ["index_code", "date"],
                 "index_hist_gold": ["index_code", "date"],
+                "index_hist_global": ["index_code", "date"],
                 "internal_index": ["index_code", "date"],
                 "fund_info": ["fund_code"],
                 "etf_info": ["etf_code"],

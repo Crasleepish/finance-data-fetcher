@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import date
 
 from core.clean.index_hist_bond_cleaner import IndexHistBondCleaner
+from core.clean.index_hist_global_cleaner import IndexHistGlobalCleaner
 from core.clean.index_hist_gold_cleaner import IndexHistGoldCleaner
 from core.clean.index_hist_stock_cleaner import IndexHistStockCleaner
 
@@ -102,5 +103,37 @@ def test_index_hist_gold_cleaner_units_and_fill() -> None:
             "amount": None,
             "change_percent": expected_percent,
             "change": 0.2,
+        }
+    ]
+
+
+def test_index_hist_global_cleaner_maps_fields() -> None:
+    cleaner = IndexHistGlobalCleaner()
+    # Values sourced from production index_hist row (Au99.95.SGE, 2025-12-31).
+    raw = [
+        {
+            "index_code": "XIN9.GLB",
+            "date": "2025-12-31",
+            "open": 952.0,
+            "close": 970.8,
+            "high": 980.0,
+            "low": 952.0,
+            "volume": 54000,
+            "amount": 52233200.0,
+        }
+    ]
+    cleaned = list(cleaner.clean(raw))
+    assert cleaned == [
+        {
+            "index_code": "XIN9.GLB",
+            "date": date(2025, 12, 31),
+            "open": 952.0,
+            "close": 970.8,
+            "high": 980.0,
+            "low": 952.0,
+            "volume": 54000,
+            "amount": 52233200.0,
+            "change_percent": None,
+            "change": None,
         }
     ]
