@@ -33,7 +33,38 @@ def get_calendar_service(request: Request) -> CalendarService:
     return cast(CalendarService, request.app.state.calendar_service)
 
 
-@router.post("/sync", response_model=CalendarSyncResponse)
+@router.post(
+    "/sync",
+    response_model=CalendarSyncResponse,
+    operation_id="sync_calendar",
+    summary="Sync trade calendar",
+    responses={
+        400: {
+            "description": "Request validation failed",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "request validation failed"},
+                }
+            },
+        },
+        500: {
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "internal server error"},
+                }
+            },
+        },
+    },
+)
 def sync_calendar(
     payload: CalendarSyncRequest,
     service: CalendarService = Depends(get_calendar_service),

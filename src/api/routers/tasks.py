@@ -60,7 +60,38 @@ def get_task_service(request: Request) -> TaskService:
     return cast(TaskService, request.app.state.task_service)
 
 
-@router.post("/start", response_model=TaskStartResponse)
+@router.post(
+    "/start",
+    response_model=TaskStartResponse,
+    operation_id="start_task",
+    summary="Start a task",
+    responses={
+        400: {
+            "description": "Request validation failed",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "request validation failed"},
+                }
+            },
+        },
+        500: {
+            "description": "Task start failed",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "task start failed"},
+                }
+            },
+        },
+    },
+)
 def start_task(
     payload: PipelineTask,
     request: Request,
@@ -94,7 +125,38 @@ def start_task(
     )
 
 
-@router.get("/running", response_model=list[TaskRunningResponse])
+@router.get(
+    "/running",
+    response_model=list[TaskRunningResponse],
+    operation_id="list_running_tasks",
+    summary="List running tasks",
+    responses={
+        400: {
+            "description": "Request validation failed",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "request validation failed"},
+                }
+            },
+        },
+        500: {
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "internal server error"},
+                }
+            },
+        },
+    },
+)
 def list_running(store: TaskStatusStore = Depends(get_task_store)) -> list[TaskRunningResponse]:
     """List active task runs."""
     records = store.list_running()
@@ -110,7 +172,38 @@ def list_running(store: TaskStatusStore = Depends(get_task_store)) -> list[TaskR
     ]
 
 
-@router.get("/{task_id}", response_model=TaskStatusResponse)
+@router.get(
+    "/{task_id}",
+    response_model=TaskStatusResponse,
+    operation_id="get_task_status",
+    summary="Get task status",
+    responses={
+        400: {
+            "description": "Request validation failed",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "request validation failed"},
+                }
+            },
+        },
+        500: {
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "internal server error"},
+                }
+            },
+        },
+    },
+)
 def get_task_status(
     task_id: int,
     store: TaskStatusStore = Depends(get_task_store),
@@ -120,7 +213,38 @@ def get_task_status(
     return _to_response(record)
 
 
-@router.post("/cancel/{task_id}", response_model=TaskStatusResponse)
+@router.post(
+    "/cancel/{task_id}",
+    response_model=TaskStatusResponse,
+    operation_id="cancel_task",
+    summary="Cancel a task",
+    responses={
+        400: {
+            "description": "Request validation failed",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "request validation failed"},
+                }
+            },
+        },
+        500: {
+            "description": "Task cancel failed",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "task cancel failed"},
+                }
+            },
+        },
+    },
+)
 def cancel_task(
     task_id: int,
     service: TaskService = Depends(get_task_service),
