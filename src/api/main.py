@@ -9,6 +9,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from api.routers.calendar import router as calendar_router
+from api.routers.data import router as data_router
 from api.routers.tasks import router as tasks_router
 from config.loader import load_config
 from core.fetch.retry import RetryPolicy
@@ -46,7 +47,9 @@ from infra.queue.in_memory import InMemoryTaskQueue
 from infra.task_state.store import TaskStatusStore
 from infra.tushare.client import TushareProClient
 from infra.worker_runtime.runtime import WorkerRuntime
+from models.data_query import ErrorResponse
 from services.calendar_service import build_calendar_service
+from services.data_query_service import DataQueryService
 from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
 from services.pipelines.adj_factor_pipeline import AdjFactorPipeline
 from services.pipelines.etf_hist_pipeline import EtfHistPipeline
@@ -97,6 +100,7 @@ def create_app() -> FastAPI:
         logger.info("application startup")
         app.state.calendar_service = build_calendar_service(config)
         engine = create_engine_from_config(config.database)
+        app.state.data_query_service = DataQueryService(engine=engine)
         task_store = TaskStatusStore(engine=engine)
         task_queue = InMemoryTaskQueue()
         guard = IdempotencyGuard(engine=engine)
@@ -440,9 +444,18 @@ def create_app() -> FastAPI:
                 "error_fields": sorted(set(error_fields)),
             },
         )
+        if request.url.path.startswith("/data/"):
+            payload = ErrorResponse(
+                success=False,
+                data=None,
+                error="request validation failed",
+                meta=None,
+            )
+            return JSONResponse(status_code=400, content=payload.model_dump(mode="json"))
         return JSONResponse(status_code=400, content={"detail": "request validation failed"})
 
     app.include_router(calendar_router)
+    app.include_router(data_router)
     app.include_router(tasks_router)
     return app
 

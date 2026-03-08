@@ -165,6 +165,11 @@ Notes:
 - services/factor_fetcher: Factor backtest entrypoint returning RawBatch
 - services/fund_beta_estimator: Fund beta estimation logic
 - core/backtest/backtest_engine: VectorBT-based backtest engine
+- core/data_query/validation: query input normalization & validation for data read APIs
+- core/data_query/mapping: data_type mappings + currency/unit defaults
+- services/data_query_service: data read orchestration for /data/results and /data/list
+- api/routers/data: data query endpoints
+- models/data_query: Pydantic schemas for data query responses
 - core/backtest/stock_selector: Factor portfolio selectors
 - core/backtest/weight_allocator: Portfolio weight allocation strategies
 - core/backtest/rebalance_date_generator: Rebalance date generation helpers
