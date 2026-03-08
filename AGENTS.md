@@ -231,10 +231,10 @@ No ad-hoc loggers.
 Before any change is valid:
 
 ```bash
-ruff check .
-ruff format .
-mypy src/
-pytest
+uv run ruff check .
+uv run ruff format .
+uv run mypy src/
+uv run pytest
 ```
 
 Agents must assume CI enforces this.

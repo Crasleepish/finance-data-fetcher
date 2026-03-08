@@ -21,7 +21,7 @@ class LoggingConfig(BaseModel):
 class DatabaseConfig(BaseModel):
     """Database connectivity configuration."""
 
-    url: str = Field(default="postgresql+psycopg2://myuser:xjqxz214@192.168.56.101:5432/mydb")
+    url: str = Field(default="")
 
 
 class TushareConfig(BaseModel):
