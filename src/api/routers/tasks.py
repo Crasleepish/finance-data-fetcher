@@ -7,6 +7,11 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
 from core.pipeline.validation import ensure_hashable
+from core.task_query.validation import (
+    normalize_page,
+    normalize_page_size,
+    parse_datetime_range,
+)
 from infra.task_state.store import TaskStatusStore
 from models.task_payload import PipelineTask
 from models.task_status import TaskState, TaskStatusRecord
@@ -48,6 +53,56 @@ class TaskRunningResponse(BaseModel):
     progress: str
     started_at: str | None
     error: str | None
+
+
+class TaskListQuery(BaseModel):
+    """Query parameters for task list endpoint."""
+
+    task_id: int | None = None
+    spec: str | None = None
+    state: list[TaskState] | None = None
+    created_at_from: str | None = None
+    created_at_to: str | None = None
+    started_at_from: str | None = None
+    started_at_to: str | None = None
+    finished_at_from: str | None = None
+    finished_at_to: str | None = None
+    last_heartbeat_at_from: str | None = None
+    last_heartbeat_at_to: str | None = None
+    page: int | None = None
+    page_size: int | None = None
+
+
+class TaskListItem(BaseModel):
+    """Task list item including task payload."""
+
+    task_id: int
+    idempotency_key: str
+    spec: str
+    state: TaskState
+    attempt: int
+    progress: str
+    error: str | None
+    created_at: str
+    started_at: str | None
+    finished_at: str | None
+    last_heartbeat_at: str | None
+    task_payload: dict
+
+
+class TaskListMeta(BaseModel):
+    """Metadata for task list response."""
+
+    page: int
+    page_size: int
+    total: int
+
+
+class TaskListResponse(BaseModel):
+    """Response payload for task list endpoint."""
+
+    items: list[TaskListItem]
+    meta: TaskListMeta
 
 
 def get_task_store(request: Request) -> TaskStatusStore:
@@ -173,6 +228,79 @@ def list_running(store: TaskStatusStore = Depends(get_task_store)) -> list[TaskR
 
 
 @router.get(
+    "/list",
+    response_model=TaskListResponse,
+    operation_id="list_tasks",
+    summary="List tasks",
+    responses={
+        400: {
+            "description": "Request validation failed",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "request validation failed"},
+                }
+            },
+        },
+        500: {
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {"detail": {"type": "string"}},
+                    },
+                    "example": {"detail": "internal server error"},
+                }
+            },
+        },
+    },
+)
+def list_tasks(
+    query: TaskListQuery = Depends(),
+    store: TaskStatusStore = Depends(get_task_store),
+) -> TaskListResponse:
+    """List tasks with filters and pagination."""
+    try:
+        page = normalize_page(query.page)
+        page_size = normalize_page_size(query.page_size)
+        created_at_range = parse_datetime_range(query.created_at_from, query.created_at_to)
+        started_at_range = parse_datetime_range(query.started_at_from, query.started_at_to)
+        finished_at_range = parse_datetime_range(query.finished_at_from, query.finished_at_to)
+        heartbeat_range = parse_datetime_range(
+            query.last_heartbeat_at_from, query.last_heartbeat_at_to
+        )
+        states = list(query.state or [])
+
+        rows, total = store.list_tasks(
+            task_id=query.task_id,
+            spec=query.spec,
+            states=states,
+            created_at_range=created_at_range,
+            started_at_range=started_at_range,
+            finished_at_range=finished_at_range,
+            last_heartbeat_at_range=heartbeat_range,
+            page=page,
+            page_size=page_size,
+        )
+    except ValueError as exc:
+        logger.info("task list validation failed", extra={"error": str(exc)})
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception:
+        logger.exception("task list failed")
+        raise HTTPException(status_code=500, detail="internal server error")
+
+    items = [_row_to_list_item(row) for row in rows]
+    return TaskListResponse(
+        items=items,
+        meta=TaskListMeta(page=page, page_size=page_size, total=total),
+    )
+
+
+@router.get(
     "/{task_id}",
     response_model=TaskStatusResponse,
     operation_id="get_task_status",
@@ -273,4 +401,23 @@ def _to_response(record: TaskStatusRecord) -> TaskStatusResponse:
         last_heartbeat_at=(
             record.last_heartbeat_at.isoformat() if record.last_heartbeat_at else None
         ),
+    )
+
+
+def _row_to_list_item(row: dict) -> TaskListItem:
+    return TaskListItem(
+        task_id=row["task_id"],
+        idempotency_key=row["idempotency_key"],
+        spec=row["spec"],
+        state=TaskState(row["state"]),
+        attempt=row["attempt"],
+        progress=str(row["progress"]),
+        error=row["error"],
+        created_at=row["created_at"].isoformat(),
+        started_at=row["started_at"].isoformat() if row["started_at"] else None,
+        finished_at=row["finished_at"].isoformat() if row["finished_at"] else None,
+        last_heartbeat_at=(
+            row["last_heartbeat_at"].isoformat() if row["last_heartbeat_at"] else None
+        ),
+        task_payload=dict(row["task_payload"]),
     )

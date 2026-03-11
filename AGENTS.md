@@ -167,6 +167,7 @@ Notes:
 - core/backtest/backtest_engine: VectorBT-based backtest engine
 - core/data_query/validation: query input normalization & validation for data read APIs
 - core/data_query/mapping: data_type mappings + currency/unit defaults
+- core/task_query/validation: task list query normalization & validation helpers
 - services/data_query_service: data read orchestration for /data/results and /data/list
 - api/routers/data: data query endpoints
 - models/data_query: Pydantic schemas for data query responses

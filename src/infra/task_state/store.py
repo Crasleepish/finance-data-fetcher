@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import Engine, Table, insert, select, update
+from sqlalchemy import Engine, Table, func, insert, select, update
 from sqlalchemy.engine import RowMapping
 
 from infra.db.engine import transaction
@@ -178,6 +178,71 @@ class TaskStatusStore:
         with transaction(self.engine) as connection:
             payload = connection.execute(stmt).scalar_one()
         return PipelineTask.model_validate(payload)
+
+    def list_tasks(
+        self,
+        *,
+        task_id: int | None,
+        spec: str | None,
+        states: list[TaskState],
+        created_at_range: tuple[datetime | None, datetime | None],
+        started_at_range: tuple[datetime | None, datetime | None],
+        finished_at_range: tuple[datetime | None, datetime | None],
+        last_heartbeat_at_range: tuple[datetime | None, datetime | None],
+        page: int,
+        page_size: int,
+    ) -> tuple[list[RowMapping], int]:
+        """List tasks with filters and pagination."""
+        created_start, created_end = created_at_range
+        started_start, started_end = started_at_range
+        finished_start, finished_end = finished_at_range
+        heartbeat_start, heartbeat_end = last_heartbeat_at_range
+        state_values = [state.value for state in states]
+
+        conditions = (
+            self.table.c.task_id == task_id if task_id is not None else None,
+            self.table.c.spec == spec if spec is not None else None,
+            self.table.c.state.in_(state_values) if state_values else None,
+            self.table.c.created_at >= created_start if created_start is not None else None,
+            self.table.c.created_at <= created_end if created_end is not None else None,
+            self.table.c.started_at >= started_start if started_start is not None else None,
+            self.table.c.started_at <= started_end if started_end is not None else None,
+            self.table.c.finished_at >= finished_start if finished_start is not None else None,
+            self.table.c.finished_at <= finished_end if finished_end is not None else None,
+            (
+                self.table.c.last_heartbeat_at >= heartbeat_start
+                if heartbeat_start is not None
+                else None
+            ),
+            (
+                self.table.c.last_heartbeat_at <= heartbeat_end
+                if heartbeat_end is not None
+                else None
+            ),
+        )
+        if heartbeat_start is not None or heartbeat_end is not None:
+            conditions = (
+                *conditions,
+                self.table.c.last_heartbeat_at.is_not(None),
+            )
+        filters = [condition for condition in conditions if condition is not None]
+
+        stmt = select(self.table)
+        count_stmt = select(func.count()).select_from(self.table)
+        if filters:
+            stmt = stmt.where(*filters)
+            count_stmt = count_stmt.where(*filters)
+
+        stmt = (
+            stmt.order_by(self.table.c.created_at.desc(), self.table.c.task_id.desc())
+            .offset((page - 1) * page_size)
+            .limit(page_size)
+        )
+
+        with transaction(self.engine) as connection:
+            total = int(connection.execute(count_stmt).scalar_one())
+            rows = connection.execute(stmt).mappings().all()
+        return rows, total
 
 
 def _state_updates(
