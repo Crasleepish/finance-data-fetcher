@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import cast
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel
 
 from core.pipeline.validation import ensure_hashable
@@ -60,7 +60,6 @@ class TaskListQuery(BaseModel):
 
     task_id: int | None = None
     spec: str | None = None
-    state: list[TaskState] | None = None
     created_at_from: str | None = None
     created_at_to: str | None = None
     started_at_from: str | None = None
@@ -261,6 +260,7 @@ def list_running(store: TaskStatusStore = Depends(get_task_store)) -> list[TaskR
 )
 def list_tasks(
     query: TaskListQuery = Depends(),
+    state: list[TaskState] | None = Query(default=None),
     store: TaskStatusStore = Depends(get_task_store),
 ) -> TaskListResponse:
     """List tasks with filters and pagination."""
@@ -273,7 +273,7 @@ def list_tasks(
         heartbeat_range = parse_datetime_range(
             query.last_heartbeat_at_from, query.last_heartbeat_at_to
         )
-        states = list(query.state or [])
+        states = list(state or [])
 
         rows, total = store.list_tasks(
             task_id=query.task_id,

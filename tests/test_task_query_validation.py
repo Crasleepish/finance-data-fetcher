@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 import pytest
-
 from core.task_query.validation import (
     normalize_page,
     normalize_page_size,
@@ -54,3 +53,4 @@ def test_normalize_page_size_defaults_and_caps() -> None:
         normalize_page_size(0)
     with pytest.raises(ValueError):
         normalize_page_size(201)
+
