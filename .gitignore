@@ -44,3 +44,9 @@ bt_result/
 # claude
 .claude/
 .mcp.json
+
+# reports
+.reports/
+
+# docs
+/docs/数据查询接口需求/
