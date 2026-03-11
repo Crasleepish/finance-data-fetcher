@@ -137,6 +137,8 @@ class DataQueryService:
                     net_value.label("low"),
                     net_value.label("close"),
                     sql_cast(None, table.c.net_value.type).label("volume"),
+                    sql_cast(None, table.c.net_value.type).label("amount"),
+                    sql_cast(None, table.c.net_value.type).label("pct_change"),
                 )
                 .where(
                     and_(
@@ -156,6 +158,8 @@ class DataQueryService:
                     table.c.low.label("low"),
                     table.c.close.label("close"),
                     table.c.volume.label("volume"),
+                    table.c.amount.label("amount"),
+                    table.c.change_percent.label("pct_change"),
                 )
                 .where(
                     and_(
@@ -183,6 +187,8 @@ class DataQueryService:
                 low=row.low,
                 close=row.close,
                 volume=row.volume,
+                amount=row.amount,
+                pct_change=row.pct_change,
             )
             for row in rows
         ]

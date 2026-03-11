@@ -87,3 +87,6 @@ def test_http_e2e_results_flow(postgres_engine: Engine) -> None:
     results_payload = results_response.json()
     assert results_payload["success"] is True
     assert results_payload["meta"]["count"] == 1
+    point = results_payload["data"]["points"][0]
+    assert point["amount"] == 100.0
+    assert point["pct_change"] == 1.0

@@ -158,6 +158,8 @@ def test_results_stock(postgres_engine: Engine) -> None:
     point = payload["data"]["points"][0]
     assert point["open"] == 185.2
     assert point["close"] == 188.4
+    assert point["amount"] == 100.0
+    assert point["pct_change"] == 1.0
 
 
 def test_results_index(postgres_engine: Engine) -> None:
@@ -217,6 +219,8 @@ def test_results_fund_maps_net_value(postgres_engine: Engine) -> None:
     assert point["low"] == 1.6
     assert point["close"] == 1.6
     assert point["volume"] is None
+    assert point["amount"] is None
+    assert point["pct_change"] is None
 
 
 def test_results_empty_returns_success(postgres_engine: Engine) -> None:

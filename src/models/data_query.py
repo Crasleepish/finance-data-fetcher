@@ -27,6 +27,8 @@ class DataPoint(BaseModel):
     high: float | None
     low: float | None
     volume: int | None
+    amount: float | None
+    pct_change: float | None
 
 
 class DataResultsPayload(BaseModel):
