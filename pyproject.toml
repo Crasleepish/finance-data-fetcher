@@ -21,6 +21,7 @@ dependencies = [
   "numba>=0.59",
   "vectorbt>=0.25",
   "tqdm>=4.66",
+  "pyarrow>=23.0.1",
 ]
 
 [project.optional-dependencies]

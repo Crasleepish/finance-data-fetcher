@@ -30,8 +30,9 @@ services:
     #   APP_GOLD_BARCHART_QUOTES_URL: ""
     #   APP_GOLD_TMP_DIR: "/tmp"
     networks:
-      - shennong-net
+      - docker-bridge
 
 networks:
-  shennong-net:
+  docker-bridge:
     external: true
+    name: docker-bridge
