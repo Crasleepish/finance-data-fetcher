@@ -4,6 +4,7 @@ import logging
 import time
 from dataclasses import dataclass, field
 from decimal import Decimal
+from pathlib import Path
 from time import sleep
 from typing import cast
 
@@ -46,6 +47,8 @@ class WorkflowEngine:
     repo: Repository
     repo_by_pipeline: dict[str, Repository] = field(default_factory=dict)
     upsert_keys_by_pipeline: dict[str, list[str]] = field(default_factory=dict)
+    update_keys_by_pipeline: dict[str, list[str]] = field(default_factory=dict)
+    update_columns_by_pipeline: dict[str, list[str]] = field(default_factory=dict)
     replace_by_pipeline: set[str] = field(default_factory=set)
     failover: PipelineFailoverPolicy = FetchCleanFailoverPolicy()
 
@@ -94,88 +97,95 @@ class WorkflowEngine:
 
         current_pipeline_id = selected_pipeline_id
         consecutive_failures = 0
-        while current_pipeline_id is not None:
-            try:
-                pipeline = self.registry.get(current_pipeline_id)
-                total_chunks, total_persisted = self._run_pipeline(
-                    task_id,
-                    task_payload,
-                    pipeline,
-                    current_pipeline_id,
-                )
-                if self._is_cancelled(task_id):
+        try:
+            while current_pipeline_id is not None:
+                try:
+                    pipeline = self.registry.get(current_pipeline_id)
+                    total_chunks, total_persisted = self._run_pipeline(
+                        task_id,
+                        task_payload,
+                        pipeline,
+                        current_pipeline_id,
+                    )
+                    if self._is_cancelled(task_id):
+                        self._release_resources(task_id, task_payload)
+                        logger.info("run cancelled", extra={"task_id": task_id})
+                        return
+                    self.store.update_state(task_id, TaskState.SUCCEEDED)
+                    total_duration_ms = int((time.monotonic() - run_started_at) * 1000)
+                    logger.info(
+                        "run succeeded",
+                        extra={
+                            "task_id": task_id,
+                            "total_duration_ms": total_duration_ms,
+                            "total_chunks": total_chunks,
+                            "final_stats": {"persisted": total_persisted},
+                        },
+                    )
+                    return
+                except CancelledError:
                     self._release_resources(task_id, task_payload)
                     logger.info("run cancelled", extra={"task_id": task_id})
                     return
-                self.store.update_state(task_id, TaskState.SUCCEEDED)
-                total_duration_ms = int((time.monotonic() - run_started_at) * 1000)
-                logger.info(
-                    "run succeeded",
-                    extra={
-                        "task_id": task_id,
-                        "total_duration_ms": total_duration_ms,
-                        "total_chunks": total_chunks,
-                        "final_stats": {"persisted": total_persisted},
-                    },
-                )
-                return
-            except CancelledError:
-                self._release_resources(task_id, task_payload)
-                logger.info("run cancelled", extra={"task_id": task_id})
-                return
-            except Exception as exc:
-                if isinstance(exc, StageError):
-                    stage = exc.stage
-                    error = exc.original
-                    chunk_args = exc.chunk_args
-                else:
-                    stage = Stage.PERSIST
-                    error = exc
-                    chunk_args = None
+                except Exception as exc:
+                    if isinstance(exc, StageError):
+                        stage = exc.stage
+                        error = exc.original
+                        chunk_args = exc.chunk_args
+                    else:
+                        stage = Stage.PERSIST
+                        error = exc
+                        chunk_args = None
 
-                if not self.failover.should_failover(error, stage, chunk_args):
-                    logger.error(
-                        "run failed",
+                    if not self.failover.should_failover(error, stage, chunk_args):
+                        logger.error(
+                            "run failed",
+                            extra={
+                                "task_id": task_id,
+                                "error_type": type(error).__name__,
+                                "error_summary": str(error),
+                                "failed_stage": stage.value,
+                            },
+                        )
+                        self.store.update_state(task_id, TaskState.FAILED, error=str(error))
+                        return
+                    consecutive_failures += 1
+                    logger.warning(
+                        "failover triggered",
                         extra={
                             "task_id": task_id,
-                            "error_type": type(error).__name__,
-                            "error_summary": str(error),
+                            "reason_code": type(error).__name__,
                             "failed_stage": stage.value,
+                            "consecutive_failures": consecutive_failures,
                         },
                     )
-                    self.store.update_state(task_id, TaskState.FAILED, error=str(error))
-                    return
-                consecutive_failures += 1
-                logger.warning(
-                    "failover triggered",
-                    extra={
-                        "task_id": task_id,
-                        "reason_code": type(error).__name__,
-                        "failed_stage": stage.value,
-                        "consecutive_failures": consecutive_failures,
-                    },
-                )
-                next_id = self.failover.select_next_pipeline(current_pipeline_id, candidates, error)
-                if next_id is None:
-                    logger.error(
-                        "failover unavailable",
+                    next_id = self.failover.select_next_pipeline(
+                        current_pipeline_id,
+                        candidates,
+                        error,
+                    )
+                    if next_id is None:
+                        logger.error(
+                            "failover unavailable",
+                            extra={
+                                "task_id": task_id,
+                                "from_pipeline": current_pipeline_id,
+                            },
+                        )
+                        self.store.update_state(task_id, TaskState.FAILED, error=str(error))
+                        return
+                    logger.warning(
+                        "pipeline failover",
                         extra={
                             "task_id": task_id,
                             "from_pipeline": current_pipeline_id,
+                            "to_pipeline": next_id,
                         },
                     )
-                    self.store.update_state(task_id, TaskState.FAILED, error=str(error))
-                    return
-                logger.warning(
-                    "pipeline failover",
-                    extra={
-                        "task_id": task_id,
-                        "from_pipeline": current_pipeline_id,
-                        "to_pipeline": next_id,
-                    },
-                )
-                current_pipeline_id = next_id
-                self.store.update_progress(task_id, Decimal("0"))
+                    current_pipeline_id = next_id
+                    self.store.update_progress(task_id, Decimal("0"))
+        finally:
+            self._cleanup_task_files(task_payload)
 
     def _run_pipeline(
         self,
@@ -228,6 +238,8 @@ class WorkflowEngine:
                     normalized,
                     repo,
                     self.upsert_keys_by_pipeline.get(pipeline_id),
+                    update_keys=self.update_keys_by_pipeline.get(pipeline_id),
+                    update_columns=self.update_columns_by_pipeline.get(pipeline_id),
                     replace=pipeline_id in self.replace_by_pipeline,
                 )
             except Exception as exc:
@@ -286,6 +298,17 @@ class WorkflowEngine:
             extra={"task_id": task_id, "pipeline_id": task.pipeline_id or "selector"},
         )
 
+    def _cleanup_task_files(self, task: PipelineTask) -> None:
+        params = cast(dict[str, object], task.arguments.get("params") or {})
+        cleanup_path = params.get("cleanup_zip_path")
+        if not isinstance(cleanup_path, str) or not cleanup_path:
+            return
+        try:
+            Path(cleanup_path).unlink(missing_ok=True)
+        except OSError:
+            logger.warning("failed to delete temp zip", extra={"zip_path": cleanup_path})
+
+
     def _fetch(self, pipeline: IngestionPipeline, chunk_args: ChunkArgs) -> RawBatch:
         try:
             return pipeline.fetch(chunk_args)
@@ -306,6 +329,8 @@ class WorkflowEngine:
         repo: Repository,
         upsert_keys: list[str] | None,
         *,
+        update_keys: list[str] | None,
+        update_columns: list[str] | None,
         replace: bool,
     ) -> tuple[int, int]:
         records = list(normalized)
@@ -313,6 +338,12 @@ class WorkflowEngine:
             return 0, 0
         if replace:
             persisted = repo.replace_all(records)
+        elif update_keys and update_columns:
+            persisted = repo.update_batch(
+                records,
+                key_columns=update_keys,
+                update_columns=update_columns,
+            )
         elif upsert_keys:
             persisted = repo.upsert_batch(records, upsert_keys)
         else:

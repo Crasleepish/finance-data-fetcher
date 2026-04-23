@@ -4,7 +4,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import Any
+from typing import Any, cast
 
 from sqlalchemy import Engine, Table, func, insert, select, update
 from sqlalchemy.engine import RowMapping
@@ -199,7 +199,7 @@ class TaskStatusStore:
         heartbeat_start, heartbeat_end = last_heartbeat_at_range
         state_values = [state.value for state in states]
 
-        conditions = (
+        conditions = [
             self.table.c.task_id == task_id if task_id is not None else None,
             self.table.c.spec == spec if spec is not None else None,
             self.table.c.state.in_(state_values) if state_values else None,
@@ -219,12 +219,9 @@ class TaskStatusStore:
                 if heartbeat_end is not None
                 else None
             ),
-        )
+        ]
         if heartbeat_start is not None or heartbeat_end is not None:
-            conditions = (
-                *conditions,
-                self.table.c.last_heartbeat_at.is_not(None),
-            )
+            conditions.append(self.table.c.last_heartbeat_at.is_not(None))
         filters = [condition for condition in conditions if condition is not None]
 
         stmt = select(self.table)
@@ -241,7 +238,7 @@ class TaskStatusStore:
 
         with transaction(self.engine) as connection:
             total = int(connection.execute(count_stmt).scalar_one())
-            rows = connection.execute(stmt).mappings().all()
+            rows = cast(list[RowMapping], connection.execute(stmt).mappings().all())
         return rows, total
 
 

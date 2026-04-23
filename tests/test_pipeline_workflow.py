@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import time
+import zipfile
 from dataclasses import dataclass, field
+from datetime import date
 from pathlib import Path
 
+from sqlalchemy import select
 from sqlalchemy.engine import Engine
 
 from core.clean.csv_cleaner import CsvMessageCleaner
@@ -11,8 +14,9 @@ from core.pipeline.pipeline import IngestionPipeline
 from core.pipeline.registry import PipelineRegistry
 from core.pipeline.types import Arguments, ChunkArgs, NormalizedBatch, RawBatch
 from core.workflow.failover import FetchCleanFailoverPolicy
+from infra.db.engine import transaction
 from infra.db.repository import Repository
-from infra.db.tables import test_messages
+from infra.db.tables import stock_hist_unadj, test_messages
 from infra.fetcher.csv_fetcher import CsvFetcher
 from infra.idempotency.guard import IdempotencyGuard
 from infra.queue.in_memory import InMemoryTaskQueue
@@ -159,3 +163,100 @@ def test_csv_pipeline_to_repo(postgres_engine: Engine, tmp_path: Path) -> None:
 
     runtime.stop()
     raise AssertionError("csv pipeline task did not complete")
+
+
+def test_get_is_st_pipeline_updates_only_is_st(postgres_engine: Engine, tmp_path: Path) -> None:
+    zip_path = tmp_path / "A_stock_daily_unadj.zip"
+    with zipfile.ZipFile(zip_path, mode="w") as archive:
+        archive.writestr(
+            "A_stock_daily_unadj/000001.csv",
+            "日期,代码,名称,是否ST\n2024-01-02,000001,平安银行,是\n2024-01-03,000001,平安银行,否\n",
+        )
+        archive.writestr(
+            "A_stock_daily_unadj/000002.csv",
+            "日期,代码,名称,是否ST\n2024-01-02,000002,万科A,否\n",
+        )
+
+    with transaction(postgres_engine) as connection:
+        connection.execute(
+            stock_hist_unadj.insert(),
+            [
+                {
+                    "stock_code": "000001.SZ",
+                    "date": date(2024, 1, 2),
+                    "close": 10.5,
+                    "is_st": None,
+                    "is_suspend": "N",
+                },
+                {
+                    "stock_code": "000001.SZ",
+                    "date": date(2024, 1, 3),
+                    "close": 10.8,
+                    "is_st": None,
+                    "is_suspend": "N",
+                },
+            ],
+        )
+
+    from services.pipelines.stock_is_st_from_file_pipeline import StockIsStFromFilePipeline
+
+    registry = PipelineRegistry()
+    registry.register("stock_is_st_from_file", StockIsStFromFilePipeline())
+
+    store = TaskStatusStore(engine=postgres_engine)
+    queue = InMemoryTaskQueue()
+    guard = IdempotencyGuard(engine=postgres_engine)
+    service = TaskService(store=store, queue=queue, guard=guard)
+    selector = PipelineSelector(
+        mapping={TaskSpec.GET_STOCK_IS_ST_FROM_FILE: ["stock_is_st_from_file"]}
+    )
+    repo = Repository(engine=postgres_engine, table=stock_hist_unadj)
+    workflow = WorkflowEngine(
+        store=store,
+        registry=registry,
+        selector=selector,
+        repo=repo,
+        repo_by_pipeline={"stock_is_st_from_file": repo},
+        update_keys_by_pipeline={"stock_is_st_from_file": ["stock_code", "date"]},
+        update_columns_by_pipeline={"stock_is_st_from_file": ["is_st"]},
+        failover=FetchCleanFailoverPolicy(),
+    )
+    runtime = WorkerRuntime(queue=queue, store=store, handler=workflow)
+    runtime.start()
+
+    task = service.start_task(
+        PipelineTask(
+            spec=TaskSpec.GET_STOCK_IS_ST_FROM_FILE,
+            pipeline_id="stock_is_st_from_file",
+            source="unit-test",
+            task_type="stock_is_st_from_file",
+            arguments={"params": {"zip_path": str(zip_path)}},
+            options={},
+        )
+    )
+
+    deadline = time.time() + 5
+    while time.time() < deadline:
+        record = store.get_by_id(task.task_id)
+        if record.state == TaskState.SUCCEEDED:
+            runtime.stop()
+            break
+        time.sleep(0.1)
+    else:
+        runtime.stop()
+        raise AssertionError("is_st pipeline task did not complete")
+
+    with transaction(postgres_engine) as connection:
+        rows = connection.execute(
+            select(
+                stock_hist_unadj.c.stock_code,
+                stock_hist_unadj.c.date,
+                stock_hist_unadj.c.close,
+                stock_hist_unadj.c.is_st,
+            ).order_by(stock_hist_unadj.c.stock_code, stock_hist_unadj.c.date)
+        ).all()
+
+    assert rows == [
+        ("000001.SZ", date(2024, 1, 2), 10.5, 1),
+        ("000001.SZ", date(2024, 1, 3), 10.8, 0),
+    ]

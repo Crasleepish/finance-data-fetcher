@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import zipfile
 from datetime import datetime, timezone
+from io import BytesIO
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -113,6 +115,23 @@ def test_start_stock_hist_unadj_payload(postgres_engine: Engine) -> None:
         "source": "manual",
         "task_type": "stock_hist_unadj",
         "arguments": {"params": {"start_date": "2024-01-02", "end_date": "2024-01-02"}},
+        "options": {},
+    }
+
+    response = client.post("/tasks/start", json=payload)
+    assert response.status_code == 200
+
+
+def test_start_stock_is_st_from_file_payload(postgres_engine: Engine) -> None:
+    app = _build_test_app(postgres_engine)
+    client = TestClient(app)
+
+    payload = {
+        "spec": TaskSpec.GET_STOCK_IS_ST_FROM_FILE,
+        "pipeline_id": "stock_is_st_from_file",
+        "source": "manual",
+        "task_type": "stock_is_st_from_file",
+        "arguments": {"params": {"zip_path": "./extra/A_stock_daily_unadj.zip"}},
         "options": {},
     }
 
@@ -267,3 +286,49 @@ def test_list_tasks_datetime_ranges_and_ordering(postgres_engine: Engine) -> Non
     ordering_payload = ordering_response.json()
     assert ordering_payload["items"][0]["task_id"] == second_task_id
     assert ordering_payload["items"][1]["task_id"] == first_task_id
+
+
+def test_upload_stock_is_st_file_starts_task(postgres_engine: Engine) -> None:
+    app = _build_test_app(postgres_engine)
+    client = TestClient(app)
+
+    buffer = BytesIO()
+    with zipfile.ZipFile(buffer, mode="w") as archive:
+        archive.writestr(
+            "A_stock_daily_unadj/000001.csv",
+            "日期,代码,是否ST\n2024-01-02,000001,是\n",
+        )
+    buffer.seek(0)
+
+    response = client.post(
+        "/tasks/upload/stock-is-st-file",
+        files={"file": ("A_stock_daily_unadj.zip", buffer.getvalue(), "application/zip")},
+        data={"source": "manual"},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    task_id = data["task_id"]
+
+    status_response = client.get(f"/tasks/{task_id}")
+    assert status_response.status_code == 200
+    task_payload = client.get("/tasks/list", params={"task_id": task_id}).json()["items"][0][
+        "task_payload"
+    ]
+    assert task_payload["spec"] == "get_stock_is_st_from_file"
+    assert task_payload["pipeline_id"] == "stock_is_st_from_file"
+    assert task_payload["arguments"]["params"]["zip_path"].endswith(".zip")
+
+
+def test_upload_stock_is_st_file_rejects_invalid_zip(postgres_engine: Engine) -> None:
+    app = _build_test_app(postgres_engine)
+    client = TestClient(app)
+
+    response = client.post(
+        "/tasks/upload/stock-is-st-file",
+        files={"file": ("A_stock_daily_unadj.zip", b"not-a-zip", "application/zip")},
+        data={"source": "manual"},
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "uploaded file must be a valid zip archive"

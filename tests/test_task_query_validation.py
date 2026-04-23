@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 import pytest
+
 from core.task_query.validation import (
     normalize_page,
     normalize_page_size,

@@ -84,6 +84,7 @@ from services.pipelines.rt_stock_hist_unadj_pipeline import (
 )
 from services.pipelines.stock_hist_unadj_pipeline import StockHistUnadjPipeline
 from services.pipelines.stock_info_pipeline import StockInfoPipeline
+from services.pipelines.stock_is_st_from_file_pipeline import StockIsStFromFilePipeline
 from services.task_service import TaskService
 from services.workflow_engine import WorkflowEngine
 
@@ -122,6 +123,10 @@ def create_app() -> FastAPI:
                 client=tushare_client,
                 retry_policy=retry_policy,
             ),
+        )
+        registry.register(
+            "stock_is_st_from_file",
+            StockIsStFromFilePipeline(),
         )
         registry.register(
             "adj_factor",
@@ -347,6 +352,7 @@ def create_app() -> FastAPI:
         repo_by_pipeline = {
             "stock_info": Repository(engine=engine, table=stock_info),
             "stock_hist_unadj": Repository(engine=engine, table=stock_hist_unadj),
+            "stock_is_st_from_file": Repository(engine=engine, table=stock_hist_unadj),
             "adj_factor": Repository(engine=engine, table=adj_factor),
             "index_info": Repository(engine=engine, table=index_info),
             "index_hist_stock": Repository(engine=engine, table=index_hist),
@@ -400,6 +406,12 @@ def create_app() -> FastAPI:
                 "gold_cftc_report": ["report_date", "contract_market_code", "market_code"],
                 "gold_future_curve": ["trade_date", "symbol"],
                 "fund_beta": ["code", "date"],
+            },
+            update_keys_by_pipeline={
+                "stock_is_st_from_file": ["stock_code", "date"],
+            },
+            update_columns_by_pipeline={
+                "stock_is_st_from_file": ["is_st"],
             },
             replace_by_pipeline={
                 "rt_stock_hist_unadj_tushare",

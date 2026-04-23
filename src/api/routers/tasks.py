@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import logging
+import tempfile
+import zipfile
+from pathlib import Path
 from typing import cast
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, Request, UploadFile
 from pydantic import BaseModel
 
 from core.pipeline.validation import ensure_hashable
@@ -14,6 +17,7 @@ from core.task_query.validation import (
 )
 from infra.task_state.store import TaskStatusStore
 from models.task_payload import PipelineTask
+from models.task_spec import TaskSpec
 from models.task_status import TaskState, TaskStatusRecord
 from services.task_service import TaskService
 
@@ -152,31 +156,43 @@ def start_task(
     service: TaskService = Depends(get_task_service),
 ) -> TaskStartResponse:
     """Start a task asynchronously and return its id."""
-    arguments_digest = ensure_hashable(payload.arguments)
-    options_digest = ensure_hashable(payload.options)
-    caller = request.headers.get("x-caller")
-    logger.info(
-        "task start request",
-        extra={
-            "pipeline_id": payload.pipeline_id or "selector",
-            "arguments_digest": arguments_digest,
-            "options_digest": options_digest,
-            "caller": caller,
-        },
+    return _start_task(payload, request, service)
+
+
+@router.post(
+    "/upload/stock-is-st-file",
+    response_model=TaskStartResponse,
+    operation_id="upload_stock_is_st_file",
+    summary="Upload stock is_st zip and start a task",
+)
+def upload_stock_is_st_file(
+    request: Request,
+    file: UploadFile = File(...),
+    source: str = Form(...),
+    service: TaskService = Depends(get_task_service),
+) -> TaskStartResponse:
+    filename = file.filename or ""
+    if not filename.lower().endswith(".zip"):
+        raise HTTPException(status_code=400, detail="zip file is required")
+
+    zip_path = _save_upload_to_temp(file)
+    if not zipfile.is_zipfile(zip_path):
+        Path(zip_path).unlink(missing_ok=True)
+        raise HTTPException(status_code=400, detail="uploaded file must be a valid zip archive")
+
+    payload = PipelineTask(
+        spec=TaskSpec.GET_STOCK_IS_ST_FROM_FILE,
+        pipeline_id="stock_is_st_from_file",
+        source=source,
+        task_type="stock_is_st_from_file",
+        arguments={"params": {"zip_path": zip_path, "cleanup_zip_path": zip_path}},
+        options={},
     )
     try:
-        record = service.start_task(payload)
+        return _start_task(payload, request, service)
     except Exception:
-        logger.exception(
-            "task start failed",
-            extra={"pipeline_id": payload.pipeline_id},
-        )
-        raise HTTPException(status_code=500, detail="task start failed")
-    return TaskStartResponse(
-        task_id=record.task_id,
-        state=record.state,
-        idempotency_key=record.idempotency_key,
-    )
+        Path(zip_path).unlink(missing_ok=True)
+        raise
 
 
 @router.get(
@@ -293,7 +309,7 @@ def list_tasks(
         logger.exception("task list failed")
         raise HTTPException(status_code=500, detail="internal server error")
 
-    items = [_row_to_list_item(row) for row in rows]
+    items = [_row_to_list_item(dict(row)) for row in rows]
     return TaskListResponse(
         items=items,
         meta=TaskListMeta(page=page, page_size=page_size, total=total),
@@ -384,6 +400,49 @@ def cancel_task(
         logger.exception("task cancel failed", extra={"task_id": task_id})
         raise HTTPException(status_code=500, detail="task cancel failed")
     return _to_response(record)
+
+
+def _start_task(
+    payload: PipelineTask,
+    request: Request,
+    service: TaskService,
+) -> TaskStartResponse:
+    arguments_digest = ensure_hashable(payload.arguments)
+    options_digest = ensure_hashable(payload.options)
+    caller = request.headers.get("x-caller")
+    logger.info(
+        "task start request",
+        extra={
+            "pipeline_id": payload.pipeline_id or "selector",
+            "arguments_digest": arguments_digest,
+            "options_digest": options_digest,
+            "caller": caller,
+        },
+    )
+    try:
+        record = service.start_task(payload)
+    except Exception:
+        logger.exception(
+            "task start failed",
+            extra={"pipeline_id": payload.pipeline_id},
+        )
+        raise HTTPException(status_code=500, detail="task start failed")
+    return TaskStartResponse(
+        task_id=record.task_id,
+        state=record.state,
+        idempotency_key=record.idempotency_key,
+    )
+
+
+def _save_upload_to_temp(file: UploadFile) -> str:
+    suffix = Path(file.filename or "upload.zip").suffix or ".zip"
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as handle:
+        while True:
+            chunk = file.file.read(1024 * 1024)
+            if not chunk:
+                break
+            handle.write(chunk)
+        return handle.name
 
 
 def _to_response(record: TaskStatusRecord) -> TaskStatusResponse:

@@ -42,6 +42,7 @@
 | --- | --- | --- |
 | get_stock_info | stock_info | stock_info |
 | get_stock_hist_unadj | stock_hist_unadj | stock_hist_unadj |
+| get_stock_is_st_from_file | stock_is_st_from_file | stock_is_st_from_file |
 | get_fundamental_data | fundamental_data | fundamental_data, fundamental_data_single |
 | get_market_factors | market_factors | market_factors |
 | get_fund_beta | fund_beta | fund_beta |
@@ -124,6 +125,43 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
     "options": {}
   }'
 ```
+
+---
+
+### stock_is_st_from_file
+
+- **spec**：`get_stock_is_st_from_file`
+- **arguments.params**（JSON 提交模式）：
+  - `zip_path`：`string`，必填，zip 文件路径。
+- **说明**：该任务只做全量处理；只更新 `stock_hist_unadj` 中已存在的 `(stock_code, date)` 行，不会插入新行。`is_st` 写入为 `int4`：`1 = ST`，`0 = 非 ST`，`NULL = 尚未回填`。
+
+**JSON 示例**
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_stock_is_st_from_file",
+    "source": "manual",
+    "task_type": "stock_is_st_from_file",
+    "arguments": {
+      "params": {
+        "zip_path": "./extra/A_stock_daily_unadj.zip"
+      }
+    },
+    "options": {}
+  }'
+```
+
+**大文件上传示例**
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/upload/stock-is-st-file" \
+  -F "source=manual" \
+  -F "file=@./extra/A_stock_daily_unadj.zip;type=application/zip"
+```
+
+> 说明：二进制大文件请使用 multipart 上传接口，服务端会流式落盘后再创建任务；若前面有反向代理，需要同步放开请求体大小限制。
 
 ---
 

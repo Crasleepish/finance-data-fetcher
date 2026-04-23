@@ -10,6 +10,7 @@ class TaskSpec(StrEnum):
     PIPELINE = "pipeline"
     GET_STOCK_INFO = "get_stock_info"
     GET_STOCK_HIST_UNADJ = "get_stock_hist_unadj"
+    GET_STOCK_IS_ST_FROM_FILE = "get_stock_is_st_from_file"
     GET_FUNDAMENTAL_DATA = "get_fundamental_data"
     GET_ADJ_FACTOR = "get_adj_factor"
     GET_INDEX_INFO = "get_index_info"

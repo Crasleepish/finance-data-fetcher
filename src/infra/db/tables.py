@@ -310,6 +310,7 @@ stock_hist_unadj = Table(
     Column("free_share", BigInteger, comment="free float shares"),
     Column("mkt_cap", BigInteger, comment="market cap in CNY"),
     Column("circ_mv", BigInteger, comment="float market cap in CNY"),
+    Column("is_st", Integer, comment="1=ST, 0=non-ST, NULL means not backfilled"),
     Column("is_suspend", CHAR(length=1), nullable=False, server_default="N", comment="Y/N"),
     Index("stock_hist_unadj_date_idx", "date"),
     Index(

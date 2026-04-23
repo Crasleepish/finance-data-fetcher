@@ -33,6 +33,10 @@ uv run pytest tests/test_config_loader.py::test_name
   - config: centralized configuration
 - Pipeline routing is defined in `config/task_pipeline_mapping.py` (spec → pipeline implementation).
 - Configuration is loaded by `src/config/loader.py` from `config/app.yaml` or `APP_CONFIG_PATH`, with env overrides (e.g., `APP_DB_URL`, `APP_TUSHARE_TOKEN_PRIVATE`, `APP_TUSHARE_TOKEN_PUBLIC`). Business logic must not read env vars directly.
+- Database connection note:
+  - For local development, connect to PostgreSQL at `127.0.0.1:5432`.
+  - The database host in `config/app.yaml` is for container-internal access.
+  - The username, password, and database name are the same between local development and the container setup.
 
 ## Implementation constraints (from AGENTS.md)
 
