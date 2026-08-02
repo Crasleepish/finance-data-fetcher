@@ -40,6 +40,7 @@ config/app.yaml
 
 # runtime files
 bt_result/
+manual_import/
 
 # claude
 .claude/
