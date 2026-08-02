@@ -31,6 +31,8 @@ services:
     #   APP_GOLD_TMP_DIR: "/tmp"
     networks:
       - docker-bridge
+    #    environment:
+    #      HTTP_PROXY: http://47.114.119.74:8000
 
 networks:
   docker-bridge:

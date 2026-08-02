@@ -150,6 +150,7 @@ fundamental_data = Table(
     metadata,
     Column("stock_code", String(length=10), primary_key=True),
     Column("report_date", Date, primary_key=True),
+    Column("f_ann_date", Date),
     Column("total_equity", Float(precision=53)),
     Column("total_assets", Float(precision=53)),
     Column("current_liabilities", Float(precision=53)),
@@ -269,6 +270,18 @@ market_factors = Table(
     Column("SMB", Numeric(precision=10, scale=6)),
     Column("HML", Numeric(precision=10, scale=6)),
     Column("QMJ", Numeric(precision=10, scale=6)),
+)
+
+moneyflow_hsgt = Table(
+    "moneyflow_hsgt",
+    metadata,
+    Column("date", Date, primary_key=True),
+    Column("ggt_ss", Numeric(precision=20, scale=2)),
+    Column("ggt_sz", Numeric(precision=20, scale=2)),
+    Column("hgt", Numeric(precision=20, scale=2)),
+    Column("sgt", Numeric(precision=20, scale=2)),
+    Column("north_money", Numeric(precision=20, scale=2)),
+    Column("south_money", Numeric(precision=20, scale=2)),
 )
 
 rt_market_factors = Table(
@@ -395,4 +408,20 @@ us_index = Table(
     Column("ask_high", Float(precision=53)),
     Column("ask_low", Float(precision=53)),
     Column("tick_qty", BigInteger),
+)
+
+industry_component = Table(
+    "industry_component",
+    metadata,
+    Column("stock_code", String(length=10), primary_key=True),
+    Column("standard", String(length=10), primary_key=True),
+    Column("begin_date", Date, primary_key=True),
+    Column("end_date", Date, nullable=False),
+    Column("industry_level1_code", String(length=10)),
+    Column("industry_level1_name", String(length=20)),
+    Column("industry_level2_code", String(length=10)),
+    Column("industry_level2_name", String(length=20)),
+    Column("industry_level3_code", String(length=10)),
+    Column("industry_level3_name", String(length=30)),
+    Index("industry_component_stock_code_standard_idx", "stock_code", "standard"),
 )

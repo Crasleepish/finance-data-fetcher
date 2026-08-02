@@ -57,6 +57,11 @@ class TushareClient(Protocol):
     def adj_factor(self, trade_date: str, fields: str) -> list[dict[str, object]]:
         """Return adj_factor rows as a list of dicts."""
 
+    def moneyflow_hsgt(
+        self, start_date: str, end_date: str, fields: str
+    ) -> list[dict[str, object]]:
+        """Return moneyflow_hsgt rows as a list of dicts."""
+
     def index_basic(
         self, market: str, fields: str, offset: int, limit: int
     ) -> list[dict[str, object]]:
@@ -271,6 +276,19 @@ class TushareProClient(TushareClient):
         self._rate_limiter.wait()
         pro = ts.pro_api(self.token)
         data = pro.adj_factor(trade_date=trade_date, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def moneyflow_hsgt(
+        self, start_date: str, end_date: str, fields: str
+    ) -> list[dict[str, object]]:
+        """Query moneyflow_hsgt data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.moneyflow_hsgt(start_date=start_date, end_date=end_date, fields=fields)
         if data is None or data.empty:
             return []
         return cast(list[dict[str, object]], data.to_dict("records"))

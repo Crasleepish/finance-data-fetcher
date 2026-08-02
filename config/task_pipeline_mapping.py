@@ -9,6 +9,7 @@ TASK_PIPELINE_MAPPING = {
     TaskSpec.GET_STOCK_IS_ST_FROM_FILE: ["stock_is_st_from_file"],
     TaskSpec.GET_FUNDAMENTAL_DATA: ["fundamental_data", "fundamental_data_single"],
     TaskSpec.GET_ADJ_FACTOR: ["adj_factor"],
+    TaskSpec.GET_MONEYFLOW_HSGT: ["moneyflow_hsgt"],
     TaskSpec.GET_INDEX_INFO: ["index_info"],
     TaskSpec.GET_INDEX_HIST_STOCK: ["index_hist_stock"],
     TaskSpec.GET_INDEX_HIST_BOND: ["index_hist_bond"],

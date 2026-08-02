@@ -13,6 +13,7 @@ def test_fundamental_data_cleaner_maps_fields() -> None:
                 {
                     "ts_code": "000001.SZ",
                     "end_date": "20240331",
+                    "f_ann_date": "20240415",
                     "n_income_attr_p": 10.0,
                     "operate_profit": 20.0,
                     "total_revenue": 30.0,
@@ -23,6 +24,7 @@ def test_fundamental_data_cleaner_maps_fields() -> None:
                 {
                     "ts_code": "000001.SZ",
                     "end_date": "20240331",
+                    "f_ann_date": "20240418",
                     "total_hldr_eqy_exc_min_int": 100.0,
                     "total_assets": 200.0,
                     "total_cur_liab": 50.0,
@@ -34,6 +36,7 @@ def test_fundamental_data_cleaner_maps_fields() -> None:
                 {
                     "ts_code": "000001.SZ",
                     "end_date": "20240331",
+                    "f_ann_date": "20240420",
                     "n_cashflow_act": 5.0,
                     "c_pay_acq_const_fiolta": 6.0,
                 }
@@ -46,6 +49,7 @@ def test_fundamental_data_cleaner_maps_fields() -> None:
         {
             "stock_code": "000001.SZ",
             "report_date": date(2024, 3, 31),
+            "f_ann_date": date(2024, 4, 20),
             "total_equity": 100.0,
             "total_assets": 200.0,
             "current_liabilities": 50.0,
@@ -60,6 +64,21 @@ def test_fundamental_data_cleaner_maps_fields() -> None:
             "total_liabilities": 75.0,
         }
     ]
+
+
+def test_fundamental_data_cleaner_f_ann_date_none_when_all_missing() -> None:
+    cleaner = FundamentalDataCleaner(overwrite=False)
+    raw = [
+        {
+            "income": [{"ts_code": "000010.SZ", "end_date": "20240331"}],
+            "balance": [{"ts_code": "000010.SZ", "end_date": "20240331"}],
+            "cashflow": [{"ts_code": "000010.SZ", "end_date": "20240331"}],
+        }
+    ]
+
+    records = list(cleaner.clean(raw))
+    assert records[0]["report_date"] == date(2024, 3, 31)
+    assert records[0]["f_ann_date"] is None
 
 
 def test_fundamental_data_cleaner_net_profit_fallback() -> None:

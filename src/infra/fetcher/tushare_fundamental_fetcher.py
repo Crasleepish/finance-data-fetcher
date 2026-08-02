@@ -14,13 +14,13 @@ from infra.tushare.client import TushareClient
 logger = logging.getLogger(__name__)
 
 _INCOME_FIELDS = (
-    "ts_code,end_date,n_income_attr_p,n_income,continued_net_profit,end_net_profit,"
+    "ts_code,end_date,f_ann_date,n_income_attr_p,n_income,continued_net_profit,end_net_profit,"
     "operate_profit,total_revenue,total_cogs,oper_exp"
 )
 _BALANCE_FIELDS = (
-    "ts_code,end_date,total_hldr_eqy_exc_min_int,total_assets,total_cur_liab,total_ncl,total_liab"
+    "ts_code,end_date,f_ann_date,total_hldr_eqy_exc_min_int,total_assets,total_cur_liab,total_ncl,total_liab"
 )
-_CASHFLOW_FIELDS = "ts_code,end_date,n_cashflow_act,c_pay_acq_const_fiolta"
+_CASHFLOW_FIELDS = "ts_code,end_date,f_ann_date,n_cashflow_act,c_pay_acq_const_fiolta"
 
 
 @dataclass(frozen=True)

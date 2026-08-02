@@ -62,6 +62,11 @@ def _build_record(
             cashflow_row.get("end_date"),
         )
     )
+    f_ann_date = _latest_date(
+        _parse_date(_first_non_empty(income_row.get("f_ann_date"))),
+        _parse_date(_first_non_empty(balance_row.get("f_ann_date"))),
+        _parse_date(_first_non_empty(cashflow_row.get("f_ann_date"))),
+    )
     total_equity = _parse_amount(balance_row.get("total_hldr_eqy_exc_min_int"))
     total_assets = _parse_amount(balance_row.get("total_assets"))
     current_liabilities = _parse_amount(balance_row.get("total_cur_liab"))
@@ -93,6 +98,7 @@ def _build_record(
     return {
         "stock_code": ts_code,
         "report_date": end_date,
+        "f_ann_date": f_ann_date,
         "total_equity": total_equity,
         "total_assets": total_assets,
         "current_liabilities": current_liabilities,
@@ -161,6 +167,13 @@ def _parse_date(value: Any) -> date | None:
         if len(value) == 10:
             return datetime.strptime(value, "%Y-%m-%d").date()
     raise ValueError("invalid date value")
+
+
+def _latest_date(*values: date | None) -> date | None:
+    dates = [value for value in values if isinstance(value, date)]
+    if not dates:
+        return None
+    return max(dates)
 
 
 def _parse_amount(value: Any) -> float | None:

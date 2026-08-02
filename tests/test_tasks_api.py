@@ -122,6 +122,28 @@ def test_start_stock_hist_unadj_payload(postgres_engine: Engine) -> None:
     assert response.status_code == 200
 
 
+def test_start_moneyflow_hsgt_payload(postgres_engine: Engine) -> None:
+    app = _build_test_app(postgres_engine)
+    client = TestClient(app)
+
+    payload = {
+        "spec": TaskSpec.GET_MONEYFLOW_HSGT,
+        "pipeline_id": "moneyflow_hsgt",
+        "source": "manual",
+        "task_type": "moneyflow_hsgt",
+        "arguments": {"params": {"start_date": "2024-01-02", "end_date": "2024-01-05"}},
+        "options": {},
+    }
+
+    response = client.post("/tasks/start", json=payload)
+    assert response.status_code == 200
+    task_id = response.json()["task_id"]
+
+    status_response = client.get(f"/tasks/{task_id}")
+    assert status_response.status_code == 200
+    assert status_response.json()["spec"] == "get_moneyflow_hsgt"
+
+
 def test_start_stock_is_st_from_file_payload(postgres_engine: Engine) -> None:
     app = _build_test_app(postgres_engine)
     client = TestClient(app)
