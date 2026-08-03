@@ -20,6 +20,7 @@ class TaskSpec(StrEnum):
     GET_INDEX_HIST_BOND = "get_index_hist_bond"
     GET_INDEX_HIST_GOLD = "get_index_hist_gold"
     GET_INDEX_HIST_GLOBAL = "get_index_hist_global"
+    GET_INDEX_DAILY_BASIC = "get_index_daily_basic"
     GET_INTERNAL_INDEX = "get_internal_index"
     GET_FUND_INFO = "get_fund_info"
     GET_FUND_HIST_INDEX = "get_fund_hist_index"

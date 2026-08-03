@@ -26,6 +26,7 @@ from infra.db.tables import (
     fundamental_data,
     gold_cftc_report,
     gold_future_curve,
+    index_daily_basic,
     index_hist,
     index_info,
     margin_daily,
@@ -64,6 +65,7 @@ from services.pipelines.fundamental_data_pipeline import FundamentalDataPipeline
 from services.pipelines.fundamental_data_single_pipeline import FundamentalDataSinglePipeline
 from services.pipelines.gold_cftc_report_pipeline import GoldCftcReportPipeline
 from services.pipelines.gold_future_curve_pipeline import GoldFutureCurvePipeline
+from services.pipelines.index_daily_basic_pipeline import IndexDailyBasicPipeline
 from services.pipelines.index_hist_bond_pipeline import IndexHistBondPipeline
 from services.pipelines.index_hist_global_pipeline import IndexHistGlobalPipeline
 from services.pipelines.index_hist_gold_pipeline import IndexHistGoldPipeline
@@ -285,6 +287,14 @@ def create_app() -> FastAPI:
             ),
         )
         registry.register(
+            "index_daily_basic",
+            IndexDailyBasicPipeline(
+                calendar=app.state.calendar_service.calendar,
+                client=tushare_client,
+                retry_policy=retry_policy,
+            ),
+        )
+        registry.register(
             "index_hist_bond",
             IndexHistBondPipeline(
                 calendar=app.state.calendar_service.calendar,
@@ -377,6 +387,7 @@ def create_app() -> FastAPI:
             "moneyflow_hsgt": Repository(engine=engine, table=moneyflow_hsgt),
             "margin_daily": Repository(engine=engine, table=margin_daily),
             "index_info": Repository(engine=engine, table=index_info),
+            "index_daily_basic": Repository(engine=engine, table=index_daily_basic),
             "index_hist_stock": Repository(engine=engine, table=index_hist),
             "index_hist_bond": Repository(engine=engine, table=index_hist),
             "index_hist_gold": Repository(engine=engine, table=index_hist),
@@ -414,6 +425,7 @@ def create_app() -> FastAPI:
                 "moneyflow_hsgt": ["date"],
                 "margin_daily": ["trade_date", "exchange_id"],
                 "index_info": ["index_code"],
+                "index_daily_basic": ["ts_code", "trade_date"],
                 "index_hist_stock": ["index_code", "date"],
                 "index_hist_bond": ["index_code", "date"],
                 "index_hist_gold": ["index_code", "date"],

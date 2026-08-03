@@ -16,6 +16,7 @@ TASK_PIPELINE_MAPPING = {
     TaskSpec.GET_INDEX_HIST_BOND: ["index_hist_bond"],
     TaskSpec.GET_INDEX_HIST_GOLD: ["index_hist_gold"],
     TaskSpec.GET_INDEX_HIST_GLOBAL: ["index_hist_global"],
+    TaskSpec.GET_INDEX_DAILY_BASIC: ["index_daily_basic"],
     TaskSpec.GET_INTERNAL_INDEX: ["internal_index"],
     TaskSpec.GET_FUND_INFO: ["fund_info"],
     TaskSpec.GET_FUND_HIST_INDEX: ["fund_hist_index"],

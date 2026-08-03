@@ -239,6 +239,24 @@ gold_future_curve = Table(
     UniqueConstraint("trade_date", "symbol", name="uq_gold_future_curve_date_symbol"),
 )
 
+index_daily_basic = Table(
+    "index_daily_basic",
+    metadata,
+    Column("ts_code", String(length=20), primary_key=True, comment="指数代码"),
+    Column("trade_date", Date, primary_key=True, comment="交易日期"),
+    Column("total_mv", Float(precision=53), comment="总市值（万元）"),
+    Column("float_mv", Float(precision=53), comment="流通市值（万元）"),
+    Column("total_share", Float(precision=53), comment="总股本（万股）"),
+    Column("float_share", Float(precision=53), comment="流通股本（万股）"),
+    Column("free_share", Float(precision=53), comment="自由流通股本（万股）"),
+    Column("turnover_rate", Float(precision=53), comment="换手率（%）"),
+    Column("turnover_rate_f", Float(precision=53), comment="换手率（自由流通股本）（%）"),
+    Column("pe", Float(precision=53), comment="市盈率（倍）"),
+    Column("pe_ttm", Float(precision=53), comment="市盈率（TTM）（倍）"),
+    Column("pb", Float(precision=53), comment="市净率（倍）"),
+    comment="Tushare 大盘指数每日指标数据",
+)
+
 index_hist = Table(
     "index_hist",
     metadata,

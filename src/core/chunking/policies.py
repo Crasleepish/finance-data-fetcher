@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
-from typing import Protocol
+from typing import Protocol, Sequence
 
 from core.calendar.service import TradingCalendarService
 from core.pipeline.types import Arguments, ChunkArgs
@@ -87,6 +87,40 @@ class TradeDayRangeChunkPolicy:
             for chunk in chunks
             if chunk
         ]
+
+
+@dataclass(frozen=True)
+class TradeDayRangePerCodeChunkPolicy:
+    """Split a date range into trade-day-aware chunks for every source code."""
+
+    start_key: str
+    end_key: str
+    code_key: str
+    chunk_size: int
+    codes: Sequence[str]
+    calendar: TradingCalendarService
+
+    def plan(self, arguments: Arguments) -> list[ChunkArgs]:
+        params = _get_params(arguments)
+        start = _parse_date(_require_key(params, self.start_key))
+        end = _parse_date(_require_key(params, self.end_key))
+        chunks = self.calendar.normalize_trade_day_chunks(start, end, self.chunk_size)
+        planned: list[ChunkArgs] = []
+        for code in self.codes:
+            for chunk in chunks:
+                if not chunk:
+                    continue
+                planned.append(
+                    {
+                        "params": {
+                            **params,
+                            self.code_key: code,
+                            self.start_key: chunk[0].isoformat(),
+                            self.end_key: chunk[-1].isoformat(),
+                        }
+                    }
+                )
+        return planned
 
 
 def _get_params(arguments: Arguments) -> dict[str, object]:

@@ -81,6 +81,15 @@ class TushareClient(Protocol):
     ) -> list[dict[str, object]]:
         """Return index_daily rows as a list of dicts."""
 
+    def index_dailybasic(
+        self,
+        ts_code: str,
+        start_date: str,
+        end_date: str,
+        fields: str,
+    ) -> list[dict[str, object]]:
+        """Return index_dailybasic rows as a list of dicts."""
+
     def index_global(
         self,
         ts_code: str,
@@ -341,6 +350,24 @@ class TushareProClient(TushareClient):
             fields=fields,
             offset=offset,
             limit=limit,
+        )
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def index_dailybasic(
+        self, ts_code: str, start_date: str, end_date: str, fields: str
+    ) -> list[dict[str, object]]:
+        """Query index_dailybasic data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.index_dailybasic(
+            ts_code=ts_code,
+            start_date=start_date,
+            end_date=end_date,
+            fields=fields,
         )
         if data is None or data.empty:
             return []
