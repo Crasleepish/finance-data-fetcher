@@ -272,6 +272,27 @@ market_factors = Table(
     Column("QMJ", Numeric(precision=10, scale=6)),
 )
 
+margin_daily = Table(
+    "margin_daily",
+    metadata,
+    Column("trade_date", Date, primary_key=True, comment="交易日期"),
+    Column(
+        "exchange_id",
+        String(length=10),
+        primary_key=True,
+        comment="交易所代码（SSE/SZSE/BSE）",
+    ),
+    Column("rzye", Numeric(precision=20, scale=2), comment="融资余额（元）"),
+    Column("rzmre", Numeric(precision=20, scale=2), comment="融资买入额（元）"),
+    Column("rzche", Numeric(precision=20, scale=2), comment="融资偿还额（元）"),
+    Column("rqye", Numeric(precision=20, scale=2), comment="融券余额（元）"),
+    Column("rqmcl", Numeric(precision=20, scale=2), comment="融券卖出量（股、份或手）"),
+    Column("rzrqye", Numeric(precision=20, scale=2), comment="融资融券余额（元）"),
+    Column("rqyl", Numeric(precision=20, scale=2), comment="融券余量（股、份或手）"),
+    Index("margin_daily_exchange_id_idx", "exchange_id"),
+    comment="Tushare 融资融券每日交易汇总数据",
+)
+
 moneyflow_hsgt = Table(
     "moneyflow_hsgt",
     metadata,

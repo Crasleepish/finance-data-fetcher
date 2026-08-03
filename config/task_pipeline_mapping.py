@@ -10,6 +10,7 @@ TASK_PIPELINE_MAPPING = {
     TaskSpec.GET_FUNDAMENTAL_DATA: ["fundamental_data", "fundamental_data_single"],
     TaskSpec.GET_ADJ_FACTOR: ["adj_factor"],
     TaskSpec.GET_MONEYFLOW_HSGT: ["moneyflow_hsgt"],
+    TaskSpec.GET_MARGIN_DAILY: ["margin_daily"],
     TaskSpec.GET_INDEX_INFO: ["index_info"],
     TaskSpec.GET_INDEX_HIST_STOCK: ["index_hist_stock"],
     TaskSpec.GET_INDEX_HIST_BOND: ["index_hist_bond"],

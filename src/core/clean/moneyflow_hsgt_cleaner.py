@@ -3,6 +3,7 @@ from __future__ import annotations
 import math
 from datetime import date, datetime
 from decimal import Decimal
+from typing import Any, cast
 
 from core.clean.typed_cleaner import TypedCleaner
 from core.pipeline.types import NormalizedBatch, RawBatch
@@ -69,7 +70,7 @@ def _as_yuan_decimal(value: object) -> Decimal | None:
         return None
     if isinstance(value, Decimal):
         return (value * _MILLION_TO_YUAN).quantize(_YUAN_SCALE)
-    num = float(value)
+    num = float(cast(Any, value))
     if math.isnan(num):
         return None
     return (Decimal(str(value)) * _MILLION_TO_YUAN).quantize(_YUAN_SCALE)

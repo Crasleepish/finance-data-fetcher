@@ -28,6 +28,7 @@ from infra.db.tables import (
     gold_future_curve,
     index_hist,
     index_info,
+    margin_daily,
     market_factors,
     moneyflow_hsgt,
     rt_etf_hist,
@@ -69,6 +70,7 @@ from services.pipelines.index_hist_gold_pipeline import IndexHistGoldPipeline
 from services.pipelines.index_hist_stock_pipeline import IndexHistStockPipeline
 from services.pipelines.index_info_pipeline import IndexInfoPipeline
 from services.pipelines.internal_index_pipeline import InternalIndexPipeline
+from services.pipelines.margin_daily_pipeline import MarginDailyPipeline
 from services.pipelines.market_factors_pipeline import MarketFactorsPipeline
 from services.pipelines.moneyflow_hsgt_pipeline import MoneyflowHsgtPipeline
 from services.pipelines.rt_etf_hist_pipeline import (
@@ -141,6 +143,14 @@ def create_app() -> FastAPI:
         registry.register(
             "moneyflow_hsgt",
             MoneyflowHsgtPipeline(
+                calendar=app.state.calendar_service.calendar,
+                client=tushare_client,
+                retry_policy=retry_policy,
+            ),
+        )
+        registry.register(
+            "margin_daily",
+            MarginDailyPipeline(
                 calendar=app.state.calendar_service.calendar,
                 client=tushare_client,
                 retry_policy=retry_policy,
@@ -365,6 +375,7 @@ def create_app() -> FastAPI:
             "stock_is_st_from_file": Repository(engine=engine, table=stock_hist_unadj),
             "adj_factor": Repository(engine=engine, table=adj_factor),
             "moneyflow_hsgt": Repository(engine=engine, table=moneyflow_hsgt),
+            "margin_daily": Repository(engine=engine, table=margin_daily),
             "index_info": Repository(engine=engine, table=index_info),
             "index_hist_stock": Repository(engine=engine, table=index_hist),
             "index_hist_bond": Repository(engine=engine, table=index_hist),
@@ -401,6 +412,7 @@ def create_app() -> FastAPI:
                 "stock_hist_unadj": ["stock_code", "date"],
                 "adj_factor": ["stock_code", "date"],
                 "moneyflow_hsgt": ["date"],
+                "margin_daily": ["trade_date", "exchange_id"],
                 "index_info": ["index_code"],
                 "index_hist_stock": ["index_code", "date"],
                 "index_hist_bond": ["index_code", "date"],
