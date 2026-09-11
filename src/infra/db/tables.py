@@ -311,6 +311,26 @@ margin_daily = Table(
     comment="Tushare 融资融券每日交易汇总数据",
 )
 
+market_daily_info = Table(
+    "market_daily_info",
+    metadata,
+    Column("trade_date", Date, primary_key=True, comment="交易日期"),
+    Column("ts_code", String(length=20), primary_key=True, comment="市场代码"),
+    Column("ts_name", String(length=50), comment="市场名称"),
+    Column("com_count", Integer, comment="挂牌数"),
+    Column("total_share", Numeric(precision=20, scale=4), comment="总股本（亿股）"),
+    Column("float_share", Numeric(precision=20, scale=4), comment="流通股本（亿股）"),
+    Column("total_mv", Numeric(precision=20, scale=4), comment="总市值（亿元）"),
+    Column("float_mv", Numeric(precision=20, scale=4), comment="流通市值（亿元）"),
+    Column("amount", Numeric(precision=20, scale=4), comment="交易金额（亿元）"),
+    Column("vol", Numeric(precision=20, scale=4), comment="成交量（亿股）"),
+    Column("trans_count", Numeric(precision=20, scale=4), comment="成交笔数（万笔）"),
+    Column("pe", Numeric(precision=20, scale=4), comment="市盈率（倍）"),
+    Column("tr", Numeric(precision=20, scale=4), comment="换手率（%）"),
+    Column("exchange", String(length=10), comment="交易所（SH/SZ）"),
+    comment="Tushare 市场交易统计（每日）数据",
+)
+
 moneyflow_hsgt = Table(
     "moneyflow_hsgt",
     metadata,

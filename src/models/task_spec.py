@@ -15,6 +15,7 @@ class TaskSpec(StrEnum):
     GET_ADJ_FACTOR = "get_adj_factor"
     GET_MONEYFLOW_HSGT = "get_moneyflow_hsgt"
     GET_MARGIN_DAILY = "get_margin_daily"
+    GET_MARKET_DAILY_INFO = "get_market_daily_info"
     GET_INDEX_INFO = "get_index_info"
     GET_INDEX_HIST_STOCK = "get_index_hist_stock"
     GET_INDEX_HIST_BOND = "get_index_hist_bond"

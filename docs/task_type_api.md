@@ -62,6 +62,7 @@
 | get_index_hist_gold | index_hist_gold | index_hist_gold |
 | get_index_hist_global | index_hist_global | index_hist_global |
 | get_internal_index | internal_index | internal_index |
+| get_market_daily_info | market_daily_info | market_daily_info |
 | get_gold_cftc_report | gold_cftc_report | gold_cftc_report |
 | get_gold_future_curve | gold_future_curve | gold_future_curve |
 
@@ -716,6 +717,41 @@ curl -X POST "http://127.0.0.1:8000/tasks/start" \
       "params": {
         "start_date": "2006-04-03",
         "end_date": "2006-04-30"
+      }
+    },
+    "options": {}
+  }'
+```
+
+---
+
+### market_daily_info
+
+- **spec**：`get_market_daily_info`
+- **arguments.params**：
+  - `start_date`：`string`，必填，格式 `YYYY-MM-DD` 或 `YYYYMMDD`。
+  - `end_date`：`string`，必填，格式 `YYYY-MM-DD` 或 `YYYYMMDD`。
+- **说明**：抓取 Tushare 市场交易统计每日数据，双数据源：
+  - 沪市（SH）：`pro.daily_info`（doc_id=215），请求带 `exchange='SH'` 过滤，并对响应行做防御性过滤（仅保留 SH 行）；
+  - 深市（SZ）：`pro.sz_daily_info`（深圳市场每日交易概况），数据自 2008-01-02 起，无 fields/exchange 参数；原始金额/股本单位为元/股，入库时按 1e8 折算为亿元/亿股；`count` 映射为 `com_count`，`trans_count`/`pe`/`tr` 置 NULL，`exchange='SZ'`，`ts_name` 由分类映射生成（未知分类会报错）。
+  - 深市分类映射完整覆盖 23 类（经 2008-01-02..2025-12-31 全量源扫描）：股票→SZ_MARKET、主板A股→SZ_A、主板B股→SZ_B、创业板A股→SZ_GEM_A、创业板→SZ_GEM、中小板→SZ_SME、基金→SZ_FUND、ETF→SZ_FUND_ETF、LOF→SZ_FUND_LOF、封闭式基金→SZ_FUND_CEF、分级基金→SZ_FUND_SF、基础设施基金→SZ_FUND_REIT、债券→SZ_BOND、债券现券→SZ_BOND_CN、债券回购→SZ_BOND_REP、企业债→SZ_BOND_ENT、公司债→SZ_BOND_COR、国债→SZ_BOND_GOV、可转换债券→SZ_BOND_CB、ABS→SZ_BOND_ABS、期权→SZ_OPTION、权证→SZ_WR、股票权证→SZ_WR。
+  - 重复标签归一化：`权证` 与 `股票权证` 为同值重复标签（2008-01-02..2010-02-12），均映射到主键 `(trade_date, SZ_WR)`；清洗时对所有归一化后 `(trade_date, ts_code)` 相同的记录做精确去重——保留首条，完全相同则丢弃（保持输出顺序），内容冲突则报错（不做静默后写覆盖）。
+  - 两个数据源各自按交易日独立分块（每块不超过 50 个交易日），沪市分块在前、深市分块在后；深市不会排定 2008-01-02 之前的任务块。
+  - 表主键为 `(trade_date, ts_code)`，两源共用；源内 NULL/NaN 一律落为 NULL。
+
+**示例**
+
+```sh
+curl -X POST "http://127.0.0.1:8000/tasks/start" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": "get_market_daily_info",
+    "source": "manual",
+    "task_type": "market_daily_info",
+    "arguments": {
+      "params": {
+        "start_date": "2024-01-02",
+        "end_date": "2024-01-05"
       }
     },
     "options": {}

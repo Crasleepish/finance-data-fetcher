@@ -65,6 +65,18 @@ class TushareClient(Protocol):
     def margin(self, start_date: str, end_date: str, fields: str) -> list[dict[str, object]]:
         """Return margin rows as a list of dicts."""
 
+    def daily_info(
+        self,
+        start_date: str,
+        end_date: str,
+        fields: str,
+        exchange: str | None = None,
+    ) -> list[dict[str, object]]:
+        """Return daily_info rows as a list of dicts."""
+
+    def sz_daily_info(self, start_date: str, end_date: str) -> list[dict[str, object]]:
+        """Return sz_daily_info rows as a list of dicts."""
+
     def index_basic(
         self, market: str, fields: str, offset: int, limit: int
     ) -> list[dict[str, object]]:
@@ -312,6 +324,41 @@ class TushareProClient(TushareClient):
         self._rate_limiter.wait()
         pro = ts.pro_api(self.token)
         data = pro.margin(start_date=start_date, end_date=end_date, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def daily_info(
+        self,
+        start_date: str,
+        end_date: str,
+        fields: str,
+        exchange: str | None = None,
+    ) -> list[dict[str, object]]:
+        """Query daily_info (市场交易统计) data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        params: dict[str, str] = {
+            "start_date": start_date,
+            "end_date": end_date,
+            "fields": fields,
+        }
+        if exchange:
+            params["exchange"] = exchange
+        data = pro.daily_info(**params)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def sz_daily_info(self, start_date: str, end_date: str) -> list[dict[str, object]]:
+        """Query sz_daily_info (深圳市场每日交易概况) data via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.sz_daily_info(start_date=start_date, end_date=end_date)
         if data is None or data.empty:
             return []
         return cast(list[dict[str, object]], data.to_dict("records"))
