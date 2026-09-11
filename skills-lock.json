@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "graphify": {
+      "source": "/home/crasleepish/dev/agent-skills-library",
+      "sourceType": "local",
+      "computedHash": "d2b12552afc30b0b8c891b4bc69ec82186a09b8ec9a143f796e9bf73f5c75732"
+    }
+  }
+}
