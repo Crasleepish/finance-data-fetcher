@@ -41,6 +41,10 @@ config/app.yaml
 # runtime files
 bt_result/
 manual_import/
+bigquant/
+
+# browser automation artifacts
+.playwright-cli/
 
 # claude
 .claude/

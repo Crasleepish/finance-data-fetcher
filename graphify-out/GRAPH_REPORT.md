@@ -1,13 +1,18 @@
-# Graph Report - .  (2026-09-11)
+# Graph Report - finance-data-fetcher  (2026-09-16)
 
 ## Corpus Check
-- 325 files · ~116,962 words
+- 317 files · ~112,195 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2894 nodes · 5895 edges · 219 communities (180 shown, 39 thin omitted)
-- Extraction: 72% EXTRACTED · 28% INFERRED · 0% AMBIGUOUS · INFERRED: 1673 edges (avg confidence: 0.66)
+- 3212 nodes · 6004 edges · 424 communities (202 shown, 222 thin omitted)
+- Extraction: 74% EXTRACTED · 26% INFERRED · 0% AMBIGUOUS · INFERRED: 1585 edges (avg confidence: 0.65)
 - Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `7a010e65`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - [[_COMMUNITY_Fetch Retry and Error Handling|Fetch Retry and Error Handling]]
@@ -168,22 +173,8 @@
 - [[_COMMUNITY_OpenCode Plugin Dependencies|OpenCode Plugin Dependencies]]
 - [[_COMMUNITY_Data Router Service Provider|Data Router Service Provider]]
 - [[_COMMUNITY_AGENTS Guidelines Rules|AGENTS Guidelines Rules]]
-- [[_COMMUNITY_Akshare Sina Fund Quotes|Akshare Sina Fund Quotes]]
-- [[_COMMUNITY_Akshare HK Index History|Akshare HK Index History]]
-- [[_COMMUNITY_Akshare CSI Index History|Akshare CSI Index History]]
 - [[_COMMUNITY_Runtime Dependencies Docs|Runtime Dependencies Docs]]
-- [[_COMMUNITY_Pysnowball Realtime Quotes|Pysnowball Realtime Quotes]]
 - [[_COMMUNITY_Integration Test Plan Template|Integration Test Plan Template]]
-- [[_COMMUNITY_Tushare Adj Factor Doc|Tushare Adj Factor Doc]]
-- [[_COMMUNITY_Tushare Balance Sheet Doc|Tushare Balance Sheet Doc]]
-- [[_COMMUNITY_Tushare Cash Flow Doc|Tushare Cash Flow Doc]]
-- [[_COMMUNITY_Tushare Daily Quote Doc|Tushare Daily Quote Doc]]
-- [[_COMMUNITY_Tushare Daily Basic Doc|Tushare Daily Basic Doc]]
-- [[_COMMUNITY_Tushare Fund Basic Doc|Tushare Fund Basic Doc]]
-- [[_COMMUNITY_Tushare ETF Daily Doc|Tushare ETF Daily Doc]]
-- [[_COMMUNITY_Tushare Fund NAV Doc|Tushare Fund NAV Doc]]
-- [[_COMMUNITY_Tushare Income Statement Doc|Tushare Income Statement Doc]]
-- [[_COMMUNITY_Tushare Index Basic Doc|Tushare Index Basic Doc]]
 - [[_COMMUNITY_Run Script Entrypoint|Run Script Entrypoint]]
 - [[_COMMUNITY_Data Query Package Init|Data Query Package Init]]
 - [[_COMMUNITY_Task Query Package Init|Task Query Package Init]]
@@ -201,9 +192,204 @@
 - [[_COMMUNITY_Graphify Hook Status|Graphify Hook Status]]
 - [[_COMMUNITY_Graphify Hook Uninstall|Graphify Hook Uninstall]]
 - [[_COMMUNITY_Runtime Setup Guide|Runtime Setup Guide]]
-- [[_COMMUNITY_Akshare Index Minute Doc|Akshare Index Minute Doc]]
-- [[_COMMUNITY_Akshare Stock Spot Doc|Akshare Stock Spot Doc]]
+- [[_COMMUNITY_Internal Index Design Doc|Internal Index Design Doc]]
+- [[_COMMUNITY_Factor Calculation Design Doc|Factor Calculation Design Doc]]
 - [[_COMMUNITY_Project Package Metadata|Project Package Metadata]]
+- [[_COMMUNITY_index_daily_basic_cleaner.py|index_daily_basic_cleaner.py]]
+- [[_COMMUNITY_.clean|.clean]]
+- [[_COMMUNITY_Q pipeline, chunkized fetcher|Q: pipeline, chunkized fetcher]]
+- [[_COMMUNITY_graphify reference add a URL and watch a folder|graphify reference: add a URL and watch a folder]]
+- [[_COMMUNITY_graphify reference commit hook and native CLAUDE.md integration|graphify reference: commit hook and native CLAUDE.md integration]]
+- [[_COMMUNITY_graphify reference incremental update and cluster-only|graphify reference: incremental update and cluster-only]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_.clean|.clean]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_test_rt_etf_hist_akshare_plan_chunks|test_rt_etf_hist_akshare_plan_chunks]]
+- [[_COMMUNITY_test_rt_index_hist_akshare_plan_chunks|test_rt_index_hist_akshare_plan_chunks]]
+- [[_COMMUNITY_graphify reference GitHub clone and cross-repo merge|graphify reference: GitHub clone and cross-repo merge]]
+- [[_COMMUNITY_graphify reference transcribe video and audio|graphify reference: transcribe video and audio]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_AGENTS|AGENTS.md]]
+- [[_COMMUNITY_extraction-spec|extraction-spec.md]]
+- [[_COMMUNITY_Add Watch Flag|Add Watch Flag]]
+- [[_COMMUNITY_Ingest Function|Ingest Function]]
+- [[_COMMUNITY_Needs Update Flag|Needs Update Flag]]
+- [[_COMMUNITY_oEmbed Protocol|oEmbed Protocol]]
+- [[_COMMUNITY_arXiv URL Type|arXiv URL Type]]
+- [[_COMMUNITY_Image URL Type|Image URL Type]]
+- [[_COMMUNITY_PDF URL Type|PDF URL Type]]
+- [[_COMMUNITY_TwitterX URL Type|Twitter/X URL Type]]
+- [[_COMMUNITY_Webpage URL Type|Webpage URL Type]]
+- [[_COMMUNITY_YouTube URL Type|YouTube URL Type]]
+- [[_COMMUNITY_yt-dlp Tool|yt-dlp Tool]]
+- [[_COMMUNITY_Watch Mode (opencode)|Watch Mode (opencode)]]
+- [[_COMMUNITY_graphify MCP Server (opencode)|graphify MCP Server (opencode)]]
+- [[_COMMUNITY_Wiki Export (opencode)|Wiki Export (opencode)]]
+- [[_COMMUNITY_Deterministic Node ID Format (opencode)|Deterministic Node ID Format (opencode)]]
+- [[_COMMUNITY_Semantic Similarity Edges (opencode)|Semantic Similarity Edges (opencode)]]
+- [[_COMMUNITY_GitHub Repo Clone (opencode)|GitHub Repo Clone (opencode)]]
+- [[_COMMUNITY_Cross-Repo Graph Merge (opencode)|Cross-Repo Graph Merge (opencode)]]
+- [[_COMMUNITY_Native CLAUDE.md Integration (opencode)|Native CLAUDE.md Integration (opencode)]]
+- [[_COMMUNITY_Post-Commit Auto-Rebuild Hook (opencode)|Post-Commit Auto-Rebuild Hook (opencode)]]
+- [[_COMMUNITY_Graph.json|Graph.json]]
+- [[_COMMUNITY_GRAPH_REPORT|GRAPH_REPORT.md]]
+- [[_COMMUNITY_Graphify claude install|Graphify claude install]]
+- [[_COMMUNITY_Graphify claude uninstall|Graphify claude uninstall]]
+- [[_COMMUNITY_graphify section|## graphify section]]
+- [[_COMMUNITY_Post-commit hook|Post-commit hook]]
+- [[_COMMUNITY_Constrained Query Expansion (opencode)|Constrained Query Expansion (opencode)]]
+- [[_COMMUNITY_Reflect  LESSONS.md Work Memory (opencode)|Reflect / LESSONS.md Work Memory (opencode)]]
+- [[_COMMUNITY_save-result Feedback Loop (opencode)|save-result Feedback Loop (opencode)]]
+- [[_COMMUNITY_Whisper Domain Hint Prompt (opencode)|Whisper Domain Hint Prompt (opencode)]]
+- [[_COMMUNITY_Whisper VideoAudio Transcription (opencode)|Whisper Video/Audio Transcription (opencode)]]
+- [[_COMMUNITY_Cluster-Only Rebuild (opencode)|Cluster-Only Rebuild (opencode)]]
+- [[_COMMUNITY_Incremental Update (--update) (opencode)|Incremental Update (--update) (opencode)]]
+- [[_COMMUNITY_AST Structural Extraction (opencode)|AST Structural Extraction (opencode)]]
+- [[_COMMUNITY_EXTRACTEDINFERREDAMBIGUOUS Audit Trail (opencode)|EXTRACTED/INFERRED/AMBIGUOUS Audit Trail (opencode)]]
+- [[_COMMUNITY_Deep Mode Extraction (opencode)|Deep Mode Extraction (opencode)]]
+- [[_COMMUNITY_God Nodes (opencode)|God Nodes (opencode)]]
+- [[_COMMUNITY_GRAPH_REPORT.md (opencode)|GRAPH_REPORT.md (opencode)]]
+- [[_COMMUNITY_Honesty Rules (opencode)|Honesty Rules (opencode)]]
+- [[_COMMUNITY_graphify Pipeline (opencode)|graphify Pipeline (opencode)]]
+- [[_COMMUNITY_Semantic Extraction (opencode)|Semantic Extraction (opencode)]]
+- [[_COMMUNITY_Parallel Subagent Dispatch (opencode)|Parallel Subagent Dispatch (opencode)]]
+- [[_COMMUNITY_Config Loader|Config Loader]]
+- [[_COMMUNITY_Dependency Direction api - services - core|Dependency Direction api -> services -> core]]
+- [[_COMMUNITY_Quality Gates|Quality Gates]]
+- [[_COMMUNITY_fund_etf_category_sina interface (新浪基金列表及行情)|fund_etf_category_sina interface (新浪基金列表及行情)]]
+- [[_COMMUNITY_stock_hk_index_daily_sina interface (港股指数历史行情)|stock_hk_index_daily_sina interface (港股指数历史行情)]]
+- [[_COMMUNITY_stock_zh_index_hist_csindex interface (中证指数日频数据)|stock_zh_index_hist_csindex interface (中证指数日频数据)]]
+- [[_COMMUNITY_Core layer (business logic pipelines, srccore)|Core layer (business logic pipelines, src/core)]]
+- [[_COMMUNITY_Infra layer (db, fetchers, guard, logging)|Infra layer (db, fetchers, guard, logging)]]
+- [[_COMMUNITY_PipelineRegistry (corepipelineregistry.py)|PipelineRegistry (core/pipeline/registry.py)]]
+- [[_COMMUNITY_Services layer (orchestration, srcservices)|Services layer (orchestration, src/services)]]
+- [[_COMMUNITY_Tushare external client (infra.fetcher)|Tushare external client (infra.fetcher)]]
+- [[_COMMUNITY_WorkflowEngine (task lifecycle orchestration)|WorkflowEngine (task lifecycle orchestration)]]
+- [[_COMMUNITY_PipelineSelector (spec - pipeline candidates)|PipelineSelector (spec -> pipeline candidates)]]
+- [[_COMMUNITY_TaskService (POST tasksstart entry)|TaskService (POST /tasks/start entry)]]
+- [[_COMMUNITY_TaskStatusStore (Postgres-backed task state)|TaskStatusStore (Postgres-backed task state)]]
+- [[_COMMUNITY_Repository (SQLAlchemy Core insertupsertreplace)|Repository (SQLAlchemy Core insert/upsert/replace)]]
+- [[_COMMUNITY_SQLAlchemy tables (task_table, stock_hist_unadj, index_hist, fund_hist, ...)|SQLAlchemy tables (task_table, stock_hist_unadj, index_hist, fund_hist, ...)]]
+- [[_COMMUNITY_calendar router (calendar sync)|/calendar router (calendar sync)]]
+- [[_COMMUNITY_tasks router (startrunningstatuscancel)|/tasks router (start/running/status/cancel)]]
+- [[_COMMUNITY_index_info table (index_name, market=IN)|index_info table (index_name, market=IN)]]
+- [[_COMMUNITY_8 internal research indices (NYBIGNYSMLNYVALNYGRONYBVNYBGNYSVNYSG)|8 internal research indices (NYBIG/NYSML/NYVAL/NYGRO/NYBV/NYBG/NYSV/NYSG)]]
+- [[_COMMUNITY_内部研究指数 pipeline (index_histindex_info)|内部研究指数 pipeline (index_hist/index_info)]]
+- [[_COMMUNITY_pysnowball quotec interface (雪球实时行情)|pysnowball quotec interface (雪球实时行情)]]
+- [[_COMMUNITY_Idempotency|Idempotency]]
+- [[_COMMUNITY_Pipeline Candidates Mapping|Pipeline Candidates Mapping]]
+- [[_COMMUNITY_TaskSpec Enum|TaskSpec Enum]]
+- [[_COMMUNITY_Task API (tasksstart)|Task API (/tasks/start)]]
+- [[_COMMUNITY_task_type Parameter|task_type Parameter]]
+- [[_COMMUNITY_adj_factor interface (股票复权因子)|adj_factor interface (股票复权因子)]]
+- [[_COMMUNITY_balancesheet interface (上市公司资产负债表)|balancesheet interface (上市公司资产负债表)]]
+- [[_COMMUNITY_cashflow interface (上市公司现金流量表)|cashflow interface (上市公司现金流量表)]]
+- [[_COMMUNITY_daily_basic interface (每日基本面指标)|daily_basic interface (每日基本面指标)]]
+- [[_COMMUNITY_daily interface (未复权A股日线行情)|daily interface (未复权A股日线行情)]]
+- [[_COMMUNITY_fund_basic interface (公募基金列表)|fund_basic interface (公募基金列表)]]
+- [[_COMMUNITY_fund_daily interface (ETF日线行情)|fund_daily interface (ETF日线行情)]]
+- [[_COMMUNITY_fund_nav interface (公募基金净值)|fund_nav interface (公募基金净值)]]
+- [[_COMMUNITY_income interface (上市公司利润表)|income interface (上市公司利润表)]]
+- [[_COMMUNITY_index_basic interface (指数基本信息)|index_basic interface (指数基本信息)]]
+- [[_COMMUNITY_index_daily interface (指数日线行情)|index_daily interface (指数日线行情)]]
+- [[_COMMUNITY_富时中国A50指数 (XIN9)|富时中国A50指数 (XIN9)]]
+- [[_COMMUNITY_恒生指数 (HSI)|恒生指数 (HSI)]]
+- [[_COMMUNITY_index_global interface (国际指数)|index_global interface (国际指数)]]
+- [[_COMMUNITY_rt_idx_k interface (交易所指数实时日线)|rt_idx_k interface (交易所指数实时日线)]]
+- [[_COMMUNITY_rt_k interface (沪深京实时日线)|rt_k interface (沪深京实时日线)]]
+- [[_COMMUNITY_ts.pro_api  ts.set_token|ts.pro_api / ts.set_token]]
+- [[_COMMUNITY_tushare Python SDK (tushare=1.2.10)|tushare Python SDK (tushare>=1.2.10)]]
+- [[_COMMUNITY_sge_daily interface (现货黄金日行情)|sge_daily interface (现货黄金日行情)]]
+- [[_COMMUNITY_上海黄金交易所 (SGE)|上海黄金交易所 (SGE)]]
+- [[_COMMUNITY_stock_basic interface (基础信息)|stock_basic interface (基础信息)]]
+- [[_COMMUNITY_stock_st interface (ST股票列表)|stock_st interface (ST股票列表)]]
+- [[_COMMUNITY_suspend_d interface (每日停复牌信息)|suspend_d interface (每日停复牌信息)]]
+- [[_COMMUNITY_trade_cal interface (交易日历)|trade_cal interface (交易日历)]]
+- [[_COMMUNITY_adj_factor table (复权因子)|adj_factor table (复权因子)]]
+- [[_COMMUNITY_bt_result_daily_returns.csv and _weights.csv artifacts|bt_result/*_daily_returns.csv and *_weights.csv artifacts]]
+- [[_COMMUNITY_MKTSMBHMLQMJ factor definitions|MKT/SMB/HML/QMJ factor definitions]]
+- [[_COMMUNITY_fundamental_data table (financial fields)|fundamental_data table (financial fields)]]
+- [[_COMMUNITY_market_factors pipeline (因子计算)|market_factors pipeline (因子计算)]]
+- [[_COMMUNITY_market_factors table (date, MKT, SMB, HML, QMJ)|market_factors table (date, MKT, SMB, HML, QMJ)]]
+- [[_COMMUNITY_Selector chain (BasicAmountMktCapPercentileBMScoreQualityScoreMktCapWeight)|Selector chain (Basic/Amount/MktCapPercentile/BMScore/QualityScore/MktCapWeight)]]
+- [[_COMMUNITY_stock_hist_unadj table (daily quotes, mkt_cap, amount)|stock_hist_unadj table (daily quotes, mkt_cap, amount)]]
+- [[_COMMUNITY_stock_info table (industry, listing_date, exchange)|stock_info table (industry, listing_date, exchange)]]
+- [[_COMMUNITY_trade_calendar table (调仓日与回测区间)|trade_calendar table (调仓日与回测区间)]]
+- [[_COMMUNITY_VectorBT backtest engine|VectorBT backtest engine]]
+- [[_COMMUNITY_ChunkPolicy (chunked fetching)|ChunkPolicy (chunked fetching)]]
+- [[_COMMUNITY_Fetcher|Fetcher]]
+- [[_COMMUNITY_IngestionPipeline|IngestionPipeline]]
+- [[_COMMUNITY_PipelineRegistry|PipelineRegistry]]
+- [[_COMMUNITY_Database (Postgres)|Database (Postgres)]]
+- [[_COMMUNITY_Fetch→clean→persist pipeline flow|Fetch→clean→persist pipeline flow]]
+- [[_COMMUNITY_Idempotency guard (active-run dedup)|Idempotency guard (active-run dedup)]]
+- [[_COMMUNITY_Pipeline orchestration driven by spectask_type|Pipeline orchestration driven by spec/task_type]]
+- [[_COMMUNITY_Repository (explicit-transaction writes)|Repository (explicit-transaction writes)]]
+- [[_COMMUNITY_Task queue|Task queue]]
+- [[_COMMUNITY_TaskService|TaskService]]
+- [[_COMMUNITY_TaskStatusStore  Progress  Logs|TaskStatusStore / Progress / Logs]]
+- [[_COMMUNITY_FastAPI tasks API (tasksstart, tasksrunning, tasks{id})|FastAPI tasks API (/tasks/start, /tasks/running, /tasks/{id})]]
+- [[_COMMUNITY_TradingCalendarService|TradingCalendarService]]
+- [[_COMMUNITY_Worker runtime (async consumer)|Worker runtime (async consumer)]]
+- [[_COMMUNITY_Task specs in README examples (get_stock_info … get_gold_future_curve)|Task specs in README examples (get_stock_info … get_gold_future_curve)]]
+- [[_COMMUNITY_POST tasksstart submission interface|POST /tasks/start submission interface]]
+- [[_COMMUNITY_API layer scope rule (HTTP only, delegate to services)|API layer scope rule (HTTP only, delegate to services)]]
+- [[_COMMUNITY_AGENTS.md (srcapi)|AGENTS.md (src/api)]]
+- [[_COMMUNITY_AGENTS.md (srcapirouters)|AGENTS.md (src/api/routers)]]
+- [[_COMMUNITY_Router layer scope rule (thin handlers, no orchestration)|Router layer scope rule (thin handlers, no orchestration)]]
+- [[_COMMUNITY_Config layer scope (configapp.yaml + env overrides)|Config layer scope (config/app.yaml + env overrides)]]
+- [[_COMMUNITY_AGENTS.md (srcconfig)|AGENTS.md (src/config)]]
+- [[_COMMUNITY_core layer (framework-agnostic business logic)|core layer (framework-agnostic business logic)]]
+- [[_COMMUNITY_Core layer scope (pipelinefetchcleanworkflowchunking, no apiservices imports)|Core layer scope (pipeline/fetch/clean/workflow/chunking, no api/services imports)]]
+- [[_COMMUNITY_AGENTS.md (srccore)|AGENTS.md (src/core)]]
+- [[_COMMUNITY_backtest engine|backtest engine]]
+- [[_COMMUNITY_portfolio construction helpers (selectors, allocators, rebalance scheduling)|portfolio construction helpers (selectors, allocators, rebalance scheduling)]]
+- [[_COMMUNITY_fund beta estimation primitives (Kalman filter, QR estimator, covariance helpers)|fund beta estimation primitives (Kalman filter, Q/R estimator, covariance helpers)]]
+- [[_COMMUNITY_trading calendar service logic|trading calendar service logic]]
+- [[_COMMUNITY_chunking policy for splitting request parameters|chunking policy for splitting request parameters]]
+- [[_COMMUNITY_cleaner interfaces and validation helpers|cleaner interfaces and validation helpers]]
+- [[_COMMUNITY_fetch error types|fetch error types]]
+- [[_COMMUNITY_fetcher interface|fetcher interface]]
+- [[_COMMUNITY_retry policy|retry policy]]
+- [[_COMMUNITY_index code parsing and API mapping helpers|index code parsing and API mapping helpers]]
+- [[_COMMUNITY_pipeline contracts, validation rules, shared types|pipeline contracts, validation rules, shared types]]
+- [[_COMMUNITY_pipeline registry|pipeline registry]]
+- [[_COMMUNITY_failover policies for pipelines|failover policies for pipelines]]
+- [[_COMMUNITY_workflow orchestration|workflow orchestration]]
+- [[_COMMUNITY_infrastructure adapters (DB, logging, external clients, fetcher implementations)|infrastructure adapters (DB, logging, external clients, fetcher implementations)]]
+- [[_COMMUNITY_calendar storage and sync logic|calendar storage and sync logic]]
+- [[_COMMUNITY_SQLAlchemy Core engine, tables, repository helpers|SQLAlchemy Core engine, tables, repository helpers]]
+- [[_COMMUNITY_concrete fetcher implementations (Akshare, Tushare)|concrete fetcher implementations (Akshare, Tushare)]]
+- [[_COMMUNITY_srcinfraxueqiu_token_ token helpers|src/infra/xueqiu_token_* token helpers]]
+- [[_COMMUNITY_HTTP client adapters|HTTP client adapters]]
+- [[_COMMUNITY_idempotency guards for task processing|idempotency guards for task processing]]
+- [[_COMMUNITY_task queue interfaces and implementations|task queue interfaces and implementations]]
+- [[_COMMUNITY_task state machine and persistence|task state machine and persistence]]
+- [[_COMMUNITY_Tushare client wrapper and token handling|Tushare client wrapper and token handling]]
+- [[_COMMUNITY_background worker runtime|background worker runtime]]
+- [[_COMMUNITY_Pydantic schemas (and ORM models)|Pydantic schemas (and ORM models)]]
+- [[_COMMUNITY_srcservicesfund_beta_estimator.py|src/services/fund_beta_estimator.py]]
+- [[_COMMUNITY_services orchestration layer|services orchestration layer]]
+- [[_COMMUNITY_srcservicesportfolio_driver.py|src/services/portfolio_driver.py]]
+- [[_COMMUNITY_srcservicesworker_handler.py (task execution handler)|src/services/worker_handler.py (task execution handler)]]
+- [[_COMMUNITY_srcservicesworkflow_engine.py|src/services/workflow_engine.py]]
+- [[_COMMUNITY_pipeline implementations bound to specs|pipeline implementations bound to specs]]
+- [[_COMMUNITY_configtask_pipeline_mapping.py (spec to pipeline mapping)|config/task_pipeline_mapping.py (spec to pipeline mapping)]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `ChunkArgs` - 197 edges
@@ -218,106 +404,90 @@
 10. `TushareProClient` - 34 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `graphify Pipeline` --semantically_similar_to--> `graphify Pipeline (opencode)`  [INFERRED] [semantically similar]
-  .agents/skills/graphify/SKILL.md → .opencode/skills/graphify/SKILL.md
-- `IngestionPipeline` --semantically_similar_to--> `graphify Pipeline`  [INFERRED] [semantically similar]
-  graphify-out/memory/query_20260802_091231_pipeline__chunkized_fetcher.md → .agents/skills/graphify/SKILL.md
-- `Pipeline orchestration driven by spec/task_type` --semantically_similar_to--> `config/task_pipeline_mapping.py (spec to pipeline mapping)`  [INFERRED] [semantically similar]
-  Home.md → src/services/pipelines/AGENTS.md
-- `test_fund_hist_cleaner_maps_fields()` --calls--> `FundHistCleaner`  [INFERRED]
-  tests/test_fund_hist_pipeline.py → src/core/clean/fund_hist_cleaner.py
-- `test_fund_info_cleaner_maps_and_drops_missing_found_date()` --calls--> `FundInfoCleaner`  [INFERRED]
-  tests/test_fund_info_pipeline.py → src/core/clean/fund_info_cleaner.py
+- `test_index_hist_bond_cleaner_units_and_fill()` --calls--> `IndexHistBondCleaner`  [INFERRED]
+  tests/test_index_hist_cleaners.py → src/core/clean/index_hist_bond_cleaner.py
+- `test_index_hist_global_cleaner_maps_fields()` --calls--> `IndexHistGlobalCleaner`  [INFERRED]
+  tests/test_index_hist_cleaners.py → src/core/clean/index_hist_global_cleaner.py
+- `test_index_hist_stock_cleaner_units_and_fill()` --calls--> `IndexHistStockCleaner`  [INFERRED]
+  tests/test_index_hist_cleaners.py → src/core/clean/index_hist_stock_cleaner.py
+- `test_fundamental_data_ttm_last_annual_nan_skips()` --calls--> `_apply_operating_profit_ttm()`  [INFERRED]
+  tests/test_fundamental_data_cleaner.py → src/services/pipelines/fundamental_data_pipeline.py
+- `test_fundamental_data_ttm_last_same_nan_skips()` --calls--> `_apply_operating_profit_ttm()`  [INFERRED]
+  tests/test_fundamental_data_cleaner.py → src/services/pipelines/fundamental_data_pipeline.py
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
-- **graphify Extraction Pipeline** — _agents_skills_graphify_skill_ast_extraction, _agents_skills_graphify_skill_semantic_extraction, _agents_skills_graphify_skill_community_detection, _agents_skills_graphify_skill_god_nodes [EXTRACTED 1.00]
-- **graphify Query and Feedback Loop** — _agents_skills_graphify_references_query_query_expansion, _agents_skills_graphify_references_query_bfs_dfs_traversal, _agents_skills_graphify_references_query_save_result, _agents_skills_graphify_references_query_reflect_lessons [EXTRACTED 1.00]
-- **graphify Incremental Update Flow** — _agents_skills_graphify_references_update_incremental_update, _agents_skills_graphify_references_update_build_merge, _agents_skills_graphify_references_update_cluster_only [EXTRACTED 1.00]
-- **Task submission → execution → persistence flow** — home_tasks_start_api, home_task_service, home_task_queue, home_worker_runtime, home_workflow_engine, home_pipeline_orchestration, home_repository, home_database [EXTRACTED 1.00]
-- **akshare interface documentation set** — docs_akshare_fund_etf_category_sina, docs_akshare_hk_index_daily_sina, docs_akshare_index_zh_a_hist_min_em, docs_akshare_stock_zh_a_spot, docs_akshare_stock_zh_index_hist_csindex [INFERRED 0.85]
-- **Tushare Pro data interfaces** — docs_tushare_adj_factor_interface, docs_tushare_balancesheet_interface, docs_tushare_cashflow_interface, docs_tushare_daily_interface, docs_tushare_daily_basic_interface, docs_tushare_fund_basic_interface, docs_tushare_fund_daily_interface, docs_tushare_fund_nav_interface, docs_tushare_income_interface, docs_tushare_index_basic_interface [INFERRED 0.85]
-- **tushare interfaces invoked through the shared tushare Python SDK** — docs_tushare_sdk_tushare_python_sdk, docs_tushare_sdk_ts_pro_api, docs_tushare_index_daily_index_daily_api, docs_tushare_index_global_index_global_api, docs_tushare_rt_idx_k_rt_idx_k_api, docs_tushare_rt_k_rt_k_api, docs_tushare_sge_daily_sge_daily_api, docs_tushare_stock_basic_stock_basic_api, docs_tushare_stock_st_stock_st_api, docs_tushare_suspend_d_suspend_d_api, docs_tushare_trade_calendar_trade_cal_api [INFERRED 0.85]
-- **internal research index pipeline reuses market_factors bt_result artifacts** — docs_yinzi_jisuan_pipeline_shejifangan_market_factors_pipeline, docs_yinzi_jisuan_pipeline_shejifangan_bt_result_csv, docs_neibu_yanjiu_zhishu_pipeline_shejifangan_internal_research_index_pipeline, docs_neibu_yanjiu_zhishu_pipeline_shejifangan_index_hist, docs_neibu_yanjiu_zhishu_pipeline_shejifangan_index_info, docs_yinzi_jisuan_pipeline_shejifangan_stock_hist_unadj [EXTRACTED 1.00]
-- **market_factors pipeline input/output data flow** — docs_yinzi_jisuan_pipeline_shejifangan_stock_hist_unadj, docs_yinzi_jisuan_pipeline_shejifangan_adj_factor, docs_yinzi_jisuan_pipeline_shejifangan_fundamental_data, docs_yinzi_jisuan_pipeline_shejifangan_stock_info, docs_neibu_yanjiu_zhishu_pipeline_shejifangan_index_hist, docs_yinzi_jisuan_pipeline_shejifangan_trade_calendar, docs_yinzi_jisuan_pipeline_shejifangan_market_factors_pipeline, docs_yinzi_jisuan_pipeline_shejifangan_market_factors_table, docs_yinzi_jisuan_pipeline_shejifangan_bt_result_csv [EXTRACTED 1.00]
-- **fetch contract** — src_core_fetch_agents_fetcher_interface, src_core_fetch_agents_retry_policy, src_core_fetch_agents_fetch_error [EXTRACTED 1.00]
-- **pipeline abstraction** — src_core_pipeline_agents_pipeline_contract, src_core_pipeline_agents_pipeline_registry, src_services_pipelines_agents_pipeline_implementation, src_services_pipelines_agents_task_pipeline_mapping [EXTRACTED 1.00]
-- **task execution stack** — src_infra_worker_runtime_agents_worker_runtime, src_infra_queue_agents_task_queue, src_infra_task_state_agents_task_state_machine, src_infra_idempotency_agents_idempotency_guard [EXTRACTED 1.00]
 - **All 8 internal index series plotted in the chart** — docs_internal_index_last5y_nybig_in, docs_internal_index_last5y_nysml_in, docs_internal_index_last5y_nyval_in, docs_internal_index_last5y_nygro_in, docs_internal_index_last5y_nybv_in, docs_internal_index_last5y_nybg_in, docs_internal_index_last5y_nysv_in, docs_internal_index_last5y_nysg_in [EXTRACTED 1.00]
 - **Chart and its 4 comparison panels** — docs_internal_index_last5y_chart, docs_internal_index_last5y_panel_size, docs_internal_index_last5y_panel_style, docs_internal_index_last5y_panel_large_style, docs_internal_index_last5y_panel_small_style [EXTRACTED 1.00]
 - **Value vs growth comparison pairs** — docs_internal_index_last5y_panel_style, docs_internal_index_last5y_panel_large_style, docs_internal_index_last5y_panel_small_style, docs_internal_index_last5y_nyval_in, docs_internal_index_last5y_nygro_in, docs_internal_index_last5y_nybv_in, docs_internal_index_last5y_nybg_in, docs_internal_index_last5y_nysv_in, docs_internal_index_last5y_nysg_in [INFERRED 0.95]
 
-## Communities (219 total, 39 thin omitted)
+## Communities (424 total, 222 thin omitted)
 
 ### Community 0 - "Fetch Retry and Error Handling"
-Cohesion: 0.06
-Nodes (46): Response, FetchError, NonRetryableError, Deterministic error that should not be retried., Base error raised during fetch operations., Transient error that should be retried., RetryableError, Execute operation with retry on RetryableError. (+38 more)
+Cohesion: 0.16
+Nodes (15): NonRetryableError, Deterministic error that should not be retried., _decode_payload(), RawBatch, Fetch stock is_st rows from selected CSV members in a zip archive., _read_member_rows(), StockIsStFromFileFetcher, NormalizedBatch (+7 more)
 
 ### Community 1 - "Margin Daily Data Pipeline"
-Cohesion: 0.07
-Nodes (41): _as_decimal(), MarginDailyCleaner, _parse_date(), date, Decimal, NormalizedBatch, RawBatch, Normalize Tushare margin rows into DB-ready records. (+33 more)
+Cohesion: 0.19
+Nodes (10): _as_decimal(), MarginDailyCleaner, _parse_date(), date, Decimal, NormalizedBatch, RawBatch, Normalize Tushare margin rows into DB-ready records. (+2 more)
 
 ### Community 2 - "Repository and Transaction Layer"
-Cohesion: 0.07
-Nodes (38): CursorResult, Executable, Select stocks from the universe., CalendarStore, date, SQL-backed store for trade calendar dates., Return min/max trade dates or None if empty., Return sorted trade days within range. (+30 more)
+Cohesion: 0.06
+Nodes (42): CursorResult, Executable, Protocol, Select stocks from the universe., CalendarStore, date, SQL-backed store for trade calendar dates., Return min/max trade dates or None if empty. (+34 more)
 
 ### Community 3 - "Tushare Pro Client API"
-Cohesion: 0.05
-Nodes (28): _RateLimiter, Tushare PRO client wrapper., Query stock_basic via Tushare PRO API., Query daily_basic data via Tushare PRO API., Query suspend_d data via Tushare PRO API., Query income_vip data via Tushare PRO API., Query cashflow_vip data via Tushare PRO API., Query income data via Tushare PRO API. (+20 more)
+Cohesion: 0.06
+Nodes (35): _RateLimiter, Tushare PRO client wrapper., Query stock_basic via Tushare PRO API., Query daily data via Tushare PRO API., Query daily_basic data via Tushare PRO API., Query suspend_d data via Tushare PRO API., Query income_vip data via Tushare PRO API., Query balancesheet_vip data via Tushare PRO API. (+27 more)
 
 ### Community 4 - "ETF Historical Price Pipeline"
 Cohesion: 0.06
 Nodes (38): _as_amount(), _as_float(), _as_int_shares(), EtfHistCleaner, _parse_date(), Any, NormalizedBatch, RawBatch (+30 more)
 
 ### Community 5 - "Fundamental Data Cleaning"
-Cohesion: 0.08
-Nodes (47): _as_payloads(), _as_rows(), _build_record(), _dedupe_last(), _first_non_empty(), _first_non_none(), FundamentalDataCleaner, _is_missing() (+39 more)
+Cohesion: 0.24
+Nodes (18): _as_payloads(), _as_rows(), _build_record(), _dedupe_last(), _first_non_empty(), _first_non_none(), _is_missing(), _latest_date() (+10 more)
 
 ### Community 6 - "Task Lifecycle Models"
 Cohesion: 0.09
-Nodes (48): cancel_task(), get_task_service(), get_task_status(), get_task_store(), list_running(), list_tasks(), Request, Response payload for task list endpoint. (+40 more)
+Nodes (47): cancel_task(), get_task_service(), get_task_status(), get_task_store(), list_running(), list_tasks(), Request, Response payload for task list endpoint. (+39 more)
 
 ### Community 7 - "Index Daily Basic Pipeline"
-Cohesion: 0.08
-Nodes (36): Split a date range into trade-day-aware chunks for every source code., TradeDayRangePerCodeChunkPolicy, _as_decimal(), IndexDailyBasicCleaner, _parse_date(), date, Decimal, NormalizedBatch (+28 more)
+Cohesion: 0.12
+Nodes (27): IndexDailyBasicCleaner, Normalize Tushare index_dailybasic rows into DB-ready records., PostgresUpsertStrategy, PostgreSQL upsert strategy using ON CONFLICT DO UPDATE., Fetch Tushare index_dailybasic rows for a source code and date range., TushareIndexDailyBasicFetcher, IndexDailyBasicPipeline, Pipeline for fetching and cleaning Tushare 大盘指数每日指标 data. (+19 more)
 
 ### Community 8 - "Index Hist Bond Pipeline"
-Cohesion: 0.06
-Nodes (38): _as_float(), _as_int(), _as_str(), _fill_close(), IndexHistBondCleaner, _is_nan(), _list_of_dicts(), _parse_date() (+30 more)
+Cohesion: 0.07
+Nodes (36): _as_float(), _as_int(), _as_str(), _fill_close(), IndexHistBondCleaner, _is_nan(), _list_of_dicts(), _parse_date() (+28 more)
 
 ### Community 9 - "Worker Queue and Idempotency"
-Cohesion: 0.08
-Nodes (35): PipelineRegistry, Registry for resolving pipelines by id., IdempotencyGuard, Guard to prevent concurrent duplicate task runs for the same logic., InMemoryTaskQueue, In-process FIFO queue implementation., Remove a pending task by id if it is still in the queue., Background worker that pulls tasks from a queue and executes them. (+27 more)
-
-### Community 10 - "Architecture Docs and Layers"
-Cohesion: 0.06
-Nodes (36): API layer (FastAPI, src/api), Core layer (business logic pipelines, src/core), Infra layer (db, fetchers, guard, logging), PipelineRegistry (core/pipeline/registry.py), Services layer (orchestration, src/services), Tushare external client (infra.fetcher), WorkflowEngine (task lifecycle orchestration), PipelineSelector (spec -> pipeline candidates) (+28 more)
+Cohesion: 0.09
+Nodes (28): MoneyflowHsgtCleaner, NormalizedBatch, RawBatch, Normalize Tushare moneyflow_hsgt rows into DB-ready records., Normalize raw moneyflow_hsgt rows into DB-ready records., PipelineRegistry, Registry for resolving pipelines by id., Fetch moneyflow_hsgt data for a date range. (+20 more)
 
 ### Community 11 - "Index Hist Gold Pipeline"
-Cohesion: 0.07
-Nodes (35): _as_float(), _as_int(), _as_str(), _compute_change_percent(), _fill_close(), IndexHistGoldCleaner, _list_of_dicts(), _parse_date() (+27 more)
+Cohesion: 0.16
+Nodes (18): _as_float(), _as_int(), _as_str(), _compute_change_percent(), _fill_close(), IndexHistGoldCleaner, _list_of_dicts(), _parse_date() (+10 more)
 
 ### Community 12 - "Project Wiki and Schedule"
-Cohesion: 0.07
-Nodes (44): Config Loader, Dependency Direction api -> services -> core, SQLAlchemy Core Preference, Build schedule (module milestones), API control plane, Async execution (infra/queue + worker runtime), ChunkPolicy (Arguments → chunks_of_arguments), Cleaner (bound to pipeline) (+36 more)
+Cohesion: 0.11
+Nodes (18): SQLAlchemy Core Preference, Build schedule (module milestones), API control plane, Async execution (infra/queue + worker runtime), ChunkPolicy (Arguments → chunks_of_arguments), Cleaner (bound to pipeline), Database access layer (infra/db), Fetcher (chunk-level retry only) (+10 more)
 
 ### Community 13 - "Pipeline Workflow Engine"
-Cohesion: 0.08
-Nodes (26): RuntimeError, IngestionPipeline, Core pipeline interface for chunking, fetching, and cleaning data., Register a pipeline implementation by id., Return a pipeline for the id or raise KeyError., FetchCleanFailoverPolicy, PipelineFailoverPolicy, Exception (+18 more)
+Cohesion: 0.10
+Nodes (24): RuntimeError, FetchCleanFailoverPolicy, PipelineFailoverPolicy, Exception, Execution stages for workflow failover decisions., Policy interface for pipeline failover decisions., Return True if workflow should switch pipelines., Select the next pipeline id or None to stop. (+16 more)
 
 ### Community 14 - "Tushare Client Facade"
-Cohesion: 0.05
-Nodes (23): Return index_dailybasic rows as a list of dicts., Return index_global rows as a list of dicts., Return sge_daily rows as a list of dicts., Tushare client interface used by fetchers., Return fund_basic rows as a list of dicts., Return fund_nav rows as a list of dicts., Return rt_k rows as a list of dicts., Return rt_idx_k rows as a list of dicts. (+15 more)
+Cohesion: 0.04
+Nodes (27): Return index_dailybasic rows as a list of dicts., Return index_global rows as a list of dicts., Return sge_daily rows as a list of dicts., Tushare client interface used by fetchers., Return fund_basic rows as a list of dicts., Return fund_nav rows as a list of dicts., Return fund_daily rows as a list of dicts., Return rt_k rows as a list of dicts. (+19 more)
 
 ### Community 15 - "Realtime ETF History Pipelines"
-Cohesion: 0.07
-Nodes (30): NormalizedBatch, RawBatch, Clean and normalize real-time ETF snapshot rows., Normalize raw snapshot rows into rt_etf_hist records., RtEtfHistCleaner, PysnowballEtfQuotecFetcher, Fetch real-time ETF snapshots via pysnowball.quotec., Reset refresh attempt state for a new pipeline run. (+22 more)
+Cohesion: 0.19
+Nodes (11): _normalize_akshare_rows(), _normalize_etf_code(), datetime, NormalizedBatch, RawBatch, Fetch raw ETF snapshot rows., Normalize raw snapshot rows into rt_etf_hist records., Real-time ETF snapshot pipeline via pysnowball. (+3 more)
 
 ### Community 16 - "Stock Hist Unadjusted Pipeline"
-Cohesion: 0.07
-Nodes (31): _as_float(), _as_int(), _first_non_none(), _list_of_dicts(), _normalize_stock_code(), _parse_trade_date(), Any, NormalizedBatch (+23 more)
+Cohesion: 0.09
+Nodes (20): Normalize daily + daily_basic + ST + suspend data into stock_hist_unadj rows., StockHistUnadjCleaner, RawBatch, Fetch daily, daily_basic, and suspend data for a trade date., Fetch raw data for a trade date., _require_param(), _safe_call(), _to_yyyymmdd() (+12 more)
 
 ### Community 17 - "Internal Index Pipeline"
 Cohesion: 0.11
@@ -325,19 +495,19 @@ Nodes (29): LogCaptureFixture, _all_components(), InternalIndexPipeline, _latest
 
 ### Community 18 - "Chunking Args and Policies"
 Cohesion: 0.09
-Nodes (24): Protocol, _chunk_dates(), _chunk_numbers(), ChunkPolicy, _get_params(), _parse_date(), _parse_int(), date (+16 more)
+Nodes (26): _chunk_dates(), _chunk_numbers(), ChunkPolicy, _get_params(), _parse_date(), _parse_int(), date, Policy interface for planning chunk arguments. (+18 more)
 
 ### Community 19 - "Realtime Stock History Pipelines"
-Cohesion: 0.08
-Nodes (29): NormalizedBatch, RawBatch, Clean and normalize real-time stock snapshot rows., Normalize raw snapshot rows into rt_stock_hist_unadj records., RtStockHistUnadjCleaner, _first_str(), _normalize_akshare_rows(), _normalize_stock_code() (+21 more)
+Cohesion: 0.16
+Nodes (17): _first_str(), _normalize_akshare_rows(), _normalize_stock_code(), _normalize_tushare_rows(), Any, datetime, NormalizedBatch, RawBatch (+9 more)
 
 ### Community 20 - "Logging and App Wiring"
-Cohesion: 0.12
-Nodes (17): create_app(), FastAPI, Create FastAPI app with configured dependencies and routes., load_pipeline_mapping(), Load pipeline mapping from a Python file path., _ensure_chunk_args(), _ensure_raw_batch(), PipelineTaskHandler (+9 more)
+Cohesion: 0.08
+Nodes (29): create_app(), FastAPI, Create FastAPI app with configured dependencies and routes., generate_idempotency_key(), _next_attempt(), Connection, Select, Table (+21 more)
 
 ### Community 21 - "Task Status Persistence Store"
-Cohesion: 0.11
-Nodes (24): RowMapping, _normalize_progress(), Any, datetime, Decimal, Update task heartbeat timestamp., List tasks in active states (PENDING/RUNNING)., Fetch a task status record by id. (+16 more)
+Cohesion: 0.17
+Nodes (15): RowMapping, _normalize_progress(), Any, datetime, Decimal, Update task heartbeat timestamp., Compute column updates for a state transition., Normalize and validate progress within 0-100. (+7 more)
 
 ### Community 22 - "Trading Calendar Service"
 Cohesion: 0.12
@@ -348,28 +518,28 @@ Cohesion: 0.11
 Nodes (15): FundBetaDataFetcher, DataFrame, date, Return market factor DataFrame indexed by date., Return fund daily returns indexed by date with forward-filled net value., Fetch fund beta inputs from the database., Return trade days within the date range., Return the date range needed to bootstrap QR estimation. (+7 more)
 
 ### Community 24 - "Fund Beta Estimator"
-Cohesion: 0.14
-Nodes (17): covariance_to_json(), pack_covariance(), Any, ndarray, Pack a covariance matrix into upper-triangle column-major float32 bytes., Unpack covariance bytes into a symmetric matrix using metadata JSON., Serialize covariance matrix to JSON for storage., Return None for NaN-like values. (+9 more)
+Cohesion: 0.06
+Nodes (33): covariance_to_json(), pack_covariance(), Any, ndarray, Pack a covariance matrix into upper-triangle column-major float32 bytes., Unpack covariance bytes into a symmetric matrix using metadata JSON., Serialize covariance matrix to JSON for storage., Return None for NaN-like values. (+25 more)
 
 ### Community 25 - "Realtime Index History Pipelines"
-Cohesion: 0.11
-Nodes (17): NormalizedBatch, RawBatch, Clean and normalize real-time index snapshot rows., Normalize raw snapshot rows into rt_index_hist records., RtIndexHistCleaner, NormalizedBatch, RawBatch, Normalize raw snapshot rows into rt_index_hist records. (+9 more)
+Cohesion: 0.17
+Nodes (13): NormalizedBatch, RawBatch, Clean and normalize real-time index snapshot rows., Normalize raw snapshot rows into rt_index_hist records., RtIndexHistCleaner, IndexCodeMapping, Index code mapping between stored code and API code., PysnowballQuotecFetcher (+5 more)
 
 ### Community 26 - "Xueqiu ETF Quote Fetching"
-Cohesion: 0.15
-Nodes (20): EtfCodeMapping, _fetch_with_token(), _from_xueqiu_code(), _is_mapping(), RawBatch, Fetch ETF snapshots for one chunk., _require_mappings(), RawBatch (+12 more)
+Cohesion: 0.17
+Nodes (16): RawBatch, Fetch ETF snapshots for one chunk., _fetch_with_token(), RawBatch, Fetch index snapshots for all configured codes., load_latest_token(), parse_token_timestamp(), datetime (+8 more)
 
 ### Community 27 - "Adjustment Factor Pipeline"
-Cohesion: 0.19
-Nodes (13): AdjFactorCleaner, Normalize Tushare adj_factor rows into adj_factor records., Fetch adj_factor data for a single trade date., TushareAdjFactorFetcher, AdjFactorPipeline, Pipeline for fetching and cleaning adj_factor data., FakeCalendarStore, FakeSyncer (+5 more)
+Cohesion: 0.07
+Nodes (32): AdjFactorCleaner, _as_float(), _parse_date(), Any, NormalizedBatch, RawBatch, Normalize Tushare adj_factor rows into adj_factor records., Normalize raw adj_factor rows into DB-ready records. (+24 more)
 
 ### Community 28 - "Index Code Catalog"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (16): build_code_mappings(), parse_index_codes(), Parse comma-separated index codes into a stable list., Build index_code to api_code mappings., Remove suffix after the first dot, if any., Remove .SGE suffix from SGE codes., strip_sge_suffix(), strip_suffix() (+8 more)
 
 ### Community 29 - "ETF and Fund Info Pipeline"
-Cohesion: 0.11
-Nodes (15): _get_cancel_check(), RawBatch, Fetch fund_basic data from Tushare with internal pagination., Fetch raw fund_basic data for the given chunk arguments., _safe_fund_basic(), TushareFundBasicFetcher, EtfInfoPipeline, NormalizedBatch (+7 more)
+Cohesion: 0.21
+Nodes (8): _get_cancel_check(), RawBatch, Fetch fund_basic data from Tushare with internal pagination., Fetch raw fund_basic data for the given chunk arguments., _safe_fund_basic(), TushareFundBasicFetcher, FakeTushareClient, test_fund_basic_fetcher_paginates_until_empty()
 
 ### Community 30 - "Backtest Engine"
 Cohesion: 0.15
@@ -384,92 +554,92 @@ Cohesion: 0.13
 Nodes (21): Internal Indices (Weekly Close, Last 5 Years), index_hist table (index_code,date,open,close,high,low,volume,amount,change_percent,change), InternalIndexPipeline: 8 internal indices from market_factors bt_result bm_*_daily_returns.csv, All 8 indices share 2006-03-31 base of 1000 so plotted levels are directly comparable, Within 2021-2026 window NYSML level range (12.5k-30k) exceeds NYBIG (4k-6k): small-cap internal index level above large-cap, Value indices (NYVAL 15k-30k, NYBV 8k-13k, NYSV 20k-50k) level ranges exceed growth counterparts (NYGRO 4k-7k, NYBG 2.5k-5.5k, NYSG 6k-11k), 4 rows x 2 columns, 8 single-series panels with independent y-axis scales, Weekly close index points (+13 more)
 
 ### Community 33 - "Fund Info Pipeline"
-Cohesion: 0.12
-Nodes (14): _as_float(), FundInfoCleaner, _parse_date(), Any, NormalizedBatch, RawBatch, Normalize fund_basic rows into fund_info records., Normalize raw fund_basic rows into fund_info records. (+6 more)
+Cohesion: 0.21
+Nodes (9): _as_float(), FundInfoCleaner, _parse_date(), Any, NormalizedBatch, RawBatch, Normalize fund_basic rows into fund_info records., Normalize raw fund_basic rows into fund_info records. (+1 more)
 
 ### Community 34 - "Index Hist Stock Cleaner"
-Cohesion: 0.16
-Nodes (17): _as_float(), _as_int(), _as_str(), _fill_close(), IndexHistStockCleaner, _list_of_dicts(), _parse_date(), Any (+9 more)
+Cohesion: 0.06
+Nodes (31): adj_factor, etf_hist, etf_info, fund_beta, fund_hist_index, fund_hist_money, fund_info, fundamental_data (+23 more)
 
 ### Community 35 - "Data Query Validation"
-Cohesion: 0.12
-Nodes (17): default_currency_unit(), Return default currency/unit for a data_type., parse_date(), parse_date_range(), date, Validate data_type against allowed values., Parse date in YYYY-MM-DD or YYYYMMDD format., Parse and validate date range. (+9 more)
+Cohesion: 0.07
+Nodes (32): default_currency_unit(), Return default currency/unit for a data_type., normalize_limit(), normalize_list_order(), normalize_page(), normalize_page_size(), normalize_results_order(), parse_date() (+24 more)
 
 ### Community 36 - "Fetcher Implementations"
-Cohesion: 0.10
-Nodes (15): Fetcher, RawBatch, Fetch raw data for the given chunk arguments., Fetcher interface for retrieving raw data for a chunk., AkshareIndexHistMinFetcher, RawBatch, Fetch index 30-min data from Akshare., Fetch min-level data for one index code. (+7 more)
+Cohesion: 0.18
+Nodes (7): Fetcher, RawBatch, Fetch raw data for the given chunk arguments., Fetcher interface for retrieving raw data for a chunk., CsvFetcher, RawBatch, Fetch raw data from a CSV file path provided in chunk args.
 
 ### Community 37 - "Calendar Service and API"
-Cohesion: 0.14
-Nodes (17): CalendarSyncRequest, CalendarSyncResponse, get_calendar_service(), Request, Request body for calendar sync endpoint., Response payload for calendar sync endpoint., Provide CalendarService from app state., Manually sync trade calendar for a date range. (+9 more)
+Cohesion: 0.10
+Nodes (21): CalendarSyncRequest, CalendarSyncResponse, get_calendar_service(), Request, Request body for calendar sync endpoint., Response payload for calendar sync endpoint., Provide CalendarService from app state., Manually sync trade calendar for a date range. (+13 more)
 
 ### Community 38 - "Application Settings Config"
-Cohesion: 0.12
-Nodes (15): DatabaseConfig, DataConfig, FundBetaConfig, FundDataConfig, IndexDataConfig, Database connectivity configuration., Tushare integration configuration (token + exchange defaults)., Index universe configuration by data source. (+7 more)
+Cohesion: 0.33
+Nodes (5): DatabaseConfig, Database connectivity configuration., create_engine_from_config(), Engine, Create a SQLAlchemy Engine from DatabaseConfig.
 
 ### Community 39 - "Stock Selector Components"
 Cohesion: 0.12
 Nodes (12): AmountSelector, BasicSelector, ExcludeBlacklistSelector, HasPriceSelector, HSExchangeSelector, ListedMoreThanOneYearSelector, Select stocks listed more than one year., Select stocks with price on asof_date. (+4 more)
 
 ### Community 40 - "Index Hist Global Pipeline"
-Cohesion: 0.14
-Nodes (15): IndexHistGlobalCleaner, Normalize Tushare index_global rows into index_hist records., AkshareHkIndexDailyFetcher, Fetch HK index daily rows from Sina for configured indices., IndexHistGlobalPipeline, _parse_date(), _plan_year_chunks(), date (+7 more)
+Cohesion: 0.08
+Nodes (31): _as_float(), _as_int(), _as_str(), _fill_close(), IndexHistGlobalCleaner, _list_of_dicts(), _parse_date(), Any (+23 more)
 
 ### Community 41 - "Market Daily Info Cleaning"
-Cohesion: 0.11
-Nodes (18): MarketDailyInfoCleaner, NormalizedBatch, RawBatch, Normalize raw daily_info rows (SH or SZ) into DB-ready records., Drop exact duplicate normalized records with the same (trade_date, ts_code)., Normalize Tushare 市场交易统计 rows into DB-ready records.      SH rows (tagged `_sour, 权证 and 股票权证 are duplicate source labels with identical values;     both map to (, A second normalized record with the same (trade_date, ts_code) but     different (+10 more)
+Cohesion: 0.07
+Nodes (26): Example: start get_adj_factor, Example: start get_etf_hist, Example: start get_etf_info, Example: start get_fund_beta (filtered fund_codes), Example: start get_fund_hist_index, Example: start get_fund_hist_money, Example: start get_fund_info, Example: start get_fundamental_data (+18 more)
 
 ### Community 42 - "Factor Data Fetcher"
 Cohesion: 0.14
 Nodes (12): DataFetcher, DataFrame, Series, Fetch adjustment factors between start and end dates., Fetch adjusted historical price by applying adj_factor ratios., Fetch fundamentals for a single field in an adjusted window., Fetch multiple fundamental fields with a lookback window., Fetch stock-level data for factor backtests. (+4 more)
 
 ### Community 43 - "Fund Beta Pipeline"
-Cohesion: 0.14
-Nodes (13): FundBetaPipeline, _optional_code_list(), _parse_date(), datetime, NormalizedBatch, RawBatch, Normalize beta records for persistence., Pipeline for computing fund beta exposures. (+5 more)
+Cohesion: 0.25
+Nodes (7): FundBetaPipeline, NormalizedBatch, RawBatch, Normalize beta records for persistence., Pipeline for computing fund beta exposures., test_fund_beta_pipeline_fetch_historical(), test_fund_beta_pipeline_plan_chunks()
 
 ### Community 44 - "Task Queue Abstractions"
-Cohesion: 0.11
-Nodes (11): Queue payload for task execution., Abstract queue interface for task execution., Put a task item into the queue., Get a task item from the queue; return None on timeout., Remove a pending task by id; return True if removed., TaskItem, TaskQueue, Put a task item into the queue. (+3 more)
+Cohesion: 0.09
+Nodes (15): Queue payload for task execution., Abstract queue interface for task execution., Put a task item into the queue., Get a task item from the queue; return None on timeout., Remove a pending task by id; return True if removed., TaskItem, TaskQueue, Put a task item into the queue. (+7 more)
 
 ### Community 45 - "Realtime Index Hist Support"
-Cohesion: 0.16
-Nodes (15): _build_snapshot_from_min(), _format_ts(), _parse_min_row(), _parse_ts(), _prev_trade_day(), date, datetime, Engine (+7 more)
+Cohesion: 0.11
+Nodes (22): _build_snapshot_from_min(), _format_ts(), _parse_min_row(), _parse_ts(), _prev_trade_day(), date, datetime, Engine (+14 more)
 
 ### Community 46 - "Kalman Filter Beta Estimation"
-Cohesion: 0.13
-Nodes (11): _as_float(), KalmanFilter, Any, ndarray, Run one prediction/update step and return the updated state., Update alpha rho in the state transition matrix., Update gamma rho in the state transition matrix (if ECM enabled)., Return the current state estimate. (+3 more)
+Cohesion: 0.08
+Nodes (25): 10. 依赖文件与产物, 1. 目标与产出, 2.1 数据表依赖, 2.2 数据窗口, 2. 上游数据前提, 3.1 行情与复权价格, 3.2 基本面数据, 3. 数据清洗与标准化 (+17 more)
 
 ### Community 47 - "Data Query Service Results"
-Cohesion: 0.12
-Nodes (17): normalize_limit(), normalize_list_order(), normalize_page(), normalize_page_size(), normalize_results_order(), Validate asset_code is non-empty., Validate limit or apply default., Validate order for results endpoint. (+9 more)
+Cohesion: 0.08
+Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
 ### Community 48 - "Index Info Pipeline"
-Cohesion: 0.13
-Nodes (14): _get_cancel_check(), _load_csv(), _normalize_markets(), RawBatch, Fetch index_basic data and merge with CSV overrides., Fetch raw index_basic rows for target markets and CSV overrides., _safe_index_basic(), TushareIndexBasicFetcher (+6 more)
+Cohesion: 0.20
+Nodes (7): IndexInfoPipeline, NormalizedBatch, RawBatch, Pipeline for fetching and cleaning index_info records., Return a single chunk; pagination is handled by the fetcher., Fetch raw index_basic data plus CSV overrides., Clean and merge index_basic data into index_info records.
 
 ### Community 49 - "Market Daily Info Tests"
-Cohesion: 0.18
-Nodes (12): _calendar(), FakeCalendarStore, FakeSyncer, date, Engine, Compact YYYYMMDD input dates must be normalized to ISO YYYY-MM-DD chunk     boun, test_market_daily_info_create_app_wiring_runs_task(), test_market_daily_info_pipeline_plans_compact_dates_to_iso_chunks() (+4 more)
+Cohesion: 0.14
+Nodes (15): MarketDailyInfoCleaner, Normalize Tushare 市场交易统计 rows into DB-ready records.      SH rows (tagged `_sour, FakeCalendarStore, FakeSyncer, date, De-duplication applies to all normalized rows, not only SZ warrants., Real SH daily_info rows (e.g. SH_FUND_* boards) carry NaN com_count;     it must, test_market_daily_info_cleaner_covers_all_sz_categories() (+7 more)
 
 ### Community 50 - "Data Query Models Service"
-Cohesion: 0.17
-Nodes (15): BaseModel, AssetItem, DataListPayload, DataPoint, ListMeta, Standard response envelope for data query endpoints., OHLC point for chart/table output., Metadata for results endpoint. (+7 more)
+Cohesion: 0.10
+Nodes (36): BaseModel, JSONResponse, _error_response(), get_data_query_service(), get_results(), list_assets(), ListQuery, Request (+28 more)
 
 ### Community 51 - "Logging Configuration"
-Cohesion: 0.13
-Nodes (17): Handler, LogRecord, LoggingConfig, Logging configuration values for the service runtime., _build_file_handler(), _build_handlers(), ExtraFormatter, _gzip_namer() (+9 more)
+Cohesion: 0.22
+Nodes (10): Handler, LogRecord, LoggingConfig, Logging configuration values for the service runtime., _build_handlers(), ExtraFormatter, Formatter that appends structured extra fields., Configure root and uvicorn loggers with file rotation + console output. (+2 more)
 
 ### Community 52 - "Data Query API Routing"
-Cohesion: 0.21
-Nodes (16): JSONResponse, _error_response(), get_results(), list_assets(), ListQuery, List assets for a data type with optional keyword search., Query parameters for results endpoint., Query parameters for list endpoint. (+8 more)
+Cohesion: 0.14
+Nodes (21): IdempotencyGuard, Guard to prevent concurrent duplicate task runs for the same logic., InMemoryTaskQueue, In-process FIFO queue implementation., Remove a pending task by id if it is still in the queue., Persistence helper for task status records., TaskStatusStore, Engine (+13 more)
 
 ### Community 53 - "Selector Base and Scores"
 Cohesion: 0.25
 Nodes (8): get_latest_available_row(), DataFrame, Timestamp, QualityScoreSelector, Return latest report row within one year before asof_date., Select stocks by quality score., Base selector with parent chain., Selector
 
 ### Community 54 - "Market Daily Info Test Suite"
-Cohesion: 0.23
-Nodes (17): Fetch Tushare 市场交易统计 (pro.daily_info) SH rows for a date range., TushareMarketDailyInfoFetcher, De-duplication applies to all normalized rows, not only SZ warrants., Real SH daily_info rows (e.g. SH_FUND_* boards) carry NaN com_count;     it must, _row(), test_market_daily_info_cleaner_deduplicates_identical_sh_rows(), test_market_daily_info_cleaner_normalizes_sh_fields_and_strips_source_tag(), test_market_daily_info_cleaner_rejects_non_integral_com_count() (+9 more)
+Cohesion: 0.11
+Nodes (18): 1. 目标与产出, 2.1 纯维度指数（4 条）, 2.2 交叉风格指数（4 条）, 2. 指数清单与口径, 3.1 依赖输入, 3.2 复用策略, 3. 依赖与缓存复用, 4.1 组合日收益构成 (+10 more)
 
 ### Community 55 - "Market Factors Pipeline"
 Cohesion: 0.17
@@ -492,8 +662,8 @@ Cohesion: 0.12
 Nodes (10): CalendarFetcher, CSIIndexDataFetcher, Engine, Fetch index data from index_hist table., Fetch trade calendar information., Return trade dates between start/end (YYYYMMDD) inclusive., Return previous trade date before current_date., DataFrame (+2 more)
 
 ### Community 60 - "Index Hist Stock Pipeline"
-Cohesion: 0.17
-Nodes (12): _identity(), IndexHistStockPipeline, _parse_date(), _plan_year_chunks(), date, NormalizedBatch, RawBatch, Pipeline for fetching stock index history from Tushare index_daily. (+4 more)
+Cohesion: 0.07
+Nodes (35): _as_float(), _as_int(), _as_str(), _fill_close(), IndexHistStockCleaner, _list_of_dicts(), _parse_date(), Any (+27 more)
 
 ### Community 61 - "Market Daily Info Pipeline"
 Cohesion: 0.14
@@ -504,20 +674,20 @@ Cohesion: 0.22
 Nodes (10): _mean(), DataFrame, datetime, RawBatch, Series, Compute intraday factor snapshot using rt_stock_hist_unadj and cached weights., Compute one intraday factor snapshot row., RtMarketFactorsFetcher (+2 more)
 
 ### Community 63 - "Index Info Cleaner"
-Cohesion: 0.15
-Nodes (10): IndexInfoCleaner, _list_of_dicts(), NormalizedBatch, RawBatch, Merge Tushare and CSV index info rows with CSV overrides., Normalize index_basic rows and CSV overrides into index_info records., FakeTushareClient, Path (+2 more)
+Cohesion: 0.10
+Nodes (18): IndexInfoCleaner, _list_of_dicts(), NormalizedBatch, RawBatch, Merge Tushare and CSV index info rows with CSV overrides., Normalize index_basic rows and CSV overrides into index_info records., _get_cancel_check(), _load_csv() (+10 more)
 
 ### Community 64 - "Retry Policy and SZ Daily"
-Cohesion: 0.31
-Nodes (14): Exponential backoff retry policy with optional jitter., RetryPolicy, Fetch Tushare sz_daily_info (深圳市场每日交易概况) rows for a date range., TushareSzDailyInfoFetcher, FakeTushareClient, _sz_row(), test_market_daily_info_pipeline_routes_fetch_by_source(), test_sz_daily_info_fetcher_accepts_compact_dates() (+6 more)
+Cohesion: 0.14
+Nodes (41): Exponential backoff retry policy with optional jitter., RetryPolicy, Fetch Tushare 市场交易统计 (pro.daily_info) SH rows for a date range., TushareMarketDailyInfoFetcher, Fetch Tushare sz_daily_info (深圳市场每日交易概况) rows for a date range., TushareSzDailyInfoFetcher, _calendar(), FakeTushareClient (+33 more)
 
 ### Community 65 - "Gold Derivatives Fetcher"
 Cohesion: 0.22
 Nodes (8): GoldDerivativesFetcher, Any, date, Path, RawBatch, Return futures curve rows from Barchart., Fetch gold derivatives data for CFTC reports and futures curve., Return CFTC report rows if updates are needed; otherwise empty.
 
 ### Community 66 - "Gold CFTC Report Pipeline"
-Cohesion: 0.16
-Nodes (12): GoldCftcReportPipeline, _parse_date(), date, NormalizedBatch, RawBatch, Pipeline for fetching and persisting CFTC gold reports., Plan a single chunk for the requested as-of date., Fetch CFTC report records for the provided as-of date. (+4 more)
+Cohesion: 0.11
+Nodes (17): GoldCftcReportCleaner, _normalize_record(), Any, NormalizedBatch, RawBatch, Return raw CFTC records as normalized dicts., Normalize CFTC report records for direct DB persistence., GoldCftcReportPipeline (+9 more)
 
 ### Community 67 - "Realtime Market Factors Pipeline"
 Cohesion: 0.14
@@ -527,25 +697,21 @@ Nodes (11): Engine, NormalizedBatch, RawBatch, Pipeline for computing intraday m
 Cohesion: 0.17
 Nodes (9): DatetimeIndex, CalendarProvider, Timestamp, Protocol for fetching trade dates., Return trade dates between start and end., Return previous trade date before current_date., Generate rebalance dates based on frequency and calendar., Return rebalance dates within [start_date, end_date]. (+1 more)
 
-### Community 69 - "Factor Calculation Design Docs"
-Cohesion: 0.16
-Nodes (15): index_hist table (index_code, date, OHLC, volume, amount), index_info table (index_name, market=IN), 8 internal research indices (NYBIG/NYSML/NYVAL/NYGRO/NYBV/NYBG/NYSV/NYSG), 内部研究指数 pipeline (index_hist/index_info), adj_factor table (复权因子), bt_result/*_daily_returns.csv and *_weights.csv artifacts, MKT/SMB/HML/QMJ factor definitions, fundamental_data table (financial fields) (+7 more)
-
 ### Community 70 - "Gold Future Curve Pipeline"
-Cohesion: 0.17
-Nodes (11): GoldDataConfig, Gold derivatives fetcher configuration., Engine, GoldFutureCurvePipeline, NormalizedBatch, RawBatch, Pipeline for fetching and persisting gold futures curve data., Fetch gold futures curve records. (+3 more)
+Cohesion: 0.09
+Nodes (23): DataConfig, FundBetaConfig, FundDataConfig, GoldDataConfig, IndexDataConfig, Tushare integration configuration (token + exchange defaults)., Index universe configuration by data source., Fund configuration for pipeline inputs. (+15 more)
 
 ### Community 71 - "Fundamental Data Single Pipeline"
-Cohesion: 0.16
-Nodes (11): Fetch income/balance/cashflow data for a list of stock codes., TushareFundamentalSingleFetcher, _fetch_stock_codes(), FundamentalDataSinglePipeline, Engine, RawBatch, Table, Pipeline for fetching fundamental data per-stock with non-vip endpoints. (+3 more)
+Cohesion: 0.14
+Nodes (13): Fetch income/balance/cashflow data for a list of stock codes., TushareFundamentalSingleFetcher, _fetch_stock_codes(), FundamentalDataSinglePipeline, Engine, NormalizedBatch, RawBatch, Table (+5 more)
 
 ### Community 72 - "Idempotency Guard Logic"
-Cohesion: 0.16
-Nodes (14): generate_idempotency_key(), IdempotencyDecision, _next_attempt(), Connection, Select, Table, Check for active run and prepare key/attempt for new task if needed., Decision result for idempotency checks. (+6 more)
+Cohesion: 0.19
+Nodes (15): HttpFetcher, HTTP fetcher with chunk-level retry support., HttpClient, HttpResponse, Any, HTTP client interface used by fetchers., Send an HTTP request and return normalized response data., Normalized HTTP response payload. (+7 more)
 
 ### Community 73 - "Fund Hist Index Pipeline"
-Cohesion: 0.17
-Nodes (10): FundHistIndexPipeline, _parse_date(), date, NormalizedBatch, RawBatch, Pipeline for fetching index fund NAV history., Plan one chunk per trade date., Fetch raw fund_nav data for a trade date. (+2 more)
+Cohesion: 0.05
+Nodes (40): _as_float(), FundHistCleaner, _parse_date(), Any, NormalizedBatch, RawBatch, Normalize fund_nav rows into fund_hist records., Normalize raw fund_nav rows into fund_hist records. (+32 more)
 
 ### Community 74 - "Fund Hist Money Pipeline"
 Cohesion: 0.17
@@ -555,17 +721,13 @@ Nodes (10): FundHistMoneyPipeline, _parse_date(), date, NormalizedBatch, RawBatc
 Cohesion: 0.20
 Nodes (7): FakeTushareClient, _filter_rows(), _normalize_date(), date, Engine, _run_pipeline(), test_fundamental_data_pipelines_match()
 
-### Community 76 - "graphify Semantic Extraction"
-Cohesion: 0.16
-Nodes (14): Hyperedges, Semantic Similarity Edges, Whisper Domain Hint Prompt, Whisper Video/Audio Transcription, Deep Mode Extraction, Semantic Extraction, Parallel Subagent Dispatch, Hyperedges (opencode) (+6 more)
-
 ### Community 77 - "Backtest Weight Allocation"
 Cohesion: 0.22
 Nodes (10): ABC, EqualWeightAllocator, MktCapWeightAllocator, DataFrame, Timestamp, Abstract base class for weight allocation., Allocate weights for a list of stocks., Allocate equal weights across stocks. (+2 more)
 
 ### Community 78 - "Market Daily Info Normalization"
-Cohesion: 0.21
-Nodes (10): _as_decimal(), _as_int(), _nan_to_none(), _parse_date(), Any, date, Decimal, Return None for NULL/NaN, otherwise the value unchanged. (+2 more)
+Cohesion: 0.14
+Nodes (14): _as_decimal(), _as_int(), _nan_to_none(), _parse_date(), Any, date, Decimal, NormalizedBatch (+6 more)
 
 ### Community 79 - "Clean Error Policy Handling"
 Cohesion: 0.22
@@ -576,11 +738,11 @@ Cohesion: 0.23
 Nodes (12): ensure_comparable(), ensure_hashable(), ensure_json_serializable(), Any, Ensure payload can be serialized to JSON., Ensure payload can be hashed deterministically; return hash string., Ensure payload remains comparable after JSON round-trip., Validate payload for JSON serialization, hashing, and comparability. (+4 more)
 
 ### Community 81 - "Single Fundamental Fetching"
-Cohesion: 0.20
-Nodes (10): _build_call(), RawBatch, Fetch raw data for stock codes over the quarterly range., _require_list(), _require_param(), _safe_call(), _to_yyyymmdd(), Query daily data via Tushare PRO API. (+2 more)
+Cohesion: 0.31
+Nodes (7): _build_call(), RawBatch, Fetch raw data for stock codes over the quarterly range., _require_list(), _require_param(), _safe_call(), _to_yyyymmdd()
 
 ### Community 82 - "Xueqiu Token Fetcher"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (10): _csrf_headers(), _default_headers(), Path, Fetch xq_a_token from Xueqiu and persist it to a local file., Fetch xq_a_token from Xueqiu., Fetch token and write it to a timestamped file in project root., XueqiuTokenFetcher, MonkeyPatch (+2 more)
 
 ### Community 83 - "Tasks API Tests"
@@ -592,48 +754,40 @@ Cohesion: 0.19
 Nodes (10): MarketFactorsCleaner, _normalize_record(), _normalize_value(), Any, NormalizedBatch, RawBatch, Pass-through cleaner for market_factors records., Return raw batch as normalized records with scalar normalization. (+2 more)
 
 ### Community 85 - "Moneyflow HSGT Cleaner"
-Cohesion: 0.19
-Nodes (10): _as_yuan_decimal(), MoneyflowHsgtCleaner, _parse_date(), date, Decimal, NormalizedBatch, RawBatch, Normalize Tushare moneyflow_hsgt rows into DB-ready records. (+2 more)
+Cohesion: 0.47
+Nodes (4): _as_yuan_decimal(), _parse_date(), date, Decimal
 
 ### Community 86 - "Typed Cleaner Base"
-Cohesion: 0.18
+Cohesion: 0.20
 Nodes (9): Any, NormalizedBatch, RawBatch, Cleaner that validates and normalizes dict-based records., Validate and normalize raw records into DB-ready records., TypedCleaner, Engine, test_cleaner_fail_chunk() (+1 more)
 
 ### Community 87 - "Stock Basic Fetcher"
-Cohesion: 0.22
-Nodes (9): _get_cancel_check(), _normalize_list_statuses(), RawBatch, Fetch stock_basic data from Tushare with internal pagination., Fetch raw data for the given chunk arguments., _safe_stock_basic(), TushareStockBasicFetcher, FakeTushareClient (+1 more)
-
-### Community 88 - "graphify URL Ingestion"
-Cohesion: 0.26
-Nodes (12): Add Watch Command, Add Watch Flag, Ingest Function, Needs Update Flag, oEmbed Protocol, arXiv URL Type, Image URL Type, PDF URL Type (+4 more)
+Cohesion: 0.08
+Nodes (23): _parse_date(), Any, NormalizedBatch, RawBatch, Clean and normalize stock_basic rows into stock_info records., Normalize raw stock_basic rows into stock_info records., StockInfoCleaner, _get_cancel_check() (+15 more)
 
 ### Community 89 - "ETF Info Cleaner"
-Cohesion: 0.18
+Cohesion: 0.17
 Nodes (8): EtfInfoCleaner, _parse_date(), Any, NormalizedBatch, RawBatch, Normalize fund_basic rows into etf_info records., Normalize raw fund_basic rows into etf_info records., test_etf_info_cleaner_maps_fields()
 
 ### Community 90 - "Index Hist Global Cleaner"
-Cohesion: 0.32
-Nodes (10): _as_float(), _as_int(), _as_str(), _fill_close(), _list_of_dicts(), _parse_date(), Any, NormalizedBatch (+2 more)
+Cohesion: 0.15
+Nodes (12): IndexHistGoldPipeline, _parse_date(), _plan_year_chunks(), date, NormalizedBatch, RawBatch, Pipeline for fetching gold index history from Tushare sge_daily., Plan chunks by natural year. (+4 more)
 
 ### Community 91 - "Factor Computation Helpers"
 Cohesion: 0.21
 Nodes (8): DataFrame, RawBatch, Load portfolio return CSVs for a factor prefix., Convert factor DataFrame to a RawBatch list of dicts., Return None for NaN-like values to match DB-null semantics., Run portfolio backtests and return daily factor records., Compute MKT/SMB/HML/QMJ factor series from portfolio returns., _safe_value()
 
-### Community 92 - "graphify Pipeline Concepts"
-Cohesion: 0.22
-Nodes (11): graphify add / URL Ingest, Watch Mode, graphify MCP Server, Wiki Export, GitHub Repo Clone, Cross-Repo Graph Merge, Native CLAUDE.md Integration, Post-Commit Auto-Rebuild Hook (+3 more)
-
 ### Community 93 - "Config Loader YAML"
-Cohesion: 0.29
-Nodes (10): _apply_env_overrides(), load_config(), Any, Path, Load AppConfig from YAML file with environment variable overrides., Resolve config path from explicit arg, env var, or default., Read a YAML mapping file and return a dict., Merge known environment overrides onto the raw config mapping. (+2 more)
+Cohesion: 0.11
+Nodes (50): ArgumentParser, Exception, as_int_list(), assert_invariants(), batch_date_bounds(), build_parser(), check_binary(), check_codes() (+42 more)
 
 ### Community 94 - "Fund Beta Cleaner"
 Cohesion: 0.24
 Nodes (8): FundBetaCleaner, _normalize_record(), _normalize_value(), Any, NormalizedBatch, RawBatch, Normalize fund beta records for persistence., Return raw beta records with scalar normalization.
 
 ### Community 95 - "Fund Hist Cleaner"
-Cohesion: 0.24
-Nodes (8): _as_float(), FundHistCleaner, _parse_date(), Any, NormalizedBatch, RawBatch, Normalize fund_nav rows into fund_hist records., Normalize raw fund_nav rows into fund_hist records.
+Cohesion: 0.17
+Nodes (14): FundamentalDataCleaner, Normalize income/balance/cashflow data into fundamental_data records., NormalizedBatch, Clean raw data and compute operating_profit_ttm with history-aware filling., test_fundamental_data_cleaner_f_ann_date_none_when_all_missing(), test_fundamental_data_cleaner_maps_fields(), test_fundamental_data_cleaner_net_profit_fallback(), test_fundamental_data_cleaner_net_profit_partial_fallback() (+6 more)
 
 ### Community 96 - "Internal Index Cleaner"
 Cohesion: 0.24
@@ -644,8 +798,8 @@ Cohesion: 0.24
 Nodes (8): Any, NormalizedBatch, RawBatch, Clean and normalize real-time market_factors snapshots., Normalize raw snapshot rows into rt_market_factors records., RtMarketFactorsCleaner, _to_datetime(), _to_float()
 
 ### Community 98 - "Stock Info Cleaner"
-Cohesion: 0.20
-Nodes (8): _parse_date(), Any, NormalizedBatch, RawBatch, Clean and normalize stock_basic rows into stock_info records., Normalize raw stock_basic rows into stock_info records., StockInfoCleaner, test_stock_info_cleaner_maps_fields()
+Cohesion: 0.26
+Nodes (13): _apply_operating_profit_ttm(), _group_by_stock(), _is_valid_number(), _last_annual_date(), _last_same_period(), _latest_ttm_before(), Any, date (+5 more)
 
 ### Community 99 - "ST Flag File Cleaner"
 Cohesion: 0.27
@@ -653,7 +807,7 @@ Nodes (9): _normalize_is_st(), _normalize_stock_code(), _parse_date(), Any, Norm
 
 ### Community 100 - "Akshare HK Index Fetcher"
 Cohesion: 0.31
-Nodes (9): _is_code_mapping(), _parse_date_optional(), _parse_date_required(), date, RawBatch, Fetch raw HK index rows for each configured index code., _require_codes(), _require_param() (+1 more)
+Nodes (11): _as_float(), _as_int(), _first_non_none(), _list_of_dicts(), _normalize_stock_code(), _parse_trade_date(), Any, NormalizedBatch (+3 more)
 
 ### Community 101 - "Tushare Fundamental Fetcher"
 Cohesion: 0.29
@@ -664,40 +818,24 @@ Cohesion: 0.20
 Nodes (8): Fetch income/balance/cashflow vip data for quarterly periods., TushareFundamentalFetcher, FundamentalDataPipeline, RawBatch, Pipeline for fetching and cleaning quarterly fundamental data., Plan a single chunk for the requested quarterly range., Fetch raw fundamental data for the quarterly range., _require_param()
 
 ### Community 103 - "Tushare Moneyflow HSGT Fetcher"
-Cohesion: 0.24
-Nodes (8): RawBatch, Fetch moneyflow_hsgt data for a date range., Fetch raw moneyflow_hsgt rows for the given date range., _require_param(), _safe_moneyflow_hsgt(), _to_yyyymmdd(), TushareMoneyflowHsgtFetcher, test_moneyflow_hsgt_fetcher_uses_date_range_and_default_fields()
+Cohesion: 0.38
+Nodes (5): RawBatch, Fetch raw moneyflow_hsgt rows for the given date range., _require_param(), _safe_moneyflow_hsgt(), _to_yyyymmdd()
 
 ### Community 104 - "Fund Catalog Helpers"
 Cohesion: 0.24
-Nodes (9): load_index_fund_codes(), parse_fund_codes(), Engine, Table, Load index fund codes from fund_info based on invest_type/fund_type., Validate configured money fund codes are present and marked as 货币型., Parse comma-separated fund codes into a stable list., _unique_codes() (+1 more)
-
-### Community 105 - "graphify Audit and Confidence"
-Cohesion: 0.27
-Nodes (10): Confidence Score Rubric, Deterministic Node ID Format, AST Structural Extraction, EXTRACTED/INFERRED/AMBIGUOUS Audit Trail, Honesty Rules, Confidence Score Rubric (opencode), Deterministic Node ID Format (opencode), AST Structural Extraction (opencode) (+2 more)
-
-### Community 106 - "graphify Pipeline Concepts OpenCode"
-Cohesion: 0.24
-Nodes (10): graphify add / URL Ingest (opencode), Watch Mode (opencode), graphify MCP Server (opencode), Wiki Export (opencode), GitHub Repo Clone (opencode), Cross-Repo Graph Merge (opencode), Native CLAUDE.md Integration (opencode), Post-Commit Auto-Rebuild Hook (opencode) (+2 more)
+Nodes (9): EtfCodeMapping, _fetch_with_token(), _from_xueqiu_code(), _is_mapping(), PysnowballEtfQuotecFetcher, Fetch real-time ETF snapshots via pysnowball.quotec., Reset refresh attempt state for a new pipeline run., _require_mappings() (+1 more)
 
 ### Community 107 - "Testcontainers Postgres Fixtures"
 Cohesion: 0.24
 Nodes (9): FixtureRequest, TempPathFactory, clean_tables(), _docker_available(), docker_env(), postgres_engine(), Engine, Path (+1 more)
 
-### Community 108 - "Module AGENTS Docs Calendar"
-Cohesion: 0.20
-Nodes (10): src/core/backtest AGENTS.md, backtest engine, portfolio construction helpers (selectors, allocators, rebalance scheduling), src/core/calendar AGENTS.md, trading calendar service logic, src/infra/calendar_store AGENTS.md, calendar storage and sync logic, src/infra/tushare AGENTS.md (+2 more)
-
 ### Community 109 - "Noise Ratio Estimator"
-Cohesion: 0.27
-Nodes (5): ndarray, QREstimator, Estimate process/observation noise from a rolling window., Append one observation row and response., Return (Q, R) for the current window.
-
-### Community 110 - "Pipeline Registry and Mapping"
-Cohesion: 0.22
-Nodes (10): src/core/clean AGENTS.md, cleaner interfaces and validation helpers, src/core/pipeline AGENTS.md, pipeline contracts, validation rules, shared types, pipeline registry, src/services AGENTS.md, src/services/worker_handler.py (task execution handler), src/services/pipelines AGENTS.md (+2 more)
+Cohesion: 0.39
+Nodes (10): Fetch Tushare margin daily-summary data for a date range., TushareMarginDailyFetcher, FakeTushareClient, _margin_row(), test_margin_cleaner_normalizes_fields_and_missing_values(), test_margin_fetcher_accepts_compact_dates_and_custom_fields(), test_margin_fetcher_rejects_inverted_date_range(), test_margin_fetcher_rejects_response_beyond_api_row_limit() (+2 more)
 
 ### Community 111 - "Gold CFTC Report Cleaner"
-Cohesion: 0.22
-Nodes (7): GoldCftcReportCleaner, _normalize_record(), Any, NormalizedBatch, RawBatch, Return raw CFTC records as normalized dicts., Normalize CFTC report records for direct DB persistence.
+Cohesion: 0.27
+Nodes (9): _is_code_mapping(), RawBatch, Fetch sge_daily rows for configured contracts in a date range., Fetch raw sge_daily rows for each configured contract., _require_codes(), _require_param(), _safe_sge_daily(), _to_yyyymmdd() (+1 more)
 
 ### Community 112 - "Gold Future Curve Cleaner"
 Cohesion: 0.22
@@ -708,8 +846,8 @@ Cohesion: 0.33
 Nodes (8): _is_yyyymmdd(), RawBatch, Fetch raw index_dailybasic rows for the given chunk., _require_param(), _safe_index_daily_basic(), _to_yyyymmdd(), _validate_chunk_size(), _validate_date_range()
 
 ### Community 114 - "Index Daily Fetcher"
-Cohesion: 0.31
-Nodes (8): _is_code_mapping(), RawBatch, Fetch raw index_daily rows for each configured index code., _require_codes(), _require_limit(), _require_param(), _safe_index_daily(), _to_yyyymmdd()
+Cohesion: 0.20
+Nodes (7): EtfInfoPipeline, NormalizedBatch, RawBatch, Pipeline for fetching and cleaning etf_info records., Return a single chunk; pagination is handled by the fetcher., Fetch raw fund_basic data for the chunk., Clean raw fund_basic data into etf_info records.
 
 ### Community 115 - "Market Daily Info Fetcher"
 Cohesion: 0.33
@@ -720,8 +858,8 @@ Cohesion: 0.33
 Nodes (8): _is_yyyymmdd(), RawBatch, Fetch raw sz_daily_info rows for the given date range chunk.          The chunk, _require_param(), _safe_sz_daily_info(), _to_yyyymmdd(), _validate_chunk_size(), _validate_date_range()
 
 ### Community 117 - "Stock Info Pipeline"
-Cohesion: 0.22
-Nodes (6): NormalizedBatch, RawBatch, Pipeline for fetching and cleaning stock_info records., Fetch raw stock_basic data for the chunk., Clean raw stock_basic data into stock_info records., StockInfoPipeline
+Cohesion: 0.20
+Nodes (7): FundInfoPipeline, NormalizedBatch, RawBatch, Pipeline for fetching and cleaning fund_info records., Return a single chunk; pagination is handled by the fetcher., Fetch raw fund_basic data for the chunk., Clean raw fund_basic data into fund_info records.
 
 ### Community 118 - "Config Loader Tests"
 Cohesion: 0.49
@@ -731,164 +869,192 @@ Nodes (9): MonkeyPatch, Path, test_env_overrides_database_url(), test_env_overri
 Cohesion: 0.22
 Nodes (7): BMScoreSelector, MktCapPercentileSelector, Select stocks by market cap percentile., Select stocks by BM score., build_all_portfolios(), Engine, Build and backtest all portfolios for the given date range.
 
-### Community 120 - "Module AGENTS Docs Fetch Beta"
-Cohesion: 0.25
-Nodes (9): src/core/beta AGENTS.md, fund beta estimation primitives (Kalman filter, Q/R estimator, covariance helpers), src/core/fetch AGENTS.md, fetch error types, fetcher interface, retry policy, src/core/indexing AGENTS.md, index code parsing and API mapping helpers (+1 more)
-
 ### Community 121 - "Fund NAV Fetcher"
-Cohesion: 0.33
-Nodes (7): _chunk_codes(), RawBatch, Fetch raw fund_nav rows for each batch of fund codes., _require_codes(), _require_param(), _safe_fund_nav(), _to_yyyymmdd()
+Cohesion: 0.31
+Nodes (4): FakeCalendarStore, FakeSyncer, date, test_margin_pipeline_plans_trade_day_chunks_of_300()
 
 ### Community 122 - "Fund NAV and Hist Fetching"
-Cohesion: 0.31
-Nodes (6): Fetch fund_nav data for configured funds on a nav date., TushareFundNavFetcher, FakeTushareClient, test_fund_hist_cleaner_maps_fields(), test_fund_hist_index_requires_fund_info_codes(), test_fund_nav_fetcher_batches_codes()
+Cohesion: 0.36
+Nodes (9): export_partition(), main(), parse_args(), Namespace, Path, Return row count of an existing partition file, validating its metadata., Query one period and stream it to Parquet; returns the row count., validate_existing() (+1 more)
 
 ### Community 123 - "Moneyflow HSGT Pipeline"
-Cohesion: 0.25
-Nodes (6): MoneyflowHsgtPipeline, NormalizedBatch, RawBatch, Pipeline for fetching and cleaning moneyflow_hsgt data., Fetch raw moneyflow_hsgt data for a date range., Clean raw moneyflow_hsgt data into DB-ready records.
-
-### Community 124 - "graphify Query Traversal"
-Cohesion: 0.25
-Nodes (8): BFS/DFS Graph Traversal, Constrained Query Expansion, Reflect / LESSONS.md Work Memory, save-result Feedback Loop, BFS/DFS Graph Traversal (opencode), Constrained Query Expansion (opencode), Reflect / LESSONS.md Work Memory (opencode), save-result Feedback Loop (opencode)
+Cohesion: 0.20
+Nodes (9): BigQuant Stock Status Sync, Required skill loads, Safety and maintenance, Step 0 — confirm inputs, Step 1 — browser export in AIStudio, Step 2 — zip and download, Step 3 — local verification (before stopping AIStudio), Step 4 — stop AIStudio (+1 more)
 
 ### Community 125 - "Data Query Table Helpers"
-Cohesion: 0.43
-Nodes (7): ColumnElement, _apply_list_order(), _hist_table_for(), _info_table_for(), Any, Select, Table
-
-### Community 126 - "Module AGENTS Docs Architecture"
-Cohesion: 0.29
-Nodes (8): core layer (framework-agnostic business logic), src/infra AGENTS.md, infrastructure adapters (DB, logging, external clients, fetcher implementations), src/infra/db AGENTS.md, SQLAlchemy Core engine, tables, repository helpers, src/models AGENTS.md, Pydantic schemas (and ORM models), services orchestration layer
+Cohesion: 0.26
+Nodes (11): ColumnElement, _apply_list_order(), _hist_table_for(), _info_table_for(), Any, Select, Table, _build_test_app() (+3 more)
 
 ### Community 127 - "CSV Message Cleaner"
 Cohesion: 0.29
 Nodes (6): CsvMessageCleaner, Any, NormalizedBatch, RawBatch, Normalize CSV rows into test_messages records., _to_int()
 
 ### Community 128 - "Index Code Mapping and Quotes"
-Cohesion: 0.36
-Nodes (7): IndexCodeMapping, Index code mapping between stored code and API code., _fetch_with_token(), PysnowballQuotecFetcher, Fetch real-time index snapshots via pysnowball.quotec., _MinRow, TypedDict
+Cohesion: 0.33
+Nodes (8): _is_yyyymmdd(), RawBatch, Fetch raw margin rows for the given date range., _require_param(), _safe_margin(), _to_yyyymmdd(), _validate_chunk_size(), _validate_date_range()
 
 ### Community 129 - "Realtime K-line Fetcher"
 Cohesion: 0.32
 Nodes (6): _normalize_codes(), RawBatch, Fetch real-time daily stock snapshots from Tushare rt_k., Fetch all real-time rows using wildcard codes., _safe_rt_k(), TushareRtKFetcher
-
-### Community 130 - "Module AGENTS Docs Worker"
-Cohesion: 0.29
-Nodes (8): src/infra/idempotency AGENTS.md, idempotency guards for task processing, src/infra/queue AGENTS.md, task queue interfaces and implementations, src/infra/task_state AGENTS.md, task state machine and persistence, src/infra/worker_runtime AGENTS.md, background worker runtime
 
 ### Community 131 - "Cleaner Base Interface"
 Cohesion: 0.29
 Nodes (5): Cleaner, NormalizedBatch, RawBatch, Normalize raw data into DB-ready records., Cleaner interface for normalizing raw batches.
 
 ### Community 132 - "Akshare Sina ETF Fetcher"
-Cohesion: 0.33
-Nodes (5): AkshareEtfSinaFetcher, RawBatch, Fetch real-time ETF quotes via Akshare Sina., Fetch ETF snapshot rows., _safe_etf_sina()
+Cohesion: 0.12
+Nodes (15): Response, FetchError, Base error raised during fetch operations., Transient error that should be retried., RetryableError, Execute operation with retry on RetryableError., AkshareEtfSinaFetcher, RawBatch (+7 more)
 
 ### Community 133 - "Akshare Stock Spot Fetcher"
 Cohesion: 0.33
 Nodes (5): AkshareStockSpotFetcher, RawBatch, Fetch real-time A-share spot data from Akshare., Fetch all stock spot rows., _safe_spot()
 
 ### Community 134 - "Adjustment Factor Fetcher"
-Cohesion: 0.38
-Nodes (5): RawBatch, Fetch adj_factor rows for the given trade date., _require_param(), _safe_adj_factor(), _to_yyyymmdd()
+Cohesion: 0.22
+Nodes (6): MarginDailyPipeline, NormalizedBatch, RawBatch, Pipeline for fetching and cleaning Tushare margin daily-summary data., Fetch raw margin data for a date range., Clean raw margin data into DB-ready records.
 
 ### Community 135 - "Task State Machine"
 Cohesion: 0.33
 Nodes (4): Finite-state machine enforcing task status transitions., Return True if the transition is allowed., Raise ValueError if transition is not allowed., TaskStateMachine
 
-### Community 136 - "Module AGENTS Docs Workflow"
-Cohesion: 0.40
-Nodes (6): src/core/chunking AGENTS.md, chunking policy for splitting request parameters, src/core/workflow AGENTS.md, failover policies for pipelines, workflow orchestration, src/services/workflow_engine.py
-
 ### Community 137 - "Realtime ETF Cleaner"
-Cohesion: 0.60
-Nodes (4): Any, _to_datetime(), _to_float(), _to_int()
+Cohesion: 0.19
+Nodes (11): Any, NormalizedBatch, RawBatch, Clean and normalize real-time ETF snapshot rows., Normalize raw snapshot rows into rt_etf_hist records., RtEtfHistCleaner, _to_datetime(), _to_float() (+3 more)
 
 ### Community 138 - "Realtime Index Cleaner"
 Cohesion: 0.60
 Nodes (4): Any, _to_datetime(), _to_float(), _to_int()
 
 ### Community 139 - "Realtime Stock Cleaner"
-Cohesion: 0.60
-Nodes (4): Any, _to_datetime(), _to_float(), _to_int()
+Cohesion: 0.16
+Nodes (12): Any, NormalizedBatch, RawBatch, Clean and normalize real-time stock snapshot rows., Normalize raw snapshot rows into rt_stock_hist_unadj records., RtStockHistUnadjCleaner, _to_datetime(), _to_float() (+4 more)
 
 ### Community 140 - "Pipeline Fetch and Clean"
-Cohesion: 0.33
-Nodes (4): NormalizedBatch, RawBatch, Fetch raw data for a chunk (no state transitions here)., Normalize raw data into the pipeline's output schema.
+Cohesion: 0.11
+Nodes (12): IngestionPipeline, NormalizedBatch, RawBatch, Plan chunk arguments for a pipeline run., Fetch raw data for a chunk (no state transitions here)., Normalize raw data into the pipeline's output schema., Core pipeline interface for chunking, fetching, and cleaning data., Register a pipeline implementation by id. (+4 more)
 
 ### Community 141 - "Tushare Calendar Sync"
-Cohesion: 0.33
-Nodes (4): date, Fetch trade calendar data from Tushare., Return open trading days for the date range., TushareCalendarSyncer
+Cohesion: 0.22
+Nodes (8): Context, Execution Prerequisites, Impact Map, Integration Test Plan, P0 (User-Facing Critical Path), P1 (Core Workflow), P2 (Edge Cases), Test Matrix
 
 ### Community 142 - "Adjustment Factor Planning"
-Cohesion: 0.40
-Nodes (4): _parse_date(), date, Plan one chunk per trade date., _require_param()
+Cohesion: 0.22
+Nodes (8): Authentication policy, Browser architecture, Browser ownership, Browser Policy, Connection policy, Interaction policy, Required dependency, Safety
 
 ### Community 143 - "Adjustment Factor Fetch Clean"
-Cohesion: 0.33
-Nodes (4): NormalizedBatch, RawBatch, Fetch raw adj_factor data for a trade date., Clean raw adj_factor data into adj_factor records.
-
-### Community 144 - "Adjustment Factor Cleaner"
-Cohesion: 0.60
-Nodes (3): _as_float(), _parse_date(), Any
-
-### Community 145 - "Module AGENTS Docs Fetchers"
-Cohesion: 0.40
-Nodes (5): src/infra/fetcher AGENTS.md, concrete fetcher implementations (Akshare, Tushare), src/infra/xueqiu_token_* token helpers, src/infra/http_client AGENTS.md, HTTP client adapters
+Cohesion: 0.22
+Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
 
 ### Community 146 - "Data Query E2E Tests"
-Cohesion: 0.70
-Nodes (4): _build_test_app(), Engine, FastAPI, test_http_e2e_results_flow()
-
-### Community 147 - "graphify Report Exports"
-Cohesion: 0.50
-Nodes (4): Neo4j Export, GRAPH_REPORT.md, Neo4j Export (opencode), GRAPH_REPORT.md (opencode)
-
-### Community 148 - "graphify Incremental Merge"
-Cohesion: 0.50
-Nodes (4): build_merge Replace-on-Re-extract, Cluster-Only Rebuild, build_merge Replace-on-Re-extract (opencode), Cluster-Only Rebuild (opencode)
-
-### Community 149 - "graphify Community Analysis"
-Cohesion: 0.67
-Nodes (4): Community Detection, God Nodes, Community Detection (opencode), God Nodes (opencode)
-
-### Community 150 - "graphify CLAUDE Integration"
-Cohesion: 0.50
-Nodes (4): CLAUDE.md, Graphify claude install, Graphify claude uninstall, ## graphify section
-
-### Community 151 - "graphify Commit Hook"
-Cohesion: 0.50
-Nodes (4): Git commit, Graph.json, GRAPH_REPORT.md, Post-commit hook
+Cohesion: 0.32
+Nodes (6): AkshareIndexHistMinFetcher, RawBatch, Fetch index 30-min data from Akshare., Fetch min-level data for one index code., _require_param(), _safe_index_min()
 
 ### Community 152 - "Adjustment Factor Cleaning"
-Cohesion: 0.50
-Nodes (3): NormalizedBatch, RawBatch, Normalize raw adj_factor rows into DB-ready records.
+Cohesion: 0.32
+Nodes (6): _extract_body(), _extract_params(), _normalize_response(), Any, RawBatch, Fetch raw data for the given chunk arguments.
 
 ### Community 153 - "Docker Compose Deployment"
 Cohesion: 0.67
 Nodes (3): docker-compose.yml (container deployment), docker-bridge external network, finance-data-fetcher uvicorn service (port 8000)
 
 ### Community 156 - "Data Router Service Provider"
+Cohesion: 0.29
+Nodes (6): Architecture, Architecture Codemap, Data Flow, External Dependencies, Key Modules, Related Areas
+
+### Community 157 - "AGENTS Guidelines Rules"
+Cohesion: 0.18
+Nodes (9): Architecture, Config, Database, Documentation updates, graphify, Quality gates (no CI is configured — run manually), Runtime, Testing (+1 more)
+
+### Community 178 - "Tushare Fund Daily Method"
+Cohesion: 0.29
+Nodes (6): Architecture, Backend Codemap, Data Flow, External Dependencies, Key Modules, Related Areas
+
+### Community 179 - "Tushare Daily Basic Method"
+Cohesion: 0.29
+Nodes (6): Architecture, Data Codemap, Data Flow, External Dependencies, Key Modules, Related Areas
+
+### Community 180 - "Tushare Income Method"
+Cohesion: 0.29
+Nodes (6): Architecture, Data Flow, Dependencies Codemap, External Dependencies, Key Modules, Related Areas
+
+### Community 181 - "Tushare Index Daily Method"
+Cohesion: 0.29
+Nodes (6): Architecture, Data Flow, External Dependencies, Frontend Codemap, Key Modules, Related Areas
+
+### Community 184 - "FalkorDB Export Option"
+Cohesion: 0.29
+Nodes (6): finance-data-fetcher Wiki, 典型数据流, 架构图, 核心特点, 项目价值, 项目简介
+
+### Community 185 - "Token Benchmark Option"
+Cohesion: 0.29
+Nodes (7): _build_file_handler(), _gzip_namer(), _gzip_rotator(), Create a daily rotating file handler with gzip compression., Append gzip suffix to rotated log filenames., Compress rotated log files and remove the source., TimedRotatingFileHandler
+
+### Community 191 - "Runtime Setup Guide"
+Cohesion: 0.43
+Nodes (5): _parse_date(), _plan_year_chunks(), date, Plan chunks by natural year., _require_param()
+
+### Community 194 - "Internal Index Design Doc"
+Cohesion: 0.29
+Nodes (5): Engine, Plan a single chunk if interval allows fetching., Plan chunks of up to 100 ETF codes., _should_fetch(), _split_chunks()
+
+### Community 195 - "Factor Calculation Design Doc"
+Cohesion: 0.33
+Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
+
+### Community 219 - "index_daily_basic_cleaner.py"
+Cohesion: 0.47
+Nodes (4): _as_decimal(), _parse_date(), date, Decimal
+
+### Community 220 - ".clean"
+Cohesion: 0.33
+Nodes (4): NormalizedBatch, RawBatch, Fetch raw index_dailybasic data for a chunk., Clean raw index_dailybasic data into DB-ready records.
+
+### Community 221 - "Q: pipeline, chunkized fetcher"
+Cohesion: 0.40
+Nodes (4): Answer, Outcome, Q: pipeline, chunkized fetcher, Source Nodes
+
+### Community 222 - "graphify reference: add a URL and watch a folder"
+Cohesion: 0.50
+Nodes (3): For /graphify add, For --watch, graphify reference: add a URL and watch a folder
+
+### Community 223 - "graphify reference: commit hook and native CLAUDE.md integration"
+Cohesion: 0.50
+Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify reference: commit hook and native CLAUDE.md integration
+
+### Community 224 - "graphify reference: incremental update and cluster-only"
+Cohesion: 0.50
+Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
+
+### Community 227 - ".clean"
+Cohesion: 0.50
+Nodes (3): NormalizedBatch, RawBatch, Normalize raw index_dailybasic rows into DB-ready records.
+
+### Community 229 - "test_rt_etf_hist_akshare_plan_chunks"
 Cohesion: 0.67
-Nodes (3): get_data_query_service(), Request, Provide DataQueryService from app state.
+Nodes (3): MonkeyPatch, test_rt_etf_hist_akshare_plan_chunks(), test_rt_etf_hist_xueqiu_plan_chunks()
+
+### Community 230 - "test_rt_index_hist_akshare_plan_chunks"
+Cohesion: 0.67
+Nodes (3): MonkeyPatch, test_rt_index_hist_akshare_plan_chunks(), test_rt_index_hist_xueqiu_plan_chunks()
 
 ## Knowledge Gaps
-- **138 isolated node(s):** `$schema`, `plugin`, `@opencode-ai/plugin`, `finance-data-fetcher`, `run.sh script` (+133 more)
+- **430 isolated node(s):** `$schema`, `plugin`, `@opencode-ai/plugin`, `finance-data-fetcher`, `run.sh script` (+425 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **39 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **222 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `ChunkArgs` connect `Chunking Args and Policies` to `Index Code Mapping and Quotes`, `Fetch Retry and Error Handling`, `Margin Daily Data Pipeline`, `Realtime K-line Fetcher`, `Akshare Sina ETF Fetcher`, `Akshare Stock Spot Fetcher`, `Adjustment Factor Fetcher`, `Index Daily Basic Pipeline`, `Index Hist Bond Pipeline`, `ETF Historical Price Pipeline`, `Worker Queue and Idempotency`, `Index Hist Gold Pipeline`, `Pipeline Fetch and Clean`, `Pipeline Workflow Engine`, `Adjustment Factor Planning`, `Realtime ETF History Pipelines`, `Stock Hist Unadjusted Pipeline`, `Adjustment Factor Fetch Clean`, `Internal Index Pipeline`, `Realtime Stock History Pipelines`, `Logging and App Wiring`, `Realtime Index History Pipelines`, `Xueqiu ETF Quote Fetching`, `Adjustment Factor Pipeline`, `ETF and Fund Info Pipeline`, `Chunk Policy Implementations`, `Fund Info Pipeline`, `Fetcher Implementations`, `Index Hist Global Pipeline`, `Fund Beta Pipeline`, `Realtime Index Hist Support`, `Index Info Pipeline`, `Market Daily Info Test Suite`, `Market Factors Pipeline`, `Index Hist Stock Pipeline`, `Market Daily Info Pipeline`, `Retry Policy and SZ Daily`, `Gold CFTC Report Pipeline`, `Realtime Market Factors Pipeline`, `Gold Future Curve Pipeline`, `Fundamental Data Single Pipeline`, `Fund Hist Index Pipeline`, `Fund Hist Money Pipeline`, `Single Fundamental Fetching`, `Stock Basic Fetcher`, `Akshare HK Index Fetcher`, `Tushare Fundamental Fetcher`, `Fundamental Data Pipeline`, `Tushare Moneyflow HSGT Fetcher`, `Index Daily Basic Fetcher`, `Index Daily Fetcher`, `Market Daily Info Fetcher`, `SZ Daily Info Fetcher`, `Stock Info Pipeline`, `Fund NAV Fetcher`, `Fund NAV and Hist Fetching`, `Moneyflow HSGT Pipeline`?**
-  _High betweenness centrality (0.178) - this node is a cross-community bridge._
-- **Why does `RetryPolicy` connect `Retry Policy and SZ Daily` to `Fetch Retry and Error Handling`, `Margin Daily Data Pipeline`, `Realtime K-line Fetcher`, `Akshare Sina ETF Fetcher`, `Akshare Stock Spot Fetcher`, `ETF Historical Price Pipeline`, `Index Daily Basic Pipeline`, `Index Hist Bond Pipeline`, `Worker Queue and Idempotency`, `Index Hist Gold Pipeline`, `Stock Hist Unadjusted Pipeline`, `Logging and App Wiring`, `Adjustment Factor Pipeline`, `ETF and Fund Info Pipeline`, `Fund Info Pipeline`, `Fetcher Implementations`, `Index Hist Global Pipeline`, `Index Info Pipeline`, `Market Daily Info Tests`, `Market Daily Info Test Suite`, `Index Hist Stock Pipeline`, `Market Daily Info Pipeline`, `Index Info Cleaner`, `Fundamental Data Single Pipeline`, `Fund Hist Index Pipeline`, `Fund Hist Money Pipeline`, `Fundamental Pipeline Comparison Tests`, `Stock Basic Fetcher`, `Fundamental Data Pipeline`, `Tushare Moneyflow HSGT Fetcher`, `Stock Info Pipeline`, `Fund NAV and Hist Fetching`, `Moneyflow HSGT Pipeline`?**
-  _High betweenness centrality (0.067) - this node is a cross-community bridge._
-- **Why does `Arguments` connect `Chunking Args and Policies` to `Index Code Mapping and Quotes`, `Margin Daily Data Pipeline`, `Fetch Retry and Error Handling`, `ETF Historical Price Pipeline`, `Task Lifecycle Models`, `Index Daily Basic Pipeline`, `Index Hist Bond Pipeline`, `Worker Queue and Idempotency`, `Index Hist Gold Pipeline`, `Pipeline Workflow Engine`, `Adjustment Factor Planning`, `Realtime ETF History Pipelines`, `Stock Hist Unadjusted Pipeline`, `Internal Index Pipeline`, `Realtime Stock History Pipelines`, `Realtime Index History Pipelines`, `Adjustment Factor Pipeline`, `ETF and Fund Info Pipeline`, `Chunk Policy Implementations`, `Fund Info Pipeline`, `Index Hist Global Pipeline`, `Fund Beta Pipeline`, `Realtime Index Hist Support`, `Index Info Pipeline`, `Market Factors Pipeline`, `Index Hist Stock Pipeline`, `Market Daily Info Pipeline`, `Gold CFTC Report Pipeline`, `Realtime Market Factors Pipeline`, `Gold Future Curve Pipeline`, `Fundamental Data Single Pipeline`, `Idempotency Guard Logic`, `Fund Hist Index Pipeline`, `Fund Hist Money Pipeline`, `Fundamental Data Pipeline`, `Stock Info Pipeline`, `Moneyflow HSGT Pipeline`?**
+- **Why does `ChunkArgs` connect `Chunking Args and Policies` to `Fetch Retry and Error Handling`, `Index Code Mapping and Quotes`, `Realtime K-line Fetcher`, `Tushare Pro Client API`, `Akshare Sina ETF Fetcher`, `Akshare Stock Spot Fetcher`, `ETF Historical Price Pipeline`, `Index Daily Basic Pipeline`, `Index Hist Bond Pipeline`, `Worker Queue and Idempotency`, `Adjustment Factor Fetcher`, `Realtime ETF Cleaner`, `Pipeline Fetch and Clean`, `Pipeline Workflow Engine`, `Realtime Stock Cleaner`, `Realtime ETF History Pipelines`, `Stock Hist Unadjusted Pipeline`, `Internal Index Pipeline`, `Data Query E2E Tests`, `Realtime Stock History Pipelines`, `Logging and App Wiring`, `Adjustment Factor Cleaning`, `Realtime Index History Pipelines`, `Xueqiu ETF Quote Fetching`, `Adjustment Factor Pipeline`, `ETF and Fund Info Pipeline`, `Chunk Policy Implementations`, `Fetcher Implementations`, `Index Hist Global Pipeline`, `Fund Beta Pipeline`, `Realtime Index Hist Support`, `Index Info Pipeline`, `Market Factors Pipeline`, `Index Hist Stock Pipeline`, `Market Daily Info Pipeline`, `Index Info Cleaner`, `Retry Policy and SZ Daily`, `Runtime Setup Guide`, `Gold CFTC Report Pipeline`, `Internal Index Design Doc`, `Realtime Market Factors Pipeline`, `Gold Future Curve Pipeline`, `Fundamental Data Single Pipeline`, `Idempotency Guard Logic`, `Fund Hist Index Pipeline`, `Fund Hist Money Pipeline`, `Single Fundamental Fetching`, `Xueqiu Token Fetcher`, `Stock Basic Fetcher`, `Index Hist Global Cleaner`, `.clean`, `Tushare Fundamental Fetcher`, `Fundamental Data Pipeline`, `Tushare Moneyflow HSGT Fetcher`, `Fund Catalog Helpers`, `Noise Ratio Estimator`, `Gold CFTC Report Cleaner`, `Index Daily Basic Fetcher`, `Index Daily Fetcher`, `Market Daily Info Fetcher`, `SZ Daily Info Fetcher`, `Stock Info Pipeline`?**
+  _High betweenness centrality (0.130) - this node is a cross-community bridge._
+- **Why does `TradingCalendarService` connect `Trading Calendar Service Tests` to `ETF Historical Price Pipeline`, `Adjustment Factor Fetcher`, `Index Daily Basic Pipeline`, `Index Hist Bond Pipeline`, `Worker Queue and Idempotency`, `Stock Hist Unadjusted Pipeline`, `Internal Index Pipeline`, `Chunking Args and Policies`, `Trading Calendar Service`, `Fund Beta Data Fetcher`, `Adjustment Factor Pipeline`, `Chunk Policy Implementations`, `Calendar Service and API`, `Fund Beta Pipeline`, `Market Daily Info Tests`, `Index Hist Stock Pipeline`, `Market Daily Info Pipeline`, `Retry Policy and SZ Daily`, `Fund Hist Index Pipeline`, `Fund Hist Money Pipeline`, `Index Hist Global Cleaner`, `Noise Ratio Estimator`, `Fund NAV Fetcher`?**
   _High betweenness centrality (0.055) - this node is a cross-community bridge._
+- **Why does `TypedCleaner` connect `Typed Cleaner Base` to `Margin Daily Data Pipeline`, `ETF Historical Price Pipeline`, `Index Daily Basic Pipeline`, `Worker Queue and Idempotency`, `Realtime ETF Cleaner`, `Realtime Index Cleaner`, `Realtime Stock Cleaner`, `Adjustment Factor Cleaner`, `Realtime Index History Pipelines`, `Adjustment Factor Pipeline`, `Fund Info Pipeline`, `Market Daily Info Tests`, `Index Info Cleaner`, `Fund Hist Index Pipeline`, `Market Daily Info Normalization`, `Clean Error Policy Handling`, `Moneyflow HSGT Cleaner`, `Stock Basic Fetcher`, `ETF Info Cleaner`, `index_daily_basic_cleaner.py`, `Internal Index Cleaner`, `Realtime Market Factors Cleaner`, `CSV Message Cleaner`?**
+  _High betweenness centrality (0.052) - this node is a cross-community bridge._
 - **Are the 77 inferred relationships involving `ChunkArgs` (e.g. with `ChunkPolicy` and `PaginationChunkPolicy`) actually correct?**
   _`ChunkArgs` has 77 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 172 inferred relationships involving `ValueError` (e.g. with `_read_yaml()` and `run_backtest()`) actually correct?**
-  _`ValueError` has 172 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 173 inferred relationships involving `ValueError` (e.g. with `validate_existing()` and `_read_yaml()`) actually correct?**
+  _`ValueError` has 173 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 120 inferred relationships involving `RetryPolicy` (e.g. with `FetchError` and `RetryableError`) actually correct?**
   _`RetryPolicy` has 120 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 44 inferred relationships involving `Arguments` (e.g. with `ChunkPolicy` and `PaginationChunkPolicy`) actually correct?**
