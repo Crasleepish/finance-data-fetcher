@@ -20,6 +20,8 @@ class EtfInfoCleaner:
                 "fund_type": "fund_type",
                 "invest_type": "invest_type",
                 "found_date": "found_date",
+                "list_date": "list_date",
+                "delist_date": "delist_date",
             },
             type_map={
                 "etf_code": str,
@@ -27,13 +29,23 @@ class EtfInfoCleaner:
                 "fund_type": optional_str,
                 "invest_type": optional_str,
                 "found_date": optional_date,
+                "list_date": optional_date,
+                "delist_date": optional_date,
             },
             required_fields={"etf_code", "etf_name"},
-            casts={"found_date": _parse_date},
+            casts={
+                "found_date": _parse_date,
+                "list_date": _parse_date,
+                "delist_date": _parse_date,
+            },
         )
 
     def clean(self, raw_batch: RawBatch) -> NormalizedBatch:
-        """Normalize raw fund_basic rows into etf_info records."""
+        """Normalize raw fund_basic rows into etf_info records.
+
+        Both date columns keep a stable key set: when the upstream row carries
+        the field, it is emitted as the parsed date or ``None`` for blank values.
+        """
         return self._cleaner.clean(raw_batch)
 
 
@@ -41,6 +53,7 @@ def _parse_date(value: Any) -> Any:
     if value is None:
         return None
     if isinstance(value, str):
+        value = value.strip()
         if not value:
             return None
         return datetime.strptime(value, "%Y%m%d").date()

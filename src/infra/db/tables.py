@@ -104,6 +104,8 @@ etf_info = Table(
     Column("fund_type", String(length=20)),
     Column("invest_type", String(length=20)),
     Column("found_date", Date),
+    Column("list_date", Date),
+    Column("delist_date", Date),
 )
 
 etf_daily_size = Table(

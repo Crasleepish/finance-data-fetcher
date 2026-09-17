@@ -185,9 +185,9 @@
     "semantic_hash": "b6639ce85ee44cd490e7e4bdc81e770a"
   },
   "src/core/clean/etf_info_cleaner.py": {
-    "mtime": 1767277302.2537038,
-    "ast_hash": "bc620a5dc849583ca21b13669e857860",
-    "semantic_hash": "bc620a5dc849583ca21b13669e857860"
+    "mtime": 1789628969.7107852,
+    "ast_hash": "553aaf3194c2c9b470aaac119cae8565",
+    "semantic_hash": ""
   },
   "src/core/clean/fund_beta_cleaner.py": {
     "mtime": 1767623085.411004,
@@ -425,8 +425,8 @@
     "semantic_hash": "1c6b402f3f89681a6278a55c8ca9d7d5"
   },
   "src/infra/db/tables.py": {
-    "mtime": 1789562406.076389,
-    "ast_hash": "09fb9b2bce984ee9498af952e6ff78cb",
+    "mtime": 1789628020.9631524,
+    "ast_hash": "52779ae9df5371e881c93244a70e3ce4",
     "semantic_hash": ""
   },
   "src/infra/etf_catalog.py": {
@@ -500,9 +500,9 @@
     "semantic_hash": "c92995f3c3fdde052c06509854008b1c"
   },
   "src/infra/fetcher/tushare_fund_basic_fetcher.py": {
-    "mtime": 1767853206.059235,
-    "ast_hash": "4b897502f5e2391edc97ec0d3f73d127",
-    "semantic_hash": "4b897502f5e2391edc97ec0d3f73d127"
+    "mtime": 1789629068.8333669,
+    "ast_hash": "a297e856374cf09da125430a26c0d8d0",
+    "semantic_hash": ""
   },
   "src/infra/fetcher/tushare_fund_daily_fetcher.py": {
     "mtime": 1767864161.2467532,
@@ -740,9 +740,9 @@
     "semantic_hash": "c7db0799e030236147b98ff8a405e336"
   },
   "src/services/pipelines/etf_info_pipeline.py": {
-    "mtime": 1767277302.2537038,
-    "ast_hash": "71089d7b6298e440c9dfa394933ebf30",
-    "semantic_hash": "71089d7b6298e440c9dfa394933ebf30"
+    "mtime": 1789628843.3557827,
+    "ast_hash": "d9582d7ca4c7bfc13831dd85f2227c4a",
+    "semantic_hash": ""
   },
   "src/services/pipelines/fund_beta_pipeline.py": {
     "mtime": 1767970189.5246632,
@@ -940,9 +940,9 @@
     "semantic_hash": "a80ef80bf9d3342a9b5a42f3449194e8"
   },
   "tests/test_etf_info_pipeline.py": {
-    "mtime": 1767277302.2537038,
-    "ast_hash": "08b08c8decfe54d245a98af7ee22a1b5",
-    "semantic_hash": "08b08c8decfe54d245a98af7ee22a1b5"
+    "mtime": 1789628994.1187067,
+    "ast_hash": "8fde78d405efd336679ec908137367c6",
+    "semantic_hash": ""
   },
   "tests/test_fetcher_retry.py": {
     "mtime": 1767020448.2452588,
