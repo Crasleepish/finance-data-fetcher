@@ -424,5 +424,15 @@
   "422": "pipeline implementations bound to specs",
   "423": "config/task_pipeline_mapping.py (spec to pipeline mapping)",
   "424": "FakeTushareClient",
-  "425": "rt_market_factors_pipeline.py"
+  "425": "rt_market_factors_pipeline.py",
+  "426": ".index_global",
+  "427": ".fund_nav_market",
+  "428": ".rt_idx_k",
+  "429": ".income_vip",
+  "430": ".balancesheet",
+  "431": ".cashflow",
+  "432": ".adj_factor",
+  "433": ".moneyflow_hsgt",
+  "434": ".daily_info",
+  "435": ".sz_daily_info"
 }

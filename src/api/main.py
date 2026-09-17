@@ -18,6 +18,7 @@ from infra.db.engine import create_engine_from_config
 from infra.db.repository import Repository
 from infra.db.tables import (
     adj_factor,
+    etf_daily_size,
     etf_hist,
     etf_info,
     fund_beta,
@@ -56,6 +57,7 @@ from services.calendar_service import build_calendar_service
 from services.data_query_service import DataQueryService
 from services.pipeline_selector import PipelineSelector, load_pipeline_mapping
 from services.pipelines.adj_factor_pipeline import AdjFactorPipeline
+from services.pipelines.etf_daily_size_pipeline import EtfDailySizePipeline
 from services.pipelines.etf_hist_pipeline import EtfHistPipeline
 from services.pipelines.etf_info_pipeline import EtfInfoPipeline
 from services.pipelines.fund_beta_pipeline import FundBetaPipeline
@@ -180,6 +182,16 @@ def create_app() -> FastAPI:
             EtfInfoPipeline(
                 client=tushare_client,
                 retry_policy=retry_policy,
+            ),
+        )
+        registry.register(
+            "etf_daily_size",
+            EtfDailySizePipeline(
+                calendar=app.state.calendar_service.calendar,
+                client=tushare_client,
+                retry_policy=retry_policy,
+                engine=engine,
+                target_table=etf_daily_size,
             ),
         )
         registry.register(
@@ -406,6 +418,7 @@ def create_app() -> FastAPI:
             "internal_index": Repository(engine=engine, table=index_hist),
             "fund_info": Repository(engine=engine, table=fund_info),
             "etf_info": Repository(engine=engine, table=etf_info),
+            "etf_daily_size": Repository(engine=engine, table=etf_daily_size),
             "fund_hist_index": Repository(engine=engine, table=fund_hist),
             "fund_hist_money": Repository(engine=engine, table=fund_hist),
             "etf_hist": Repository(engine=engine, table=etf_hist),
@@ -445,6 +458,7 @@ def create_app() -> FastAPI:
                 "internal_index": ["index_code", "date"],
                 "fund_info": ["fund_code"],
                 "etf_info": ["etf_code"],
+                "etf_daily_size": ["trade_date", "ts_code"],
                 "fund_hist_index": ["fund_code", "date"],
                 "fund_hist_money": ["fund_code", "date"],
                 "etf_hist": ["etf_code", "date"],

@@ -3,6 +3,7 @@ from __future__ import annotations
 from sqlalchemy import (
     CHAR,
     BigInteger,
+    Boolean,
     Column,
     Date,
     DateTime,
@@ -103,6 +104,40 @@ etf_info = Table(
     Column("fund_type", String(length=20)),
     Column("invest_type", String(length=20)),
     Column("found_date", Date),
+)
+
+etf_daily_size = Table(
+    "etf_daily_size",
+    metadata,
+    Column("trade_date", Date, primary_key=True, comment="交易日期"),
+    Column("ts_code", String(length=20), primary_key=True, comment="ETF代码"),
+    Column("fd_share", Numeric(precision=20, scale=4), comment="基金份额（万份）"),
+    Column(
+        "share_source_date",
+        Date,
+        comment="产生当前份额的 fund_share.trade_date（前填时为历史实际份额日期）",
+    ),
+    Column("nav_date", Date, comment="净值日期"),
+    Column("ann_date", Date, comment="净值公告日期（无公告时为 NULL）"),
+    Column("unit_nav", Numeric(precision=20, scale=6), comment="单位净值（元/份）"),
+    Column(
+        "aum_10k_cny",
+        Numeric(precision=30, scale=4),
+        comment="资产规模（万元）= fd_share(万份) * unit_nav(元/份)",
+    ),
+    Column(
+        "aum_cny",
+        Numeric(precision=30, scale=2),
+        comment="资产规模（元）= fd_share * unit_nav * 10000",
+    ),
+    Column(
+        "nav_missing",
+        Boolean,
+        nullable=False,
+        server_default=text("false"),
+        comment="当日净值缺失（unit_nav/aum 列同时为 NULL）",
+    ),
+    comment="Tushare ETF 日规模（份额 × 单位净值）数据",
 )
 
 fund_beta = Table(

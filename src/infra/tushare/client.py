@@ -131,6 +131,12 @@ class TushareClient(Protocol):
     def fund_nav(self, ts_code: str, nav_date: str, fields: str) -> list[dict[str, object]]:
         """Return fund_nav rows as a list of dicts."""
 
+    def fund_nav_market(self, nav_date: str, market: str, fields: str) -> list[dict[str, object]]:
+        """Return fund_nav rows for a nav date and market as a list of dicts."""
+
+    def fund_share(self, trade_date: str, market: str, fields: str) -> list[dict[str, object]]:
+        """Return fund_share rows as a list of dicts."""
+
     def fund_daily(
         self, trade_date: str, fields: str, offset: int, limit: int
     ) -> list[dict[str, object]]:
@@ -495,6 +501,28 @@ class TushareProClient(TushareClient):
         self._rate_limiter.wait()
         pro = ts.pro_api(self.token)
         data = pro.fund_nav(ts_code=ts_code, nav_date=nav_date, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def fund_nav_market(self, nav_date: str, market: str, fields: str) -> list[dict[str, object]]:
+        """Query fund_nav by nav date and market via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.fund_nav(nav_date=nav_date, market=market, fields=fields)
+        if data is None or data.empty:
+            return []
+        return cast(list[dict[str, object]], data.to_dict("records"))
+
+    def fund_share(self, trade_date: str, market: str, fields: str) -> list[dict[str, object]]:
+        """Query fund_share by trade date and market via Tushare PRO API."""
+        if not self.token:
+            raise ValueError("Tushare token is required")
+        self._rate_limiter.wait()
+        pro = ts.pro_api(self.token)
+        data = pro.fund_share(trade_date=trade_date, market=market, fields=fields)
         if data is None or data.empty:
             return []
         return cast(list[dict[str, object]], data.to_dict("records"))

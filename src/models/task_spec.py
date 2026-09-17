@@ -28,6 +28,7 @@ class TaskSpec(StrEnum):
     GET_FUND_HIST_MONEY = "get_fund_hist_money"
     GET_ETF_INFO = "get_etf_info"
     GET_ETF_HIST = "get_etf_hist"
+    GET_ETF_DAILY_SIZE = "get_etf_daily_size"
     GET_MARKET_FACTORS = "get_market_factors"
     GET_GOLD_CFTC_REPORT = "get_gold_cftc_report"
     GET_GOLD_FUTURE_CURVE = "get_gold_future_curve"

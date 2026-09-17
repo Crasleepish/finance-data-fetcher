@@ -24,6 +24,7 @@ TASK_PIPELINE_MAPPING = {
     TaskSpec.GET_FUND_HIST_MONEY: ["fund_hist_money"],
     TaskSpec.GET_ETF_INFO: ["etf_info"],
     TaskSpec.GET_ETF_HIST: ["etf_hist"],
+    TaskSpec.GET_ETF_DAILY_SIZE: ["etf_daily_size"],
     TaskSpec.GET_MARKET_FACTORS: ["market_factors"],
     TaskSpec.GET_GOLD_CFTC_REPORT: ["gold_cftc_report"],
     TaskSpec.GET_GOLD_FUTURE_CURVE: ["gold_future_curve"],

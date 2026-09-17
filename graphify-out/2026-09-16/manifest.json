@@ -425,8 +425,8 @@
     "semantic_hash": "1c6b402f3f89681a6278a55c8ca9d7d5"
   },
   "src/infra/db/tables.py": {
-    "mtime": 1789562406.076389,
-    "ast_hash": "09fb9b2bce984ee9498af952e6ff78cb",
+    "mtime": 1789562370.7388048,
+    "ast_hash": "99333191c2fa3381e1eabf2512fa5036",
     "semantic_hash": ""
   },
   "src/infra/etf_catalog.py": {
@@ -1600,8 +1600,8 @@
     "semantic_hash": ""
   },
   "src/core/clean/etf_daily_size_cleaner.py": {
-    "mtime": 1789564404.0874574,
-    "ast_hash": "13dfc1796f83e72d0a6b20420adb2bba",
+    "mtime": 1789562370.7388048,
+    "ast_hash": "4a159767c29545fa694955b597ec1c8a",
     "semantic_hash": ""
   },
   "src/infra/fetcher/tushare_etf_daily_size_fetcher.py": {
@@ -1610,13 +1610,13 @@
     "semantic_hash": ""
   },
   "src/services/pipelines/etf_daily_size_pipeline.py": {
-    "mtime": 1789564427.6715183,
-    "ast_hash": "ffc23462bd2d1e5f687bbf745c0d7b23",
+    "mtime": 1789562113.1075327,
+    "ast_hash": "3439a2a9b93cc3cda11c5c784ba2d179",
     "semantic_hash": ""
   },
   "tests/test_etf_daily_size_pipeline.py": {
-    "mtime": 1789564525.50448,
-    "ast_hash": "9813bb51b81f56880aa2c432a5b45d3f",
+    "mtime": 1789562292.9480777,
+    "ast_hash": "e7119924782fcbe7f26c971fa22a4a11",
     "semantic_hash": ""
   }
 }
