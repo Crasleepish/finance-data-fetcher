@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from datetime import datetime
 
 from core.fetch.errors import RetryableError
 from core.fetch.fetcher import Fetcher
@@ -12,6 +13,7 @@ from infra.tushare.client import TushareClient
 logger = logging.getLogger(__name__)
 
 _DEFAULT_FIELDS = "ts_code,nav_date,unit_nav,adj_nav"
+_FULL_HISTORY_FIELDS = "ts_code,nav_date,unit_nav,adj_nav"
 
 
 @dataclass(frozen=True)
@@ -57,6 +59,57 @@ def _safe_fund_nav(
         return client.fund_nav(ts_code=ts_code, nav_date=nav_date, fields=fields)
     except Exception as exc:
         raise RetryableError(str(exc)) from exc
+
+
+@dataclass(frozen=True)
+class TushareFundNavHistoryFetcher(Fetcher):
+    """Fetch full NAV history for a single ts_code within a date window."""
+
+    client: TushareClient
+    retry_policy: RetryPolicy
+
+    def fetch(self, chunk_args: ChunkArgs) -> RawBatch:
+        """Fetch raw fund_nav rows for one ts_code across a date window."""
+        params = chunk_args.get("params") or {}
+        ts_code = _require_param(params, "ts_code")
+        start_date = _to_yyyymmdd(_require_param(params, "start_date"))
+        end_date = _to_yyyymmdd(_require_param(params, "end_date"))
+        fields = str(params.get("fields", _FULL_HISTORY_FIELDS))
+        rows = self.retry_policy.execute(
+            lambda: _safe_fund_nav_history(self.client, ts_code, start_date, end_date, fields)
+        )
+        return _filter_within_end(rows, end_date)
+
+
+def _safe_fund_nav_history(
+    client: TushareClient, ts_code: str, start_date: str, end_date: str, fields: str
+) -> list[dict[str, object]]:
+    try:
+        return client.fund_nav_history(
+            ts_code=ts_code, start_date=start_date, end_date=end_date, fields=fields
+        )
+    except Exception as exc:
+        raise RetryableError(str(exc)) from exc
+
+
+def _filter_within_end(rows: list[dict[str, object]], end_date: str) -> list[dict[str, object]]:
+    """Drop rows whose nav_date is missing, unparseable, or after end_date."""
+    try:
+        end = datetime.strptime(end_date, "%Y%m%d").date()
+    except ValueError:
+        raise ValueError(f"invalid end_date: {end_date!r}") from None
+    kept: list[dict[str, object]] = []
+    for row in rows:
+        raw = row.get("nav_date")
+        if not isinstance(raw, str) or len(raw) != 8 or not raw.isdigit():
+            continue
+        try:
+            nav_day = datetime.strptime(raw, "%Y%m%d").date()
+        except ValueError:
+            continue
+        if nav_day <= end:
+            kept.append(row)
+    return kept
 
 
 def _require_param(params: dict[str, object], key: str) -> str:

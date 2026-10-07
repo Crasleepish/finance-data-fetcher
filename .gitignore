@@ -42,6 +42,7 @@ config/app.yaml
 bt_result/
 manual_import/
 bigquant/
+manual_import/fund_nav_delisted/manifest*.csv
 
 # browser automation artifacts
 .playwright-cli/

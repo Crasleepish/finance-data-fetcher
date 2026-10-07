@@ -24,6 +24,7 @@ class FundInfoCleaner:
                 "m_fee": "fee_rate",
                 "c_fee": "commission_rate",
                 "market": "market",
+                "status": "status",
             },
             type_map={
                 "fund_code": str,
@@ -34,6 +35,7 @@ class FundInfoCleaner:
                 "fee_rate": optional_float,
                 "commission_rate": optional_float,
                 "market": optional_str,
+                "status": optional_str,
             },
             required_fields={"fund_code", "fund_name", "found_date"},
             casts={

@@ -70,3 +70,44 @@ def test_fund_info_cleaner_maps_and_drops_missing_found_date() -> None:
             "found_date": date(2024, 1, 3),
         }
     ]
+
+
+def test_fund_info_cleaner_maps_status_when_present() -> None:
+    cleaner = FundInfoCleaner()
+    raw = [
+        {
+            "ts_code": "000003.OF",
+            "name": "Fund C",
+            "found_date": "20240102",
+            "status": "D",
+        }
+    ]
+    cleaned = list(cleaner.clean(raw))
+    assert cleaned == [
+        {
+            "fund_code": "000003.OF",
+            "fund_name": "Fund C",
+            "found_date": date(2024, 1, 2),
+            "status": "D",
+        }
+    ]
+
+
+def test_fund_info_cleaner_omits_status_when_absent() -> None:
+    cleaner = FundInfoCleaner()
+    raw = [
+        {
+            "ts_code": "000004.OF",
+            "name": "Fund D",
+            "found_date": "20240102",
+        }
+    ]
+    cleaned = list(cleaner.clean(raw))
+    assert cleaned == [
+        {
+            "fund_code": "000004.OF",
+            "fund_name": "Fund D",
+            "found_date": date(2024, 1, 2),
+        }
+    ]
+    assert "status" not in cleaned[0]

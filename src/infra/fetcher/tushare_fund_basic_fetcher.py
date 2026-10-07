@@ -13,7 +13,7 @@ from infra.tushare.client import TushareClient
 logger = logging.getLogger(__name__)
 
 _DEFAULT_FIELDS = (
-    "ts_code,name,fund_type,invest_type,found_date,m_fee,c_fee,market,list_date,delist_date"
+    "ts_code,name,fund_type,invest_type,found_date,m_fee,c_fee,market,list_date,delist_date,status"
 )
 _MANDATORY_FIELDS = ("ts_code", "name", "list_date", "delist_date")
 

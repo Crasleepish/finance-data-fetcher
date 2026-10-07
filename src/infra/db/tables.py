@@ -180,6 +180,7 @@ fund_info = Table(
     Column("fee_rate", Float(precision=53)),
     Column("commission_rate", Float(precision=53)),
     Column("market", String(length=8)),
+    Column("status", String(length=8)),
 )
 
 fundamental_data = Table(
