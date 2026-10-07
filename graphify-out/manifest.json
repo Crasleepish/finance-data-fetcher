@@ -200,9 +200,9 @@
     "semantic_hash": "4ac4e262a08e49fa974a07c4e14512ed"
   },
   "src/core/clean/fund_info_cleaner.py": {
-    "mtime": 1767203027.708804,
-    "ast_hash": "4817a3e3ddbd0c22f98f87c2aebcc4da",
-    "semantic_hash": "4817a3e3ddbd0c22f98f87c2aebcc4da"
+    "mtime": 1791383785.8544374,
+    "ast_hash": "b9118f4e9afd04542172b49cf0624728",
+    "semantic_hash": ""
   },
   "src/core/clean/fundamental_data_cleaner.py": {
     "mtime": 1776930536.3872466,
@@ -425,8 +425,8 @@
     "semantic_hash": "1c6b402f3f89681a6278a55c8ca9d7d5"
   },
   "src/infra/db/tables.py": {
-    "mtime": 1789628020.9631524,
-    "ast_hash": "52779ae9df5371e881c93244a70e3ce4",
+    "mtime": 1791383785.826436,
+    "ast_hash": "81e6383e1571257fe65643fc6d1e1e47",
     "semantic_hash": ""
   },
   "src/infra/etf_catalog.py": {
@@ -500,8 +500,8 @@
     "semantic_hash": "c92995f3c3fdde052c06509854008b1c"
   },
   "src/infra/fetcher/tushare_fund_basic_fetcher.py": {
-    "mtime": 1789629068.8333669,
-    "ast_hash": "a297e856374cf09da125430a26c0d8d0",
+    "mtime": 1791383983.4592044,
+    "ast_hash": "fb8d1ce900e092850da636e1eea69909",
     "semantic_hash": ""
   },
   "src/infra/fetcher/tushare_fund_daily_fetcher.py": {
@@ -510,17 +510,17 @@
     "semantic_hash": "6e22d12d470e3b15c92a22e8adb86c81"
   },
   "src/infra/fetcher/tushare_fund_nav_fetcher.py": {
-    "mtime": 1767864193.987205,
-    "ast_hash": "68ed2fe45daa254c2de81a6b74ffd696",
-    "semantic_hash": "68ed2fe45daa254c2de81a6b74ffd696"
+    "mtime": 1791383807.9823184,
+    "ast_hash": "edc43f44f4602748902c9efe13c81fc6",
+    "semantic_hash": ""
   },
   "src/infra/fetcher/tushare_fundamental_fetcher.py": {
-    "mtime": 1776930488.5216887,
+    "mtime": 1791384084.8767319,
     "ast_hash": "be3f168e7cfdb4c0e3337c87cd419351",
     "semantic_hash": "be3f168e7cfdb4c0e3337c87cd419351"
   },
   "src/infra/fetcher/tushare_fundamental_single_fetcher.py": {
-    "mtime": 1776930488.55769,
+    "mtime": 1791384084.8767319,
     "ast_hash": "f5ca527764d3d11095bb8afbce2172f2",
     "semantic_hash": "f5ca527764d3d11095bb8afbce2172f2"
   },
@@ -645,8 +645,8 @@
     "semantic_hash": "417f91b8907ad9e2d3fd228d74c649e8"
   },
   "src/infra/tushare/client.py": {
-    "mtime": 1789561662.704091,
-    "ast_hash": "4264c6c323263dc4196cf8cfed0a1183",
+    "mtime": 1791383793.1776733,
+    "ast_hash": "a3fd884048c4fa2cff670bec54131b91",
     "semantic_hash": ""
   },
   "src/infra/worker_runtime/__init__.py": {
@@ -880,7 +880,7 @@
     "semantic_hash": "85dfe324afa9f574f3c0f60f09488b7f"
   },
   "src/services/workflow_engine.py": {
-    "mtime": 1776910818.2342415,
+    "mtime": 1791384084.8767319,
     "ast_hash": "b424dd2be43f3200ab586d277cee82f0",
     "semantic_hash": "b424dd2be43f3200ab586d277cee82f0"
   },
@@ -955,14 +955,14 @@
     "semantic_hash": "c69669195007318ea5bb92cd264af49f"
   },
   "tests/test_fund_hist_pipeline.py": {
-    "mtime": 1767849897.964021,
-    "ast_hash": "a57712e766bbdfa7808db7a78104f2de",
-    "semantic_hash": "a57712e766bbdfa7808db7a78104f2de"
+    "mtime": 1791383983.4592044,
+    "ast_hash": "b56b304cc9d8a9372554b1fc096befe9",
+    "semantic_hash": ""
   },
   "tests/test_fund_info_pipeline.py": {
-    "mtime": 1767203027.708804,
-    "ast_hash": "5b4e2698c07391da528d7d0fdec1c4c6",
-    "semantic_hash": "5b4e2698c07391da528d7d0fdec1c4c6"
+    "mtime": 1791383863.6900735,
+    "ast_hash": "610dd4e722f8aba245c53109666be006",
+    "semantic_hash": ""
   },
   "tests/test_fundamental_data_cleaner.py": {
     "mtime": 1776930264.1668158,
@@ -1080,7 +1080,7 @@
     "semantic_hash": "d2017697bf63436467319faa02ce4656"
   },
   "tests/test_task_query_validation.py": {
-    "mtime": 1776910735.555882,
+    "mtime": 1791384084.8767319,
     "ast_hash": "b4dbc2249895c675c2185beb279cc8a8",
     "semantic_hash": "b4dbc2249895c675c2185beb279cc8a8"
   },
@@ -1515,7 +1515,7 @@
     "semantic_hash": "790d2ee435fd612d6d1877539358b67f"
   },
   "tests/test_index_daily_basic_pipeline.py": {
-    "mtime": 1785746362.3965855,
+    "mtime": 1791384084.8767319,
     "ast_hash": "b755f3fe2eab05c3c3812443a037c865",
     "semantic_hash": "b755f3fe2eab05c3c3812443a037c865"
   },
@@ -1617,6 +1617,11 @@
   "tests/test_etf_daily_size_pipeline.py": {
     "mtime": 1789564525.50448,
     "ast_hash": "9813bb51b81f56880aa2c432a5b45d3f",
+    "semantic_hash": ""
+  },
+  "extra/add_fund_info_status.sql": {
+    "mtime": 1791383785.8224359,
+    "ast_hash": "f94a92d939924bff257c757a59afa6dd",
     "semantic_hash": ""
   }
 }
