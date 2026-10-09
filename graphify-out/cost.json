@@ -11,8 +11,18 @@
       "input_tokens": 0,
       "output_tokens": 0,
       "files": 325
+    },
+    {
+      "date": "2026-10-09T14:43:48.761925+00:00",
+      "input_tokens": null,
+      "output_tokens": null,
+      "files": 17,
+      "kind": "incremental-semantic",
+      "tokens_unknown": true,
+      "note": "host-agent semantic extraction for 17 changed docs; token usage not exposed to tooling"
     }
   ],
   "total_input_tokens": 20680,
-  "total_output_tokens": 7820
+  "total_output_tokens": 7820,
+  "unknown_token_runs": 1
 }

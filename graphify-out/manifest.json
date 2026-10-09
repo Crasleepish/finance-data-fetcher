@@ -17,7 +17,7 @@
   "config/task_pipeline_mapping.py": {
     "mtime": 1789561302.1049302,
     "ast_hash": "de44989e8195d172e48f8f4b51d0283e",
-    "semantic_hash": ""
+    "semantic_hash": "de44989e8195d172e48f8f4b51d0283e"
   },
   "docs/openapi.json": {
     "mtime": 1773215022.4799664,
@@ -62,7 +62,7 @@
   "src/api/main.py": {
     "mtime": 1789561634.319264,
     "ast_hash": "71eb117718217ad5a9a3dcb51c5b53f8",
-    "semantic_hash": ""
+    "semantic_hash": "71eb117718217ad5a9a3dcb51c5b53f8"
   },
   "src/api/routers/__init__.py": {
     "mtime": 1766590247.2101777,
@@ -187,7 +187,7 @@
   "src/core/clean/etf_info_cleaner.py": {
     "mtime": 1789628969.7107852,
     "ast_hash": "553aaf3194c2c9b470aaac119cae8565",
-    "semantic_hash": ""
+    "semantic_hash": "553aaf3194c2c9b470aaac119cae8565"
   },
   "src/core/clean/fund_beta_cleaner.py": {
     "mtime": 1767623085.411004,
@@ -202,7 +202,7 @@
   "src/core/clean/fund_info_cleaner.py": {
     "mtime": 1791383785.8544374,
     "ast_hash": "b9118f4e9afd04542172b49cf0624728",
-    "semantic_hash": ""
+    "semantic_hash": "b9118f4e9afd04542172b49cf0624728"
   },
   "src/core/clean/fundamental_data_cleaner.py": {
     "mtime": 1776930536.3872466,
@@ -427,7 +427,7 @@
   "src/infra/db/tables.py": {
     "mtime": 1791383785.826436,
     "ast_hash": "81e6383e1571257fe65643fc6d1e1e47",
-    "semantic_hash": ""
+    "semantic_hash": "81e6383e1571257fe65643fc6d1e1e47"
   },
   "src/infra/etf_catalog.py": {
     "mtime": 1767789862.8825095,
@@ -502,7 +502,7 @@
   "src/infra/fetcher/tushare_fund_basic_fetcher.py": {
     "mtime": 1791383983.4592044,
     "ast_hash": "fb8d1ce900e092850da636e1eea69909",
-    "semantic_hash": ""
+    "semantic_hash": "fb8d1ce900e092850da636e1eea69909"
   },
   "src/infra/fetcher/tushare_fund_daily_fetcher.py": {
     "mtime": 1767864161.2467532,
@@ -512,7 +512,7 @@
   "src/infra/fetcher/tushare_fund_nav_fetcher.py": {
     "mtime": 1791383807.9823184,
     "ast_hash": "edc43f44f4602748902c9efe13c81fc6",
-    "semantic_hash": ""
+    "semantic_hash": "edc43f44f4602748902c9efe13c81fc6"
   },
   "src/infra/fetcher/tushare_fundamental_fetcher.py": {
     "mtime": 1791384084.8767319,
@@ -647,7 +647,7 @@
   "src/infra/tushare/client.py": {
     "mtime": 1791383793.1776733,
     "ast_hash": "a3fd884048c4fa2cff670bec54131b91",
-    "semantic_hash": ""
+    "semantic_hash": "a3fd884048c4fa2cff670bec54131b91"
   },
   "src/infra/worker_runtime/__init__.py": {
     "mtime": 1767020448.2452588,
@@ -687,7 +687,7 @@
   "src/models/task_spec.py": {
     "mtime": 1789561302.1049302,
     "ast_hash": "a7cebaa5033f7faf76d5140045475d15",
-    "semantic_hash": ""
+    "semantic_hash": "a7cebaa5033f7faf76d5140045475d15"
   },
   "src/models/task_status.py": {
     "mtime": 1767020448.2452588,
@@ -742,7 +742,7 @@
   "src/services/pipelines/etf_info_pipeline.py": {
     "mtime": 1789628843.3557827,
     "ast_hash": "d9582d7ca4c7bfc13831dd85f2227c4a",
-    "semantic_hash": ""
+    "semantic_hash": "d9582d7ca4c7bfc13831dd85f2227c4a"
   },
   "src/services/pipelines/fund_beta_pipeline.py": {
     "mtime": 1767970189.5246632,
@@ -942,7 +942,7 @@
   "tests/test_etf_info_pipeline.py": {
     "mtime": 1789628994.1187067,
     "ast_hash": "8fde78d405efd336679ec908137367c6",
-    "semantic_hash": ""
+    "semantic_hash": "8fde78d405efd336679ec908137367c6"
   },
   "tests/test_fetcher_retry.py": {
     "mtime": 1767020448.2452588,
@@ -957,12 +957,12 @@
   "tests/test_fund_hist_pipeline.py": {
     "mtime": 1791383983.4592044,
     "ast_hash": "b56b304cc9d8a9372554b1fc096befe9",
-    "semantic_hash": ""
+    "semantic_hash": "b56b304cc9d8a9372554b1fc096befe9"
   },
   "tests/test_fund_info_pipeline.py": {
     "mtime": 1791383863.6900735,
     "ast_hash": "610dd4e722f8aba245c53109666be006",
-    "semantic_hash": ""
+    "semantic_hash": "610dd4e722f8aba245c53109666be006"
   },
   "tests/test_fundamental_data_cleaner.py": {
     "mtime": 1776930264.1668158,
@@ -1112,7 +1112,7 @@
   "AGENTS.md": {
     "mtime": 1789112319.3187993,
     "ast_hash": "017f50c0cd61c3d168f9091a0afd2302",
-    "semantic_hash": ""
+    "semantic_hash": "017f50c0cd61c3d168f9091a0afd2302"
   },
   "Home.md": {
     "mtime": 1775986924.5932672,
@@ -1460,9 +1460,9 @@
     "semantic_hash": "5f5bdfeddd2f8c70d78c65d3cec14f18"
   },
   "skills-lock.json": {
-    "mtime": 1785740713.4500582,
-    "ast_hash": "13b428b498153bbf1c7fac791a4ff13a",
-    "semantic_hash": "13b428b498153bbf1c7fac791a4ff13a"
+    "mtime": 1791556355.320464,
+    "ast_hash": "6116cd08d2596b85e9b566147e502b30",
+    "semantic_hash": "6116cd08d2596b85e9b566147e502b30"
   },
   "src/core/clean/index_daily_basic_cleaner.py": {
     "mtime": 1785746213.6051514,
@@ -1582,46 +1582,156 @@
   ".opencode/skills/bigquant-stock-status-sync/scripts/export_cn_stock_status.py": {
     "mtime": 1789546680.4535046,
     "ast_hash": "de07f80ada5f645fac2e315d033bab41",
-    "semantic_hash": ""
+    "semantic_hash": "de07f80ada5f645fac2e315d033bab41"
   },
   ".opencode/skills/bigquant-stock-status-sync/scripts/sync_stock_status.py": {
     "mtime": 1789546960.4360452,
     "ast_hash": "0b737474887b948e27341944fbf503d3",
-    "semantic_hash": ""
+    "semantic_hash": "0b737474887b948e27341944fbf503d3"
   },
   ".opencode/skills/bigquant-stock-status-sync/SKILL.md": {
     "mtime": 1789547132.5214787,
     "ast_hash": "b5937b3605f34a5a4daa6354627a9505",
-    "semantic_hash": ""
+    "semantic_hash": "b5937b3605f34a5a4daa6354627a9505"
   },
   ".opencode/skills/browser-policy/SKILL.md": {
     "mtime": 1789455731.1276166,
     "ast_hash": "f3bbaa8fa95a5818041ce131feb54891",
-    "semantic_hash": ""
+    "semantic_hash": "f3bbaa8fa95a5818041ce131feb54891"
   },
   "src/core/clean/etf_daily_size_cleaner.py": {
     "mtime": 1789564404.0874574,
     "ast_hash": "13dfc1796f83e72d0a6b20420adb2bba",
-    "semantic_hash": ""
+    "semantic_hash": "13dfc1796f83e72d0a6b20420adb2bba"
   },
   "src/infra/fetcher/tushare_etf_daily_size_fetcher.py": {
     "mtime": 1789562370.7348044,
     "ast_hash": "062ec135576c1be17d4ec8d430a682f6",
-    "semantic_hash": ""
+    "semantic_hash": "062ec135576c1be17d4ec8d430a682f6"
   },
   "src/services/pipelines/etf_daily_size_pipeline.py": {
     "mtime": 1789564427.6715183,
     "ast_hash": "ffc23462bd2d1e5f687bbf745c0d7b23",
-    "semantic_hash": ""
+    "semantic_hash": "ffc23462bd2d1e5f687bbf745c0d7b23"
   },
   "tests/test_etf_daily_size_pipeline.py": {
     "mtime": 1789564525.50448,
     "ast_hash": "9813bb51b81f56880aa2c432a5b45d3f",
-    "semantic_hash": ""
+    "semantic_hash": "9813bb51b81f56880aa2c432a5b45d3f"
   },
   "extra/add_fund_info_status.sql": {
     "mtime": 1791383785.8224359,
     "ast_hash": "f94a92d939924bff257c757a59afa6dd",
-    "semantic_hash": ""
+    "semantic_hash": "f94a92d939924bff257c757a59afa6dd"
+  },
+  ".agents/skills/wind-find-finance-skill/scripts/update-check.mjs": {
+    "mtime": 1791556355.3188658,
+    "ast_hash": "fff74022f819fea1424182089827b779",
+    "semantic_hash": "fff74022f819fea1424182089827b779"
+  },
+  ".agents/skills/wind-find-finance-skill/scripts/update-state.json": {
+    "mtime": 1791556355.6244807,
+    "ast_hash": "42b524dc9d1e5b39fff808c8957ecabe",
+    "semantic_hash": "42b524dc9d1e5b39fff808c8957ecabe"
+  },
+  ".agents/skills/wind-mcp-skill/config.json": {
+    "mtime": 1791556446.2279537,
+    "ast_hash": "97ddf5dd85e0ef280abfaaf177dfcae6",
+    "semantic_hash": "97ddf5dd85e0ef280abfaaf177dfcae6"
+  },
+  ".agents/skills/wind-mcp-skill/scripts/call-rules.json": {
+    "mtime": 1791556188.9626527,
+    "ast_hash": "aec262c44151a9aae2802014573ce748",
+    "semantic_hash": "aec262c44151a9aae2802014573ce748"
+  },
+  ".agents/skills/wind-mcp-skill/scripts/cli.mjs": {
+    "mtime": 1791556188.962674,
+    "ast_hash": "93713605d4c1c26b8ae7a26a5269f707",
+    "semantic_hash": "93713605d4c1c26b8ae7a26a5269f707"
+  },
+  ".agents/skills/wind-mcp-skill/scripts/tool-manifest.json": {
+    "mtime": 1791556188.9627216,
+    "ast_hash": "68d4110a99076cf3bad3bf0b474aeb9b",
+    "semantic_hash": "68d4110a99076cf3bad3bf0b474aeb9b"
+  },
+  ".agents/skills/wind-mcp-skill/scripts/update-check.mjs": {
+    "mtime": 1791556188.9627466,
+    "ast_hash": "61b1352b4838dfe6a3a356bfce3ab749",
+    "semantic_hash": "61b1352b4838dfe6a3a356bfce3ab749"
+  },
+  ".agents/skills/wind-mcp-skill/scripts/update-state.json": {
+    "mtime": 1791556189.2637691,
+    "ast_hash": "5a4ce7fd8bbbd3c89c60301c68a475fe",
+    "semantic_hash": "5a4ce7fd8bbbd3c89c60301c68a475fe"
+  },
+  ".agents/skills/wind-find-finance-skill/README.md": {
+    "mtime": 1791556355.3178918,
+    "ast_hash": "902b57078fe326e17c2b06370aae84a4",
+    "semantic_hash": "902b57078fe326e17c2b06370aae84a4"
+  },
+  ".agents/skills/wind-find-finance-skill/SKILL.md": {
+    "mtime": 1791556355.3180463,
+    "ast_hash": "74f6514546373360d7709fc791b3a7ea",
+    "semantic_hash": "74f6514546373360d7709fc791b3a7ea"
+  },
+  ".agents/skills/wind-find-finance-skill/references/skills-catalog.md": {
+    "mtime": 1791556355.318663,
+    "ast_hash": "5284c1c4dc2c6c0cc57a22710f7322a9",
+    "semantic_hash": "5284c1c4dc2c6c0cc57a22710f7322a9"
+  },
+  ".agents/skills/wind-mcp-skill/SKILL.md": {
+    "mtime": 1791556188.957292,
+    "ast_hash": "378fc3ed065259f27b52b00e9da95697",
+    "semantic_hash": "378fc3ed065259f27b52b00e9da95697"
+  },
+  ".agents/skills/wind-mcp-skill/references/analytics.md": {
+    "mtime": 1791556188.9622138,
+    "ast_hash": "87c6d2d8c3784634af36be85e3ff420a",
+    "semantic_hash": "87c6d2d8c3784634af36be85e3ff420a"
+  },
+  ".agents/skills/wind-mcp-skill/references/bond.md": {
+    "mtime": 1791556188.9622376,
+    "ast_hash": "0b16243c0d17cf305bcbd42658eac929",
+    "semantic_hash": "0b16243c0d17cf305bcbd42658eac929"
+  },
+  ".agents/skills/wind-mcp-skill/references/economic.md": {
+    "mtime": 1791556188.9623046,
+    "ast_hash": "a6b9ebbe6941b6cd9d2e2c427ddf2bb5",
+    "semantic_hash": "a6b9ebbe6941b6cd9d2e2c427ddf2bb5"
+  },
+  ".agents/skills/wind-mcp-skill/references/financial-docs.md": {
+    "mtime": 1791556188.9622755,
+    "ast_hash": "4e38a8d929b18d422917ba9dc943f1c2",
+    "semantic_hash": "4e38a8d929b18d422917ba9dc943f1c2"
+  },
+  ".agents/skills/wind-mcp-skill/references/fund-indicators.md": {
+    "mtime": 1791556188.9622905,
+    "ast_hash": "cfcee4ae0b406195f62d574c3b9a068e",
+    "semantic_hash": "cfcee4ae0b406195f62d574c3b9a068e"
+  },
+  ".agents/skills/wind-mcp-skill/references/fund.md": {
+    "mtime": 1791556188.9623222,
+    "ast_hash": "8abdf44b6039e3005f8b518917b71a3d",
+    "semantic_hash": "8abdf44b6039e3005f8b518917b71a3d"
+  },
+  ".agents/skills/wind-mcp-skill/references/index-indicators.md": {
+    "mtime": 1791556188.9623528,
+    "ast_hash": "8cf72f7e74d788c14cde302db532941c",
+    "semantic_hash": "8cf72f7e74d788c14cde302db532941c"
+  },
+  ".agents/skills/wind-mcp-skill/references/index.md": {
+    "mtime": 1791556188.9623678,
+    "ast_hash": "7a58183cf88d58cc0a04a18627a3108d",
+    "semantic_hash": "7a58183cf88d58cc0a04a18627a3108d"
+  },
+  ".agents/skills/wind-mcp-skill/references/stock-indicators.md": {
+    "mtime": 1791556188.962382,
+    "ast_hash": "6f1a85983e0ae66f7d5198c4bb36adbc",
+    "semantic_hash": "6f1a85983e0ae66f7d5198c4bb36adbc"
+  },
+  ".agents/skills/wind-mcp-skill/references/stock.md": {
+    "mtime": 1791556188.9623985,
+    "ast_hash": "43d63b8df28b99b6e77b2cc5c78147ac",
+    "semantic_hash": "43d63b8df28b99b6e77b2cc5c78147ac"
   }
 }
