@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-09",
+  "scope": "project",
+  "lockFile": "/home/crasleepish/dev/finance-data-fetcher/skills-lock.json",
+  "lockFound": true,
+  "command": "npx skills add https://github.com/Wind-Alice/AliceMarket.git --skill wind-mcp-skill -y",
+  "method": "add",
+  "sourceType": "github",
+  "updatedAt": "2026-10-09T14:29:49.268Z",
+  "status": "success",
+  "finishedAt": "2026-10-09T14:29:49.267Z",
+  "exitCode": 0,
+  "usedFallback": true,
+  "fallbackReason": "remote changed but update did not change local files",
+  "error": null,
+  "remoteHead": "213b170db8a304224b0c4a7de60086147044cefc",
+  "remoteChanged": true,
+  "lastAppliedRemoteHead": "213b170db8a304224b0c4a7de60086147044cefc",
+  "changed": true,
+  "beforeHash": "650a3a61d7a792ab98aa4990c815e899696c2743779400fd8bf17cedc1683839",
+  "afterHash": "4746b5e371262f4c707eeb39c2d34287e0164852888d38f8a8caed2415775528",
+  "output": "ent, Lingma, OpenCode\n\n│\n◇  Installation Summary ─────────────────────────────────────────────────────╮\n│                                                                            │\n│  ~/dev/finance-data-fetcher/.agents/skills/wind-mcp-skill                  │\n│    universal: Codex, GitHub Copilot, OpenCode, Amp, Antigravity +16 more   │\n│    symlink → Claude Code, Hermes Agent, Lingma                             │\n│    overwrites: Claude Code, Codex, GitHub Copilot, OpenCode, Amp +17 more  │\n│                                                                            │\n├────────────────────────────────────────────────────────────────────────────╯\n│\n◇  Security Risk Assessments ────────────────────────────────────╮\n│                                                                │\n│                  Gen               Socket            Snyk      │\n│  wind-mcp-skill  Safe              0 alerts          Low Risk  │\n│                                                                │\n│  Details: https://skills.sh/Wind-Alice/AliceMarket             │\n│                                                                │\n├────────────────────────────────────────────────────────────────╯\n\u001b[?25l│\n\u001b[1G\u001b[J◒  Installing skills…\u001b[1G\u001b[J◐  Installing skills…\u001b[1G\u001b[J◇  Installation complete\n\u001b[?25h\n│\n◇  Installed 1 skill ───────────────────────────────────────────────────────╮\n│                                                                           │\n│  ✓ ~/dev/finance-data-fetcher/.agents/skills/wind-mcp-skill               │\n│    universal: Codex, GitHub Copilot, OpenCode, Amp, Antigravity +16 more  │\n│    symlinked: Claude Code                                                 │\n│    skipped: Hermes Agent, Lingma (project directory not found)            │\n│                                                                           │\n├───────────────────────────────────────────────────────────────────────────╯\n\n│\n└  Done!  Review skills before use; they run with full agent permissions."
+}

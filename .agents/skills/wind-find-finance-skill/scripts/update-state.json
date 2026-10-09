@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-09",
+  "scope": "project",
+  "lockFile": "/home/crasleepish/dev/finance-data-fetcher/skills-lock.json",
+  "lockFound": true,
+  "command": "npx skills add https://github.com/Wind-Alice/AliceMarket.git --skill wind-find-finance-skill -y",
+  "method": "add",
+  "sourceType": "github",
+  "updatedAt": "2026-10-09T14:32:35.627Z",
+  "status": "success",
+  "finishedAt": "2026-10-09T14:32:35.627Z",
+  "exitCode": 0,
+  "usedFallback": true,
+  "fallbackReason": "remote changed but update did not change local files",
+  "error": null,
+  "remoteHead": "213b170db8a304224b0c4a7de60086147044cefc",
+  "remoteChanged": true,
+  "lastAppliedRemoteHead": "213b170db8a304224b0c4a7de60086147044cefc",
+  "changed": true,
+  "beforeHash": "8c0cc0ec4fd1fbf68916e684878a20e2eb0204551f5edad879f782961380e078",
+  "afterHash": "c2346126c64dab3584cf00fd50faa982c13c395a410f546060fac66cfcec9f1e",
+  "output": "mary ─────────────────────────────────────────────────────╮\n│                                                                            │\n│  ~/dev/finance-data-fetcher/.agents/skills/wind-find-finance-skill         │\n│    universal: Codex, GitHub Copilot, OpenCode, Amp, Antigravity +16 more   │\n│    symlink → Claude Code, Hermes Agent, Lingma                             │\n│    overwrites: Claude Code, Codex, GitHub Copilot, OpenCode, Amp +17 more  │\n│                                                                            │\n├────────────────────────────────────────────────────────────────────────────╯\n│\n◇  Security Risk Assessments ─────────────────────────────────────────────╮\n│                                                                         │\n│                           Gen               Socket            Snyk      │\n│  wind-find-finance-skill  Med Risk          2 alerts          Low Risk  │\n│                                                                         │\n│  Details: https://skills.sh/Wind-Alice/AliceMarket                      │\n│                                                                         │\n├─────────────────────────────────────────────────────────────────────────╯\n\u001b[?25l│\n\u001b[1G\u001b[J◒  Installing skills…\u001b[1G\u001b[J◇  Installation complete\n\u001b[?25h\n│\n◇  Installed 1 skill ───────────────────────────────────────────────────────╮\n│                                                                           │\n│  ✓ ~/dev/finance-data-fetcher/.agents/skills/wind-find-finance-skill      │\n│    universal: Codex, GitHub Copilot, OpenCode, Amp, Antigravity +16 more  │\n│    symlinked: Claude Code                                                 │\n│    skipped: Hermes Agent, Lingma (project directory not found)            │\n│                                                                           │\n├───────────────────────────────────────────────────────────────────────────╯\n\n│\n└  Done!  Review skills before use; they run with full agent permissions."
+}
