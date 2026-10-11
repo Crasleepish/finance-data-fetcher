@@ -4,6 +4,7 @@ from sqlalchemy import (
     CHAR,
     BigInteger,
     Boolean,
+    CheckConstraint,
     Column,
     Date,
     DateTime,
@@ -483,6 +484,31 @@ stock_info = Table(
     Column("industry", String(length=50)),
     Column("listing_date", Date, nullable=False),
     Column("list_status", String(length=4)),
+)
+
+stock_code_change = Table(
+    "stock_code_change",
+    metadata,
+    Column("trade_code", String(length=20), primary_key=True, comment="最新代码（带后缀）"),
+    Column("code", String(length=20), primary_key=True, comment="区间内实际代码（带后缀）"),
+    Column("start_date", Date, primary_key=True, comment="区间开始日期"),
+    Column("name", String(length=50), nullable=False, comment="当前股票名称（非历史）"),
+    Column("end_date", Date, comment="区间结束日期；NULL 表示当前未结束区间"),
+    CheckConstraint(
+        "end_date IS NULL OR end_date >= start_date",
+        name="stock_code_change_date_order",
+    ),
+    CheckConstraint(
+        r"code ~ '^[0-9]{6}\.(SH|SZ|BJ)$'",
+        name="stock_code_change_code_format",
+    ),
+    CheckConstraint(
+        r"trade_code ~ '^[0-9]{6}\.(SH|SZ|BJ)$'",
+        name="stock_code_change_trade_code_format",
+    ),
+    Index("stock_code_change_code_idx", "code"),
+    Index("stock_code_change_trade_code_idx", "trade_code"),
+    comment="A股股票代码变更区间（最新名称 + 历史实际代码区间）",
 )
 
 trade_calendar = Table(

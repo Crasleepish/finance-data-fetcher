@@ -38,6 +38,7 @@ from infra.db.tables import (
     rt_index_hist,
     rt_market_factors,
     rt_stock_hist_unadj,
+    stock_code_change,
     stock_hist_unadj,
     stock_info,
     test_messages,
@@ -45,7 +46,9 @@ from infra.db.tables import (
 from infra.fetcher.akshare_etf_sina_fetcher import AkshareEtfSinaFetcher
 from infra.fetcher.akshare_index_hist_min_fetcher import AkshareIndexHistMinFetcher
 from infra.fetcher.akshare_stock_spot_fetcher import AkshareStockSpotFetcher
+from infra.fetcher.ftshare_code_change_fetcher import FtshareCodeChangeFetcher
 from infra.fetcher.tushare_rt_k_fetcher import TushareRtKFetcher
+from infra.fetcher.tushare_stock_basic_fetcher import TushareStockBasicFetcher
 from infra.idempotency.guard import IdempotencyGuard
 from infra.logging import setup_logging
 from infra.queue.in_memory import InMemoryTaskQueue
@@ -92,6 +95,7 @@ from services.pipelines.rt_stock_hist_unadj_pipeline import (
     RtStockHistUnadjAksharePipeline,
     RtStockHistUnadjTusharePipeline,
 )
+from services.pipelines.stock_code_change_pipeline import StockCodeChangePipeline
 from services.pipelines.stock_hist_unadj_pipeline import StockHistUnadjPipeline
 from services.pipelines.stock_info_pipeline import StockInfoPipeline
 from services.pipelines.stock_is_st_from_file_pipeline import StockIsStFromFilePipeline
@@ -399,6 +403,23 @@ def create_app() -> FastAPI:
                 config=config.gold,
             ),
         )
+        registry.register(
+            "stock_code_change",
+            StockCodeChangePipeline(
+                basic_fetcher=TushareStockBasicFetcher(tushare_client, retry_policy),
+                code_change_fetcher=FtshareCodeChangeFetcher(
+                    api_key=config.ftshare.api_key,
+                    base_url=config.ftshare.base_url,
+                    batch_size=config.ftshare.batch_size,
+                    max_url_length=config.ftshare.max_url_length,
+                    max_requests=config.ftshare.max_requests,
+                    timeout=config.ftshare.timeout,
+                ),
+                engine=engine,
+                stock_hist_table=stock_hist_unadj,
+                stock_info_table=stock_info,
+            ),
+        )
         selector = PipelineSelector(mapping=load_pipeline_mapping(config.pipeline_mapping_path))
         repo = Repository(engine=engine, table=test_messages)
         repo_by_pipeline = {
@@ -428,6 +449,9 @@ def create_app() -> FastAPI:
             "rt_market_factors": Repository(engine=engine, table=rt_market_factors),
             "gold_cftc_report": Repository(engine=engine, table=gold_cftc_report),
             "gold_future_curve": Repository(engine=engine, table=gold_future_curve),
+            "stock_code_change": Repository(
+                engine=engine, table=stock_code_change, serialize_replacement=True
+            ),
             "fund_beta": Repository(engine=engine, table=fund_beta),
             "rt_stock_hist_unadj_tushare": Repository(engine=engine, table=rt_stock_hist_unadj),
             "rt_stock_hist_unadj_akshare": Repository(engine=engine, table=rt_stock_hist_unadj),
@@ -483,6 +507,7 @@ def create_app() -> FastAPI:
                 "rt_etf_hist_akshare",
                 "rt_etf_hist_xueqiu",
                 "rt_market_factors",
+                "stock_code_change",
             },
         )
         app.state.task_store = task_store

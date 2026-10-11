@@ -5,7 +5,7 @@ import time
 from dataclasses import dataclass
 from typing import Any, Mapping, Protocol, Sequence
 
-from sqlalchemy import Engine, Table, and_, column, delete, insert, values
+from sqlalchemy import Engine, Table, and_, column, delete, insert, text, values
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.engine import CursorResult
 from sqlalchemy.exc import DBAPIError
@@ -56,6 +56,7 @@ class Repository:
 
     engine: Engine
     table: Table
+    serialize_replacement: bool = False
 
     def insert_batch(self, records: Sequence[Mapping[str, Any]]) -> int:
         """Insert a batch of records and return affected row count."""
@@ -112,6 +113,14 @@ class Repository:
         started_at = time.monotonic()
         try:
             with transaction(self.engine) as connection:
+                if self.serialize_replacement and connection.dialect.name == "postgresql":
+                    preparer = connection.dialect.identifier_preparer
+                    connection.execute(
+                        text(
+                            f"LOCK TABLE {preparer.quote(self.table.name)} "
+                            "IN SHARE ROW EXCLUSIVE MODE"
+                        )
+                    )
                 connection.execute(delete(self.table))
                 result = connection.execute(insert(self.table).values(list(records)))
             affected = _rowcount(result)

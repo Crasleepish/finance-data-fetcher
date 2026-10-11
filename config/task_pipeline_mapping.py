@@ -42,4 +42,5 @@ TASK_PIPELINE_MAPPING = {
         "rt_etf_hist_xueqiu",
     ],
     TaskSpec.GET_RT_MARKET_FACTORS: ["rt_market_factors"],
+    TaskSpec.GET_STOCK_CODE_CHANGE: ["stock_code_change"],
 }

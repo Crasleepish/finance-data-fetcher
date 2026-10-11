@@ -37,3 +37,4 @@ class TaskSpec(StrEnum):
     GET_RT_INDEX_HIST = "get_rt_index_hist"
     GET_RT_ETF_HIST = "get_rt_etf_hist"
     GET_RT_MARKET_FACTORS = "get_rt_market_factors"
+    GET_STOCK_CODE_CHANGE = "get_stock_code_change"

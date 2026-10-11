@@ -4,7 +4,7 @@ import logging
 from dataclasses import dataclass
 from typing import Callable
 
-from core.fetch.errors import RetryableError
+from core.fetch.errors import NonRetryableError, RetryableError
 from core.fetch.fetcher import Fetcher
 from core.fetch.retry import RetryPolicy
 from core.pipeline.types import ChunkArgs, RawBatch
@@ -35,6 +35,7 @@ class TushareStockBasicFetcher(Fetcher):
         for list_status in list_statuses:
             offset = 0
             pages = 0
+            seen_pages: set[tuple[tuple[str, str], ...]] = set()
             while True:
                 if cancel_check is not None:
                     cancel_check()
@@ -59,6 +60,12 @@ class TushareStockBasicFetcher(Fetcher):
                         },
                     )
                     break
+                fingerprint = _page_fingerprint(batch)
+                if fingerprint in seen_pages:
+                    raise NonRetryableError(
+                        f"tushare stock_basic repeated page for list_status={list_status}"
+                    )
+                seen_pages.add(fingerprint)
                 all_rows.extend(batch)
                 pages += 1
                 logger.debug(
@@ -73,6 +80,16 @@ class TushareStockBasicFetcher(Fetcher):
                 )
                 offset += self.page_size
         return all_rows
+
+
+def _page_fingerprint(batch: list[dict[str, object]]) -> tuple[tuple[str, str], ...]:
+    return tuple(
+        sorted(
+            (str(key), str(value))
+            for row in batch
+            for key, value in (row.items() if isinstance(row, dict) else [])
+        )
+    ) + (("__len__", str(len(batch))),)
 
 
 def _safe_stock_basic(

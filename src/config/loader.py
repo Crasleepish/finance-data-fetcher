@@ -155,4 +155,26 @@ def _apply_env_overrides(config: dict[str, Any]) -> dict[str, Any]:
     if gold_config:
         merged["gold"] = gold_config
 
+    ftshare_config = dict(merged.get("ftshare", {}))
+    ftshare_api_key = os.environ.get("APP_FTSHARE_API_KEY") or os.environ.get("FTSHARE_API_KEY")
+    if ftshare_api_key:
+        ftshare_config["api_key"] = ftshare_api_key
+    ftshare_base_url = os.environ.get("APP_FTSHARE_BASE_URL") or os.environ.get("FTSHARE_BASE_URL")
+    if ftshare_base_url:
+        ftshare_config["base_url"] = ftshare_base_url
+    ftshare_batch_size = os.environ.get("APP_FTSHARE_BATCH_SIZE")
+    if ftshare_batch_size:
+        ftshare_config["batch_size"] = int(ftshare_batch_size)
+    ftshare_max_url_length = os.environ.get("APP_FTSHARE_MAX_URL_LENGTH")
+    if ftshare_max_url_length:
+        ftshare_config["max_url_length"] = int(ftshare_max_url_length)
+    ftshare_max_requests = os.environ.get("APP_FTSHARE_MAX_REQUESTS")
+    if ftshare_max_requests:
+        ftshare_config["max_requests"] = int(ftshare_max_requests)
+    ftshare_timeout = os.environ.get("APP_FTSHARE_TIMEOUT")
+    if ftshare_timeout:
+        ftshare_config["timeout"] = float(ftshare_timeout)
+    if ftshare_config:
+        merged["ftshare"] = ftshare_config
+
     return merged

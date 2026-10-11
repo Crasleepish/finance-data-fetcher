@@ -78,10 +78,22 @@ class DataConfig(BaseModel):
     rt_fetch_interval: int = Field(default=600)
 
 
+class FtshareConfig(BaseModel):
+    """FTShare market-data integration configuration."""
+
+    api_key: str = Field(default="", repr=False)
+    base_url: str = Field(default="https://market.ft.tech/gateway")
+    batch_size: int = Field(default=400, ge=1, le=400)
+    max_url_length: int = Field(default=5000, ge=1, le=5000)
+    max_requests: int = Field(default=50, ge=1, le=50)
+    timeout: float = Field(default=30.0, gt=0)
+
+
 class AppConfig(BaseModel):
     """Root application configuration assembled from file + environment."""
 
     environment: str = Field(default="local")
+    ftshare: FtshareConfig = Field(default_factory=FtshareConfig)
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
     tushare: TushareConfig = Field(default_factory=TushareConfig)
     data: DataConfig = Field(default_factory=DataConfig)
