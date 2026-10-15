@@ -670,8 +670,6 @@
   "668": "handler.py",
   "669": "TestBoardName",
   "670": "handler.py",
-  "671": "margin_daily_cleaner.py",
-  "672": ".__init__",
   "673": "handler.py",
   "674": "handler.py",
   "675": "handler.py",
@@ -853,7 +851,6 @@
   "851": "handler.py",
   "852": "handler.py",
   "853": "handler.py",
-  "854": "test_stock_is_st_from_file_pipeline.py",
   "855": "龙虎榜明细",
   "856": "龙虎榜总览",
   "857": "TestHandler",
@@ -939,7 +936,6 @@
   "937": "温州民间融资综合利率指数日度",
   "938": "雪球股票排名",
   "939": "一致行动人明细",
-  "940": "rt_market_factors_pipeline.py",
   "941": "handler.py",
   "942": "SKILL.md",
   "943": "SKILL.md",
@@ -1009,8 +1005,5 @@
   "1007": "Wind Skill Catalog",
   "1008": "Wind Skill Discovery Router",
   "1009": "Wind Workflow Skill",
-  "1010": ".clean",
-  "1011": ".clean",
-  "1012": ".plan_chunks",
-  "1013": ".clean"
+  "1010": ".clean"
 }

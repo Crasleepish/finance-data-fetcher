@@ -36,6 +36,7 @@ Focused test: `uv run pytest tests/test_smoke.py::test_create_app`.
 
 ## Database
 
+- `postgres17-wsl:5432` is only reachable inside the Docker container network. From the host/WSL, use `127.0.0.1:5432`; override the host/port at runtime without rewriting the container-oriented database configuration.
 - Prefer SQLAlchemy Core: `Table`/`Column` with `select/insert/update` and explicit transactions. No hidden ORM side effects.
 
 ## Testing

@@ -1110,9 +1110,9 @@
     "semantic_hash": "791eed8f357581e3f93c6db9eb75a331"
   },
   "AGENTS.md": {
-    "mtime": 1789112319.3187993,
-    "ast_hash": "017f50c0cd61c3d168f9091a0afd2302",
-    "semantic_hash": "017f50c0cd61c3d168f9091a0afd2302"
+    "mtime": 1791991221.0485706,
+    "ast_hash": "8cc7d3ee684d93932c1ffafa01f4c98b",
+    "semantic_hash": ""
   },
   "Home.md": {
     "mtime": 1775986924.5932672,
@@ -4385,8 +4385,8 @@
     "semantic_hash": ""
   },
   "src/services/pipelines/stock_code_change_pipeline.py": {
-    "mtime": 1791704473.1466537,
-    "ast_hash": "e5beb2153f65093edeec0fa6f40dd765",
+    "mtime": 1791713309.2603457,
+    "ast_hash": "44f184b19a101baa75177ff9affdbc98",
     "semantic_hash": ""
   },
   "tests/test_ftshare_code_change_fetcher.py": {
@@ -4410,13 +4410,23 @@
     "semantic_hash": ""
   },
   "tests/test_stock_code_change_pipeline.py": {
-    "mtime": 1791704473.1466537,
-    "ast_hash": "20ec92f52d68ffc4f22cc95e770d6af9",
+    "mtime": 1791713342.29288,
+    "ast_hash": "2c72452f06d0c79b2068fc42838f2cd8",
     "semantic_hash": ""
   },
   "tests/test_tushare_stock_basic_completeness.py": {
     "mtime": 1791704473.1186512,
     "ast_hash": "f997bf59e472fee0dd715f6ab60700c7",
+    "semantic_hash": ""
+  },
+  "extra/fetch_industry_component_history_tushare.py": {
+    "mtime": 1791990925.0595708,
+    "ast_hash": "bb46011a6a1c7bc846e5ed551c2fee18",
+    "semantic_hash": ""
+  },
+  "tests/test_fetch_industry_component_history_tushare.py": {
+    "mtime": 1791990953.284495,
+    "ast_hash": "de458ff366915e3ec3dca63fbf1f4ba4",
     "semantic_hash": ""
   }
 }
